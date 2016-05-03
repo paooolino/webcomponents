@@ -10,17 +10,20 @@ class AppBodyContainer extends Component {
     
     render() {
         return (
-            <DataTable 
-                items={this.props.items} 
-                isFetching={this.props.isFetching}
-                errorMessage={this.props.errorMessage}
-                last_added_id={this.props.last_added_id}
-                last_deleted_id={this.props.last_deleted_id}
-                selected_id={this.props.selected_id}
-                addItemHandler={this.addItemHandler}
-                deleteItemHandler={this.deleteItemHandler}
-                selectItemHandler={this.selectItemHandler}
-            />
+            <div>
+                <DataTable 
+                    items={this.props.items} 
+                    isFetching={this.props.isFetching}
+                    errorMessage={this.props.errorMessage}
+                    last_added_id={this.props.last_added_id}
+                    last_deleted_id={this.props.last_deleted_id}
+                    selected_id={this.props.selected_id}
+                    addItemHandler={this.addItemHandler}
+                    deleteItemHandler={this.deleteItemHandler}
+                    selectItemHandler={this.selectItemHandler}
+                    contextMenuHandler={this.contextMenuHandler}
+                />
+            </div>
         );
     }
     
@@ -56,3 +59,5 @@ const mapStateToProps = function(store) {
 export default connect(
     mapStateToProps
 )(AppBodyContainer);
+
+
