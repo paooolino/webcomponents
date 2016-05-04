@@ -3,6 +3,7 @@ import { ContextMenu, MenuItem, ContextMenuLayer } from "react-contextmenu";
 
 import '../css/DataTable.css';
 
+// the target component for the context menu.
 const DataTableItem = ContextMenuLayer("DataTableItemContextMenu")(({name, id}) => {
     return (
         <div className="datatable_element_inner">
@@ -11,6 +12,7 @@ const DataTableItem = ContextMenuLayer("DataTableItemContextMenu")(({name, id}) 
     );
 });
 
+// the context menu.
 class DataTableItemContextMenu extends Component {
     render() {
         return(
@@ -33,6 +35,7 @@ class DataTableItemContextMenu extends Component {
     }
 }
 
+// the main component.
 const DataTable = ({
     items, isFetching, errorMessage, last_added_id, last_deleted_id, 
     selected_id, addItemHandler, deleteItemHandler, selectItemHandler,
