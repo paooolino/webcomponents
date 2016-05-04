@@ -79,29 +79,6 @@ const DataTable = ({
         </p>
         <div>
             n.items: {items.length}
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nome</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {items.map(item => {
-                        let classes = [];
-                        if( item.id == selected_id )
-                            classes.push("selected");
-                        if( item.id == last_added_id )
-                            classes.push("last_added");
-                        return(
-                            <tr onClick={()=>selectItemHandler(item.id)} className={classes.join(" ")} key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.name}</td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
         </div>
         <p>
         { isFetching && 

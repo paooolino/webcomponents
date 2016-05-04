@@ -64,9 +64,3 @@ export { fetchItems };  // this is ES6 syntax to export a function defined earli
 export { addItem };
 export { deleteItem };
 export { selectItem };
-
-
-
-
-
-

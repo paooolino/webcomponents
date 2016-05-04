@@ -21927,6 +21927,17 @@
 	        value: function componentDidMount() {
 	            this.props.dispatch((0, _itemsActions.fetchItems)(0));
 	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            // senza la condizione !isFetching viene fatto il dispatch di questa
+	            //  azione due volte perchè questo codice viene eseguito anche in
+	            //  risposta al cambiamento di stato determinato da fetchItems
+	            // così invece se sta già facendo il fetch evito di rilanciarlo
+	            if (nextProps.invalidated && !nextProps.isFetching) {
+	                this.props.dispatch((0, _itemsActions.fetchItems)(0));
+	            }
+	        }
 	    }]);
 
 	    return AppBodyContainer;
@@ -21939,7 +21950,8 @@
 	        errorMessage: store.items.errorMessage,
 	        selected_id: store.items.selected_id,
 	        last_added_id: store.items.last_added_id,
-	        last_deleted_id: store.items.last_deleted_id
+	        last_deleted_id: store.items.last_deleted_id,
+	        invalidated: store.items.invalidated
 	    };
 	};
 
@@ -22092,54 +22104,7 @@
 	            'div',
 	            null,
 	            'n.items: ',
-	            items.length,
-	            _react2.default.createElement(
-	                'table',
-	                null,
-	                _react2.default.createElement(
-	                    'thead',
-	                    null,
-	                    _react2.default.createElement(
-	                        'tr',
-	                        null,
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            '#'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Nome'
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'tbody',
-	                    null,
-	                    items.map(function (item) {
-	                        var classes = [];
-	                        if (item.id == selected_id) classes.push("selected");
-	                        if (item.id == last_added_id) classes.push("last_added");
-	                        return _react2.default.createElement(
-	                            'tr',
-	                            { onClick: function onClick() {
-	                                    return selectItemHandler(item.id);
-	                                }, className: classes.join(" "), key: item.id },
-	                            _react2.default.createElement(
-	                                'td',
-	                                null,
-	                                item.id
-	                            ),
-	                            _react2.default.createElement(
-	                                'td',
-	                                null,
-	                                item.name
-	                            )
-	                        );
-	                    })
-	                )
-	            )
+	            items.length
 	        ),
 	        _react2.default.createElement(
 	            'p',
@@ -29138,7 +29103,8 @@
 	    errorMessage: '',
 	    selected_id: 0,
 	    last_added_id: 0,
-	    last_deleted_id: 0
+	    last_deleted_id: 0,
+	    invalidated: false
 	};
 
 	function items() {
@@ -29162,7 +29128,8 @@
 	            return _extends({}, state, {
 	                isFetching: false,
 	                items: action.payload.items,
-	                errorMessage: ''
+	                errorMessage: '',
+	                invalidated: false
 	            });
 
 	        case _itemsActions.ADDITEM_REQUEST:
@@ -29181,7 +29148,8 @@
 	            return _extends({}, state, {
 	                isFetching: false,
 	                last_added_id: action.payload.last_added_id,
-	                errorMessage: ''
+	                errorMessage: '',
+	                invalidated: true
 	            });
 
 	        case _itemsActions.SELECT_ITEM:
@@ -29205,7 +29173,8 @@
 	            return _extends({}, state, {
 	                isFetching: false,
 	                last_deleted_id: action.payload.last_deleted_id,
-	                errorMessage: ''
+	                errorMessage: '',
+	                invalidated: true
 	            });
 
 	        default:

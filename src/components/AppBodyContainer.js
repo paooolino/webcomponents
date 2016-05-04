@@ -31,6 +31,16 @@ class AppBodyContainer extends Component {
         this.props.dispatch(fetchItems(0));
     }
     
+    componentWillReceiveProps(nextProps) {
+        // senza la condizione !isFetching viene fatto il dispatch di questa 
+        //  azione due volte perchè questo codice viene eseguito anche in 
+        //  risposta al cambiamento di stato determinato da fetchItems
+        // così invece se sta già facendo il fetch evito di rilanciarlo
+        if( nextProps.invalidated && !nextProps.isFetching ) {
+            this.props.dispatch(fetchItems(0));   
+        }
+    }
+    
     addItemHandler = () => {
         const id_parent = this.props.selected_id;
         this.props.dispatch(addItem(id_parent));
@@ -66,7 +76,8 @@ const mapStateToProps = function(store) {
         errorMessage: store.items.errorMessage,
         selected_id: store.items.selected_id,
         last_added_id: store.items.last_added_id,
-        last_deleted_id: store.items.last_deleted_id
+        last_deleted_id: store.items.last_deleted_id,
+        invalidated: store.items.invalidated
     };
 };
 

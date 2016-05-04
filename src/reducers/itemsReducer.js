@@ -11,7 +11,8 @@ const initialState = {
     errorMessage: '',
     selected_id: 0,
     last_added_id: 0,
-    last_deleted_id: 0
+    last_deleted_id: 0,
+    invalidated: false
 };
 
 export default function items(state=initialState, action) {
@@ -35,7 +36,8 @@ export default function items(state=initialState, action) {
                 ...state,
                 isFetching: false,
                 items: action.payload.items,
-                errorMessage: ''
+                errorMessage: '',
+                invalidated: false
             };
             
 
@@ -59,7 +61,8 @@ export default function items(state=initialState, action) {
                 ...state,
                 isFetching: false,
                 last_added_id: action.payload.last_added_id,
-                errorMessage: ''
+                errorMessage: '',
+                invalidated: true
             };
             
             
@@ -91,7 +94,8 @@ export default function items(state=initialState, action) {
                 ...state,
                 isFetching: false,
                 last_deleted_id: action.payload.last_deleted_id,
-                errorMessage: ''
+                errorMessage: '',
+                invalidated: true
             };
             
         default:
