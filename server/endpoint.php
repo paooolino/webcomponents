@@ -41,7 +41,7 @@
             break;
             
         case "deleteItem":
-            echo json_encode($de->addItem(                
+            echo json_encode($de->deleteItem(                
                 $ARR["data"]["id"]
             ));
             break;

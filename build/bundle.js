@@ -21885,6 +21885,20 @@
 	            _this.props.dispatch((0, _itemsActions.selectItem)(id));
 	        };
 
+	        _this.contextMenuHandler = function (id, id_parent, menuaction) {
+	            switch (menuaction) {
+	                case "addChild":
+	                    _this.props.dispatch((0, _itemsActions.addItem)(id));
+	                    break;
+	                case "addSibling":
+	                    _this.props.dispatch((0, _itemsActions.addItem)(id_parent));
+	                    break;
+	                case "deleteItem":
+	                    _this.props.dispatch((0, _itemsActions.deleteItem)(id));
+	                    break;
+	            }
+	        };
+
 	        return _this;
 	    }
 
@@ -21959,7 +21973,13 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var DataTableItem = (0, _reactContextmenu.ContextMenuLayer)("DataTableItemContextMenu")(function (_ref) {
+	// the target component for the context menu.
+	var DataTableItem = (0, _reactContextmenu.ContextMenuLayer)("DataTableItemContextMenu", function (props) {
+	    return {
+	        id: props.id,
+	        id_parent: props.id_parent
+	    };
+	})(function (_ref) {
 	    var name = _ref.name;
 	    var id = _ref.id;
 
@@ -21972,13 +21992,21 @@
 	    );
 	});
 
+	// the context menu.
+
 	var DataTableItemContextMenu = function (_Component) {
 	    _inherits(DataTableItemContextMenu, _Component);
 
-	    function DataTableItemContextMenu() {
+	    function DataTableItemContextMenu(props) {
 	        _classCallCheck(this, DataTableItemContextMenu);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(DataTableItemContextMenu).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DataTableItemContextMenu).call(this, props));
+
+	        _this.handleClick = function (e, data) {
+	            _this.props.contextMenuHandler(data.id, data.id_parent, data.action);
+	        };
+
+	        return _this;
 	    }
 
 	    _createClass(DataTableItemContextMenu, [{
@@ -21989,30 +22017,28 @@
 	                { identifier: 'DataTableItemContextMenu' },
 	                _react2.default.createElement(
 	                    _reactContextmenu.MenuItem,
-	                    { data: {}, onClick: this.handleClick },
+	                    { data: { action: 'addChild' }, onClick: this.handleClick },
 	                    'Aggiungi figlio'
 	                ),
 	                _react2.default.createElement(
 	                    _reactContextmenu.MenuItem,
-	                    { data: {}, onClick: this.handleClick },
+	                    { data: { action: 'addSibling' }, onClick: this.handleClick },
 	                    'Aggiungi fratello'
 	                ),
 	                _react2.default.createElement(
 	                    _reactContextmenu.MenuItem,
-	                    { data: {}, onClick: this.handleClick },
+	                    { data: { action: 'deleteItem' }, onClick: this.handleClick },
 	                    'Elimina elemento'
 	                )
 	            );
-	        }
-	    }, {
-	        key: 'handleClick',
-	        value: function handleClick(e, data) {
-	            console.log(data);
 	        }
 	    }]);
 
 	    return DataTableItemContextMenu;
 	}(_react.Component);
+
+	// the main component.
+
 
 	var DataTable = function DataTable(_ref2) {
 	    var items = _ref2.items;
@@ -22043,6 +22069,7 @@
 	                },
 	                _react2.default.createElement(DataTableItem, {
 	                    name: item.name,
+	                    id_parent: item.id_parent,
 	                    id: item.id
 	                })
 	            );
@@ -22124,13 +22151,14 @@
 	            ),
 	            errorMessage
 	        ),
-	        _react2.default.createElement(DataTableItemContextMenu, null)
+	        _react2.default.createElement(DataTableItemContextMenu, { contextMenuHandler: contextMenuHandler })
 	    );
 	};
 
 	DataTable.propTypes = {
 	    addItemHandler: _react.PropTypes.func.isRequired,
-	    selectItemHandler: _react.PropTypes.func.isRequired
+	    selectItemHandler: _react.PropTypes.func.isRequired,
+	    contextMenuHandler: _react.PropTypes.func.isRequired
 	};
 
 	exports.default = DataTable;
@@ -24787,7 +24815,7 @@
 
 
 	// module
-	exports.push([module.id, ".datatable { background-color:#fff; width:300px; float:left; }\n.datatable_element { font-size:11pt; cursor:pointer;}\n.datatable_element_inner {padding:5px 0;border-bottom:1px solid gray;}\n.datatable_element:hover { background-color:#ddd; }\n.datatable_element.selected { background-color:#ddd; }\n\n.react-context-menu {\n    min-width: 160px;\n    padding: 5px 0;\n    margin: 2px 0 0;\n    font-size: 16px;\n    color: #373a3c;\n    text-align: left;\n    background-color: #fff;\n    -webkit-background-clip: padding-box;\n    background-clip: padding-box;\n    border: 1px solid rgba(0,0,0,.15);\n    border-radius: .25rem;\n    outline: none;\n}\n\n.react-context-menu-link {\n    display: inline-block;\n    width: 100%;\n    padding: 3px 20px;\n    clear: both;\n    font-weight: 400;\n    line-height: 1.5;\n    color: #373a3c;\n    text-align: inherit;\n    white-space: nowrap;\n    background: 0 0;\n    border: 0;\n}\n\n.react-context-menu-link.active,\n.react-context-menu-link:hover {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8;\n    text-decoration: none;\n}\n.react-context-menu-item.submenu > a {\n    padding-right: 27px;\n}\n\n.react-context-menu-item.submenu > a:after {\n    content: \"\\25B6\";\n    display: inline-block;\n    position: absolute;\n    right: 7px;\n}", ""]);
+	exports.push([module.id, ".datatable { background-color:#fff; width:300px; float:left; }\n.datatable_element { font-size:11pt; cursor:pointer;}\n.datatable_element_inner {padding:5px 0;border-bottom:1px solid gray;}\n.datatable_element:hover { background-color:#ddd; }\n.datatable_element.selected { background-color:#ddd; }\n\n.react-context-menu {\n    min-width: 160px;\n    padding: 5px 0;\n    margin: 2px 0 0;\n    font-size: 16px;\n    color: #373a3c;\n    text-align: left;\n    background-color: #fff;\n    -webkit-background-clip: padding-box;\n    background-clip: padding-box;\n    border: 1px solid rgba(0,0,0,.15);\n    border-radius: .25rem;\n    outline: none;\n}\n\n.react-context-menu-link {\n    display: inline-block;\n    width: 100%;\n    box-sizing: border-box;\n    padding: 3px 20px;\n    clear: both;\n    font-weight: 400;\n    line-height: 1.5;\n    color: #373a3c;\n    text-align: inherit;\n    white-space: nowrap;\n    background: 0 0;\n    border: 0;\n}\n\n.react-context-menu-link.active,\n.react-context-menu-link:hover {\n    color: #fff;\n    background-color: #0275d8;\n    border-color: #0275d8;\n    text-decoration: none;\n}\n.react-context-menu-item.submenu > a {\n    padding-right: 27px;\n}\n\n.react-context-menu-item.submenu > a:after {\n    content: \"\\25B6\";\n    display: inline-block;\n    position: absolute;\n    right: 7px;\n}", ""]);
 
 	// exports
 

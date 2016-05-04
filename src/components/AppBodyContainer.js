@@ -43,6 +43,20 @@ class AppBodyContainer extends Component {
     selectItemHandler = (id) => {
         this.props.dispatch(selectItem(id));
     }
+    
+    contextMenuHandler = (id, id_parent, menuaction) => {
+        switch(menuaction) {
+            case "addChild":
+                this.props.dispatch(addItem(id));
+                break;
+            case "addSibling":
+                this.props.dispatch(addItem(id_parent));
+                break;
+            case "deleteItem":
+                this.props.dispatch(deleteItem(id));
+                break;
+        }
+    }
 }
    
 const mapStateToProps = function(store) {

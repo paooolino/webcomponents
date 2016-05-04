@@ -4,7 +4,10 @@ import { ContextMenu, MenuItem, ContextMenuLayer } from "react-contextmenu";
 import '../css/DataTable.css';
 
 // the target component for the context menu.
-const DataTableItem = ContextMenuLayer("DataTableItemContextMenu")(({name, id}) => {
+const DataTableItem = ContextMenuLayer("DataTableItemContextMenu", (props) => ({
+        id: props.id,
+        id_parent: props.id_parent
+    }))(({name, id}) => {
     return (
         <div className="datatable_element_inner">
             {id} {name}
@@ -14,24 +17,28 @@ const DataTableItem = ContextMenuLayer("DataTableItemContextMenu")(({name, id}) 
 
 // the context menu.
 class DataTableItemContextMenu extends Component {
+    constructor(props) {
+        super(props);
+    }
+    
     render() {
         return(
             <ContextMenu identifier="DataTableItemContextMenu">
-                <MenuItem data={{}} onClick={this.handleClick}>
+                <MenuItem data={{action:'addChild'}} onClick={this.handleClick}>
                     Aggiungi figlio
                 </MenuItem>
-                <MenuItem data={{}} onClick={this.handleClick}>
+                <MenuItem data={{action:'addSibling'}} onClick={this.handleClick}>
                     Aggiungi fratello
                 </MenuItem>
-                <MenuItem data={{}} onClick={this.handleClick}>
+                <MenuItem data={{action:'deleteItem'}} onClick={this.handleClick}>
                     Elimina elemento
                 </MenuItem>
             </ContextMenu>
         );
     }
     
-    handleClick(e, data) {
-        console.log(data);
+    handleClick = (e, data) => {
+        this.props.contextMenuHandler(data.id, data.id_parent, data.action);
     }
 }
 
@@ -57,6 +64,7 @@ const DataTable = ({
                 >
                     <DataTableItem 
                         name={item.name}
+                        id_parent={item.id_parent}
                         id={item.id}
                     />
                 </div>
@@ -102,13 +110,14 @@ const DataTable = ({
         {errorMessage}
         </p>
         
-        <DataTableItemContextMenu />
+        <DataTableItemContextMenu contextMenuHandler={contextMenuHandler} />
     </div>
 );
 
 DataTable.propTypes = {
     addItemHandler: PropTypes.func.isRequired,
-    selectItemHandler: PropTypes.func.isRequired
+    selectItemHandler: PropTypes.func.isRequired,
+    contextMenuHandler: PropTypes.func.isRequired
 };
 
 export default DataTable;
