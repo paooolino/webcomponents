@@ -44,12 +44,14 @@ class DataTableItemContextMenu extends Component {
 
 // the main component.
 const DataTable = ({
-    items, isFetching, errorMessage, last_added_id, last_deleted_id, 
+    items, parent, isFetching, errorMessage, last_added_id, last_deleted_id, 
     selected_id, addItemHandler, deleteItemHandler, selectItemHandler,
-    contextMenuHandler
+    contextMenuHandler, expandItemHandler
 }) => (
     <div className="datatable inner">
-    
+        {parent &&
+            <div onDoubleClick={()=>expandItemHandler(parent.id_parent)} className="datatable_element">{parent.id} {parent.name}</div>
+        }
         {items.map(item => {
             let classes = ["datatable_element"];
             if( item.id == selected_id )
@@ -61,6 +63,7 @@ const DataTable = ({
                     className={classes.join(" ")}
                     key={item.id}
                     onClick={()=>selectItemHandler(item.id)}
+                    onDoubleClick={()=>expandItemHandler(item.id)}
                 >
                     <DataTableItem 
                         name={item.name}
@@ -94,7 +97,8 @@ const DataTable = ({
 DataTable.propTypes = {
     addItemHandler: PropTypes.func.isRequired,
     selectItemHandler: PropTypes.func.isRequired,
-    contextMenuHandler: PropTypes.func.isRequired
+    contextMenuHandler: PropTypes.func.isRequired,
+    expandItemHandler: PropTypes.func.isRequired
 };
 
 export default DataTable;

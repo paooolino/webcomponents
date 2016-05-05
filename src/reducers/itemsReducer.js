@@ -2,17 +2,19 @@ import {
     FETCHITEMS_REQUEST, FETCHITEMS_FAILURE, FETCHITEMS_SUCCESS,
     ADDITEM_REQUEST, ADDITEM_FAILURE, ADDITEM_SUCCESS,
     DELETEITEM_REQUEST, DELETEITEM_FAILURE, DELETEITEM_SUCCESS,
-    SELECT_ITEM
+    SELECT_ITEM, EXPAND_ITEM
 } from '../actions/itemsActions';
 
 const initialState = {
     isFetching: false,
     items: [],
+    parent: {},
     errorMessage: '',
     selected_id: 0,
+    selected_id_parent: 0,
     last_added_id: 0,
     last_deleted_id: 0,
-    invalidated: false
+    invalidated: true
 };
 
 export default function items(state=initialState, action) {
@@ -36,6 +38,7 @@ export default function items(state=initialState, action) {
                 ...state,
                 isFetching: false,
                 items: action.payload.items,
+                parent: action.payload.parent,
                 errorMessage: '',
                 invalidated: false
             };
@@ -73,6 +76,12 @@ export default function items(state=initialState, action) {
                 selected_id: action.payload.id
             };
             
+        case EXPAND_ITEM:
+            return {
+                ...state,
+                selected_id_parent: action.payload.id,
+                invalidated: true
+            };
             
             
         case DELETEITEM_REQUEST:

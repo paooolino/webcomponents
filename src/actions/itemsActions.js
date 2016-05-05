@@ -18,7 +18,7 @@ export const DELETEITEM_FAILURE = 'DELETEITEM_FAILURE';
 export const DELETEITEM_SUCCESS = 'DELETEITEM_SUCCESS';
 
 export const SELECT_ITEM = 'SELECT_ITEM';
-
+export const EXPAND_ITEM = 'EXPAND_ITEM';
 
 
 //
@@ -55,6 +55,12 @@ const selectItem = (id) => ({
     }
 });
 
+const expandItem = (id) => ({
+    type: EXPAND_ITEM,
+    payload: {
+        id
+    }
+});
 
 
 //
@@ -64,3 +70,4 @@ export { fetchItems };  // this is ES6 syntax to export a function defined earli
 export { addItem };
 export { deleteItem };
 export { selectItem };
+export { expandItem };

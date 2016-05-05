@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import DataTable from './DataTable';
-import { fetchItems, addItem, selectItem, deleteItem } from '../actions/itemsActions';
+import { fetchItems, addItem, selectItem, deleteItem, expandItem } from '../actions/itemsActions';
 
 class AppBodyContainer extends Component {
     constructor(props) {
@@ -13,6 +13,7 @@ class AppBodyContainer extends Component {
             <div>
                 <DataTable 
                     items={this.props.items} 
+                    parent={this.props.parent}
                     isFetching={this.props.isFetching}
                     errorMessage={this.props.errorMessage}
                     last_added_id={this.props.last_added_id}
@@ -22,13 +23,14 @@ class AppBodyContainer extends Component {
                     deleteItemHandler={this.deleteItemHandler}
                     selectItemHandler={this.selectItemHandler}
                     contextMenuHandler={this.contextMenuHandler}
+                    expandItemHandler={this.expandItemHandler}
                 />
             </div>
         );
     }
     
     componentDidMount() {
-        this.props.dispatch(fetchItems(0));
+        this.props.dispatch(fetchItems(this.props.selected_id_parent));
     }
     
     componentWillReceiveProps(nextProps) {
@@ -37,7 +39,7 @@ class AppBodyContainer extends Component {
         //  risposta al cambiamento di stato determinato da fetchItems
         // così invece se sta già facendo il fetch evito di rilanciarlo
         if( nextProps.invalidated && !nextProps.isFetching ) {
-            this.props.dispatch(fetchItems(0));   
+            this.props.dispatch(fetchItems(nextProps.selected_id_parent));   
         }
     }
     
@@ -52,6 +54,10 @@ class AppBodyContainer extends Component {
     
     selectItemHandler = (id) => {
         this.props.dispatch(selectItem(id));
+    }
+    
+    expandItemHandler = (id) => {
+        this.props.dispatch(expandItem(id));
     }
     
     contextMenuHandler = (id, id_parent, menuaction) => {
@@ -73,11 +79,13 @@ const mapStateToProps = function(store) {
     return {
         isFetching: store.items.isFetching,
         items: store.items.items,
+        parent: store.items.parent,
         errorMessage: store.items.errorMessage,
         selected_id: store.items.selected_id,
         last_added_id: store.items.last_added_id,
         last_deleted_id: store.items.last_deleted_id,
-        invalidated: store.items.invalidated
+        invalidated: store.items.invalidated,
+        selected_id_parent: store.items.selected_id_parent
     };
 };
 

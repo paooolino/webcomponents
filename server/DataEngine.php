@@ -6,10 +6,11 @@
 
     class DataEngine {
 
-        const QUERY_SELECT_USERS    = "SELECT * FROM users WHERE username = ? AND password = ?";
-        const QUERY_SELECT_ITEMS    = "SELECT * FROM items WHERE id_parent = ?";
-        const QUERY_ADD_ITEM        = "INSERT INTO items (id_parent) VALUES (?)";
-        const QUERY_DELETE_ITEM     = "DELETE FROM items WHERE id = ?";
+        const QUERY_SELECT_USERS            = "SELECT * FROM users WHERE username = ? AND password = ?";
+        const QUERY_SELECT_ITEMS_BY_PARENT  = "SELECT * FROM items WHERE id_parent = ?";
+        const QUERY_SELECT_ITEM             = "SELECT * FROM items WHERE id = ?";
+        const QUERY_ADD_ITEM                = "INSERT INTO items (id_parent) VALUES (?)";
+        const QUERY_DELETE_ITEM             = "DELETE FROM items WHERE id = ?";
         
         public $db;
         
@@ -55,15 +56,24 @@
 		}
 		
 		public function fetchItems($id_parent, $offset, $howmany, $filter, $search, $orderby) {
-		    $rs = $this->db->select(self::QUERY_SELECT_ITEMS, array(
-		        $id_parent
-		    ));
-		    $items = $rs->fetchAll(\PDO::FETCH_ASSOC);
-		    
-		    return array(
-		        "status" => "ok",
-		        "items" => $items
-		    );
+            $rs = $this->db->select(self::QUERY_SELECT_ITEMS_BY_PARENT, array(
+                $id_parent
+            ));
+            $items = $rs->fetchAll(\PDO::FETCH_ASSOC);
+            
+            $parent = array();
+            $rs = $this->db->select(self::QUERY_SELECT_ITEM, array(
+                $id_parent
+            ));
+            if( $rs->rowCount() == 1 ) {
+                $parent = $rs->fetch(\PDO::FETCH_ASSOC);
+            }
+            
+            return array(
+                "status" => "ok",
+                "items" => $items,
+                "parent" => $parent
+            );
 		}
 		
 		public function addItem($id_parent) {

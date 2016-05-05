@@ -103,11 +103,9 @@
 	var load = storage.createLoader(engine);
 	load(store);
 
-	/*
-	store.subscribe(() =>
-	  console.log(store.getState())
-	);
-	*/
+	store.subscribe(function () {
+	  return console.log(store.getState());
+	});
 
 	// Provider: Makes the Redux store available to the connect() calls
 	// in the component hierarchy below.
@@ -21885,6 +21883,10 @@
 	            _this.props.dispatch((0, _itemsActions.selectItem)(id));
 	        };
 
+	        _this.expandItemHandler = function (id) {
+	            _this.props.dispatch((0, _itemsActions.expandItem)(id));
+	        };
+
 	        _this.contextMenuHandler = function (id, id_parent, menuaction) {
 	            switch (menuaction) {
 	                case "addChild":
@@ -21910,6 +21912,7 @@
 	                null,
 	                _react2.default.createElement(_DataTable2.default, {
 	                    items: this.props.items,
+	                    parent: this.props.parent,
 	                    isFetching: this.props.isFetching,
 	                    errorMessage: this.props.errorMessage,
 	                    last_added_id: this.props.last_added_id,
@@ -21918,14 +21921,15 @@
 	                    addItemHandler: this.addItemHandler,
 	                    deleteItemHandler: this.deleteItemHandler,
 	                    selectItemHandler: this.selectItemHandler,
-	                    contextMenuHandler: this.contextMenuHandler
+	                    contextMenuHandler: this.contextMenuHandler,
+	                    expandItemHandler: this.expandItemHandler
 	                })
 	            );
 	        }
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this.props.dispatch((0, _itemsActions.fetchItems)(0));
+	            this.props.dispatch((0, _itemsActions.fetchItems)(this.props.selected_id_parent));
 	        }
 	    }, {
 	        key: 'componentWillReceiveProps',
@@ -21935,7 +21939,7 @@
 	            //  risposta al cambiamento di stato determinato da fetchItems
 	            // così invece se sta già facendo il fetch evito di rilanciarlo
 	            if (nextProps.invalidated && !nextProps.isFetching) {
-	                this.props.dispatch((0, _itemsActions.fetchItems)(0));
+	                this.props.dispatch((0, _itemsActions.fetchItems)(nextProps.selected_id_parent));
 	            }
 	        }
 	    }]);
@@ -21947,11 +21951,13 @@
 	    return {
 	        isFetching: store.items.isFetching,
 	        items: store.items.items,
+	        parent: store.items.parent,
 	        errorMessage: store.items.errorMessage,
 	        selected_id: store.items.selected_id,
 	        last_added_id: store.items.last_added_id,
 	        last_deleted_id: store.items.last_deleted_id,
-	        invalidated: store.items.invalidated
+	        invalidated: store.items.invalidated,
+	        selected_id_parent: store.items.selected_id_parent
 	    };
 	};
 
@@ -22054,6 +22060,7 @@
 
 	var DataTable = function DataTable(_ref2) {
 	    var items = _ref2.items;
+	    var parent = _ref2.parent;
 	    var isFetching = _ref2.isFetching;
 	    var errorMessage = _ref2.errorMessage;
 	    var last_added_id = _ref2.last_added_id;
@@ -22063,9 +22070,19 @@
 	    var deleteItemHandler = _ref2.deleteItemHandler;
 	    var selectItemHandler = _ref2.selectItemHandler;
 	    var contextMenuHandler = _ref2.contextMenuHandler;
+	    var expandItemHandler = _ref2.expandItemHandler;
 	    return _react2.default.createElement(
 	        'div',
 	        { className: 'datatable inner' },
+	        parent && _react2.default.createElement(
+	            'div',
+	            { onDoubleClick: function onDoubleClick() {
+	                    return expandItemHandler(parent.id_parent);
+	                }, className: 'datatable_element' },
+	            parent.id,
+	            ' ',
+	            parent.name
+	        ),
 	        items.map(function (item) {
 	            var classes = ["datatable_element"];
 	            if (item.id == selected_id) classes.push("selected");
@@ -22077,6 +22094,9 @@
 	                    key: item.id,
 	                    onClick: function onClick() {
 	                        return selectItemHandler(item.id);
+	                    },
+	                    onDoubleClick: function onDoubleClick() {
+	                        return expandItemHandler(item.id);
 	                    }
 	                },
 	                _react2.default.createElement(DataTableItem, {
@@ -22123,7 +22143,8 @@
 	DataTable.propTypes = {
 	    addItemHandler: _react.PropTypes.func.isRequired,
 	    selectItemHandler: _react.PropTypes.func.isRequired,
-	    contextMenuHandler: _react.PropTypes.func.isRequired
+	    contextMenuHandler: _react.PropTypes.func.isRequired,
+	    expandItemHandler: _react.PropTypes.func.isRequired
 	};
 
 	exports.default = DataTable;
@@ -24794,7 +24815,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.selectItem = exports.deleteItem = exports.addItem = exports.fetchItems = exports.SELECT_ITEM = exports.DELETEITEM_SUCCESS = exports.DELETEITEM_FAILURE = exports.DELETEITEM_REQUEST = exports.ADDITEM_SUCCESS = exports.ADDITEM_FAILURE = exports.ADDITEM_REQUEST = exports.FETCHITEMS_SUCCESS = exports.FETCHITEMS_FAILURE = exports.FETCHITEMS_REQUEST = undefined;
+	exports.expandItem = exports.selectItem = exports.deleteItem = exports.addItem = exports.fetchItems = exports.EXPAND_ITEM = exports.SELECT_ITEM = exports.DELETEITEM_SUCCESS = exports.DELETEITEM_FAILURE = exports.DELETEITEM_REQUEST = exports.ADDITEM_SUCCESS = exports.ADDITEM_FAILURE = exports.ADDITEM_REQUEST = exports.FETCHITEMS_SUCCESS = exports.FETCHITEMS_FAILURE = exports.FETCHITEMS_REQUEST = undefined;
 
 	var _utils = __webpack_require__(242);
 
@@ -24814,6 +24835,7 @@
 	var DELETEITEM_SUCCESS = exports.DELETEITEM_SUCCESS = 'DELETEITEM_SUCCESS';
 
 	var SELECT_ITEM = exports.SELECT_ITEM = 'SELECT_ITEM';
+	var EXPAND_ITEM = exports.EXPAND_ITEM = 'EXPAND_ITEM';
 
 	//
 	// action creators
@@ -24839,6 +24861,15 @@
 	    };
 	};
 
+	var expandItem = function expandItem(id) {
+	    return {
+	        type: EXPAND_ITEM,
+	        payload: {
+	            id: id
+	        }
+	    };
+	};
+
 	//
 	// to be used by components
 	//
@@ -24847,6 +24878,7 @@
 	exports.addItem = addItem;
 	exports.deleteItem = deleteItem;
 	exports.selectItem = selectItem;
+	exports.expandItem = expandItem;
 
 /***/ },
 /* 242 */
@@ -24926,9 +24958,16 @@
 	                    }
 	                });
 	            }
-	        }).catch(function (err) {
-	            dispatch(error(err));
-	        });
+	        }) /*
+	           .catch(err => {
+	             console.log(err);
+	             dispatch({
+	                 type: error,
+	                 payload: {
+	                     errorMessage: err.message
+	                 }
+	             });
+	           })*/;
 	    };
 	}
 
@@ -29100,11 +29139,13 @@
 	var initialState = {
 	    isFetching: false,
 	    items: [],
+	    parent: {},
 	    errorMessage: '',
 	    selected_id: 0,
+	    selected_id_parent: 0,
 	    last_added_id: 0,
 	    last_deleted_id: 0,
-	    invalidated: false
+	    invalidated: true
 	};
 
 	function items() {
@@ -29128,6 +29169,7 @@
 	            return _extends({}, state, {
 	                isFetching: false,
 	                items: action.payload.items,
+	                parent: action.payload.parent,
 	                errorMessage: '',
 	                invalidated: false
 	            });
@@ -29155,6 +29197,12 @@
 	        case _itemsActions.SELECT_ITEM:
 	            return _extends({}, state, {
 	                selected_id: action.payload.id
+	            });
+
+	        case _itemsActions.EXPAND_ITEM:
+	            return _extends({}, state, {
+	                selected_id_parent: action.payload.id,
+	                invalidated: true
 	            });
 
 	        case _itemsActions.DELETEITEM_REQUEST:

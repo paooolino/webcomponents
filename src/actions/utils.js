@@ -63,9 +63,15 @@ export function createAsyncAction(actionName, data, request, error, success) {
                         }
                     });
                 }
-            })
+            })/*
             .catch(err => {
-                dispatch(error(err));
-    		});
+                console.log(err);
+                dispatch({
+                    type: error,
+                    payload: {
+                        errorMessage: err.message
+                    }
+                });
+    		})*/;
 	};
 }
