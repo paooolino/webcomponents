@@ -12,6 +12,7 @@
         const QUERY_ADD_ITEM                = "INSERT INTO items (id_parent) VALUES (?)";
         const QUERY_DELETE_ITEM             = "DELETE FROM items WHERE id = ?";
         const QUERY_UPDATE_NAME             = "UPDATE items SET name = ? WHERE id = ?";
+        const QUERY_UPDATE_SLUG             = "UPDATE items SET slug = ? WHERE id = ?";
         
         public $db;
         
@@ -57,20 +58,29 @@
 		}
 		
 		public function saveItemField($id, $field, $value) {
-		    if( $field == "name" ) {
-                $affected_rows = $this->db->modify(self::QUERY_UPDATE_NAME, array(
-                    $value, $id
-                ));		
-    		    return array(
-    		        "status" => "ok",
-    		        "affected_rows" => intval($affected_rows)
-    		    );
-		    } else {
-    		    return array(
-    		        "status" => "ko",
-    		        "error" => "Field not valid."
-    		    );		        
-		    }
+            $query = "";
+            switch( $field ) {
+                case "name":
+                    $query = self::QUERY_UPDATE_NAME;
+                    break;
+                case "slug":
+                    $query = self::QUERY_UPDATE_SLUG;
+                    break;
+                default:
+        		    return array(
+        		        "status" => "ko",
+        		        "error" => "Field not valid."
+        		    );                    
+            }
+            
+            $affected_rows = $this->db->modify($query, array(
+                $value, $id
+            ));		
+		    return array(
+		        "status" => "ok",
+		        "affected_rows" => intval($affected_rows)
+		    );           
+		   
 		}
 		
 		public function fetchItems($id_parent, $offset, $howmany, $filter, $search, $orderby) {

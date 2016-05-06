@@ -19,6 +19,13 @@ const ItemCard = ({
                         onBlur={blurHandler}
                     />
                 </div>
+                <div className="formLabel">Slug</div>
+                <div className="formField">
+                    <input type="text" name="slug" value={item.slug} 
+                        onChange={changeHandler} 
+                        onBlur={blurHandler}
+                    />
+                </div>
             </div>
         </div>
     );

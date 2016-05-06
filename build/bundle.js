@@ -24879,6 +24879,19 @@
 	                    onChange: changeHandler,
 	                    onBlur: blurHandler
 	                })
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'formLabel' },
+	                'Slug'
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'formField' },
+	                _react2.default.createElement('input', { type: 'text', name: 'slug', value: item.slug,
+	                    onChange: changeHandler,
+	                    onBlur: blurHandler
+	                })
 	            )
 	        )
 	    );
