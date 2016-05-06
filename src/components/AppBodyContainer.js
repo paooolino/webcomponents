@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import DataTable from './DataTable';
-import { fetchItems, addItem, selectItem, deleteItem, expandItem } from '../actions/itemsActions';
+import ItemCard from './ItemCard';
+import { fetchItems, addItem, selectItem, deleteItem, expandItem, updateItemField, saveItemField } from '../actions/itemsActions';
 
 class AppBodyContainer extends Component {
     constructor(props) {
@@ -9,6 +10,9 @@ class AppBodyContainer extends Component {
     }
     
     render() {
+        const selected_item = this.props.items.filter((item) =>
+            item.id == this.props.selected_id
+        )[0];
         return (
             <div>
                 <DataTable 
@@ -25,6 +29,13 @@ class AppBodyContainer extends Component {
                     contextMenuHandler={this.contextMenuHandler}
                     expandItemHandler={this.expandItemHandler}
                 />
+                { selected_item &&
+                <ItemCard 
+                    item={selected_item} 
+                    changeHandler={this.changeHandler}
+                    blurHandler={this.blurHandler}
+                />
+                }
             </div>
         );
     }
@@ -34,6 +45,8 @@ class AppBodyContainer extends Component {
     }
     
     componentWillReceiveProps(nextProps) {
+        // quando aggiungo o espando, invalido lo stato e rifaccio il fetch
+        
         // senza la condizione !isFetching viene fatto il dispatch di questa 
         //  azione due volte perchè questo codice viene eseguito anche in 
         //  risposta al cambiamento di stato determinato da fetchItems
@@ -58,6 +71,14 @@ class AppBodyContainer extends Component {
     
     expandItemHandler = (id) => {
         this.props.dispatch(expandItem(id));
+    }
+    
+    changeHandler = (event) => {
+        this.props.dispatch(updateItemField(event.target.name, event.target.value));
+    }
+
+    blurHandler = (event) => {
+        this.props.dispatch(saveItemField(this.props.selected_id, event.target.name, event.target.value));
     }
     
     contextMenuHandler = (id, id_parent, menuaction) => {

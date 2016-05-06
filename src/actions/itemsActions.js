@@ -19,6 +19,12 @@ export const DELETEITEM_SUCCESS = 'DELETEITEM_SUCCESS';
 
 export const SELECT_ITEM = 'SELECT_ITEM';
 export const EXPAND_ITEM = 'EXPAND_ITEM';
+export const UPDATE_ITEM_FIELD = 'UPDATE_ITEM_FIELD';
+
+export const SAVEITEMFIELD_REQUEST = 'SAVEITEMFIELD_REQUEST';
+export const SAVEITEMFIELD_FAILURE = 'SAVEITEMFIELD_FAILURE'; 
+export const SAVEITEMFIELD_SUCCESS = 'SAVEITEMFIELD_SUCCESS';
+
 
 
 //
@@ -48,6 +54,14 @@ const deleteItem = (id) => {
     );
 };
 
+const saveItemField = (id, name, value) => {
+    return createAsyncAction(
+        "saveItemField",
+        { id, name, value },
+        SAVEITEMFIELD_REQUEST, SAVEITEMFIELD_FAILURE, SAVEITEMFIELD_SUCCESS
+    );
+};
+
 const selectItem = (id) => ({
     type: SELECT_ITEM,
     payload: {
@@ -62,6 +76,15 @@ const expandItem = (id) => ({
     }
 });
 
+const updateItemField = (name, value) => ({
+    type: UPDATE_ITEM_FIELD,
+    payload: {
+        name,
+        value
+    }
+});
+
+
 
 //
 // to be used by components
@@ -71,3 +94,5 @@ export { addItem };
 export { deleteItem };
 export { selectItem };
 export { expandItem };
+export { updateItemField };
+export { saveItemField };

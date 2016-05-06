@@ -33,6 +33,12 @@
             ));
             break;
             
+        case "fetchItem":
+            echo json_encode($de->fetchItem(
+                $ARR["data"]["id"]
+            ));
+            break;
+            
         case "addItem":
             echo json_encode($de->addItem(
                 $ARR["data"]["id_parent"],
@@ -43,6 +49,14 @@
         case "deleteItem":
             echo json_encode($de->deleteItem(                
                 $ARR["data"]["id"]
+            ));
+            break;
+            
+        case "saveItemField":
+            echo json_encode($de->saveItemField(                
+                $ARR["data"]["id"],
+                $ARR["data"]["name"],
+                $ARR["data"]["value"]
             ));
             break;
             

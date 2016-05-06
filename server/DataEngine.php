@@ -11,6 +11,7 @@
         const QUERY_SELECT_ITEM             = "SELECT * FROM items WHERE id = ?";
         const QUERY_ADD_ITEM                = "INSERT INTO items (id_parent) VALUES (?)";
         const QUERY_DELETE_ITEM             = "DELETE FROM items WHERE id = ?";
+        const QUERY_UPDATE_NAME             = "UPDATE items SET name = ? WHERE id = ?";
         
         public $db;
         
@@ -55,8 +56,25 @@
             );
 		}
 		
+		public function saveItemField($id, $field, $value) {
+		    if( $field == "name" ) {
+                $affected_rows = $this->db->modify(self::QUERY_UPDATE_NAME, array(
+                    $value, $id
+                ));		
+    		    return array(
+    		        "status" => "ok",
+    		        "affected_rows" => intval($affected_rows)
+    		    );
+		    } else {
+    		    return array(
+    		        "status" => "ko",
+    		        "error" => "Field not valid."
+    		    );		        
+		    }
+		}
+		
 		public function fetchItems($id_parent, $offset, $howmany, $filter, $search, $orderby) {
-            $rs = $this->db->select(self::QUERY_SELECT_ITEMS_BY_PARENT, array(
+		    $rs = $this->db->select(self::QUERY_SELECT_ITEMS_BY_PARENT, array(
                 $id_parent
             ));
             $items = $rs->fetchAll(\PDO::FETCH_ASSOC);
@@ -73,6 +91,18 @@
                 "status" => "ok",
                 "items" => $items,
                 "parent" => $parent
+            );
+		}
+		
+		public function fetchItem($id) {
+            $rs = $this->db->select(self::QUERY_SELECT_ITEM, array(
+                $id
+            ));
+            $item = $rs->fetch(\PDO::FETCH_ASSOC);
+
+            return array(
+                "status" => "ok",
+                "item" => $item
             );
 		}
 		

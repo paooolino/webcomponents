@@ -2,12 +2,14 @@ import {
     FETCHITEMS_REQUEST, FETCHITEMS_FAILURE, FETCHITEMS_SUCCESS,
     ADDITEM_REQUEST, ADDITEM_FAILURE, ADDITEM_SUCCESS,
     DELETEITEM_REQUEST, DELETEITEM_FAILURE, DELETEITEM_SUCCESS,
-    SELECT_ITEM, EXPAND_ITEM
+    SAVEITEMFIELD_REQUEST, SAVEITEMFIELD_FAILURE, SAVEITEMFIELD_SUCCESS,
+    SELECT_ITEM, EXPAND_ITEM, UPDATE_ITEM_FIELD
 } from '../actions/itemsActions';
 
 const initialState = {
     isFetching: false,
     items: [],
+    //item: {},
     parent: {},
     errorMessage: '',
     selected_id: 0,
@@ -43,6 +45,7 @@ export default function items(state=initialState, action) {
                 invalidated: false
             };
             
+            
 
             
         case ADDITEM_REQUEST:
@@ -69,6 +72,32 @@ export default function items(state=initialState, action) {
             };
             
             
+        
+        
+        case SAVEITEMFIELD_REQUEST:
+            return {
+                ...state,
+                isFetching: true,
+                errorMessage: ''
+            };
+            
+        case SAVEITEMFIELD_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                errorMessage: action.payload.errorMessage
+            };
+            
+        case SAVEITEMFIELD_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                errorMessage: '',
+                invalidated: true
+            };
+            
+            
+            
             
         case SELECT_ITEM:
             return {
@@ -82,6 +111,19 @@ export default function items(state=initialState, action) {
                 selected_id_parent: action.payload.id,
                 invalidated: true
             };
+            
+        case UPDATE_ITEM_FIELD:
+            return {
+                ...state,
+                items: state.items.map((item) => {
+                    if(item.id == state.selected_id) {
+                        item[action.payload.name] = action.payload.value; 
+                    }
+                    return item;
+                })
+            };
+            
+            
             
             
         case DELETEITEM_REQUEST:
