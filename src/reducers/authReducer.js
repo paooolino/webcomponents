@@ -1,5 +1,5 @@
 import {
-    LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE
+    LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT
 } from '../actions/authActions';
 
 const initialState = {
@@ -31,6 +31,14 @@ export default function auth(state=initialState, action) {
                 isFetching: false,
                 isAuthenticated: false,
                 errorMessage: action.payload.errorMessage
+            };
+            
+        case LOGOUT:
+            return {
+                ...state,
+                isAuthenticated: false,
+                isFetching: false,
+                errorMessage: ''
             };
             
         default:
