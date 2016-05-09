@@ -25,23 +25,25 @@ export const SAVEITEMFIELD_REQUEST = 'SAVEITEMFIELD_REQUEST';
 export const SAVEITEMFIELD_FAILURE = 'SAVEITEMFIELD_FAILURE'; 
 export const SAVEITEMFIELD_SUCCESS = 'SAVEITEMFIELD_SUCCESS';
 
+export const SET_LANGUAGE = 'SET_LANGUAGE';
+
 
 
 //
 // action creators
 //
-const fetchItems = (id_parent, offset, howmany, filter, search, orderby) => {
+const fetchItems = (id_parent, lang, offset, howmany, filter, search, orderby) => {
     return createAsyncAction(
         "fetchItems",
-        { id_parent, offset, howmany, filter, search, orderby },
+        { id_parent, lang, offset, howmany, filter, search, orderby },
         FETCHITEMS_REQUEST, FETCHITEMS_FAILURE, FETCHITEMS_SUCCESS
     );
 };
 
-const addItem = (id_parent) => {
+const addItem = (id_parent, lang) => {
     return createAsyncAction(
         "addItem",
-        { id_parent },
+        { id_parent, lang },
         ADDITEM_REQUEST, ADDITEM_FAILURE, ADDITEM_SUCCESS
     );
 };
@@ -84,6 +86,13 @@ const updateItemField = (name, value) => ({
     }
 });
 
+const setLanguage = (lang) => ({
+    type: SET_LANGUAGE,
+    payload: {
+        lang
+    }
+});
+
 
 
 //
@@ -96,3 +105,4 @@ export { selectItem };
 export { expandItem };
 export { updateItemField };
 export { saveItemField };
+export { setLanguage };

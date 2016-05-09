@@ -7,12 +7,13 @@
     class DataEngine {
 
         const QUERY_SELECT_USERS            = "SELECT * FROM users WHERE username = ? AND password = ?";
-        const QUERY_SELECT_ITEMS_BY_PARENT  = "SELECT * FROM items WHERE id_parent = ?";
+        const QUERY_SELECT_ITEMS_BY_PARENT  = "SELECT * FROM items WHERE id_parent = ? AND lang = ?";
         const QUERY_SELECT_ITEM             = "SELECT * FROM items WHERE id = ?";
-        const QUERY_ADD_ITEM                = "INSERT INTO items (id_parent) VALUES (?)";
+        const QUERY_ADD_ITEM                = "INSERT INTO items (id_parent, lang) VALUES (?, ?)";
         const QUERY_DELETE_ITEM             = "DELETE FROM items WHERE id = ?";
         const QUERY_UPDATE_NAME             = "UPDATE items SET name = ? WHERE id = ?";
         const QUERY_UPDATE_SLUG             = "UPDATE items SET slug = ? WHERE id = ?";
+        const QUERY_SELECT_OPTIONS          = "SELECT * FROM options";
         
         public $db;
         
@@ -53,7 +54,8 @@
 
             return array(
                 "status" => "ok",
-                "authcode" => JWT::encode($token, \CMS\AUTH_JWT_KEY)
+                "authcode" => JWT::encode($token, \CMS\AUTH_JWT_KEY),
+                "options" => $this->getOptions()
             );
 		}
 		
@@ -83,9 +85,9 @@
 		   
 		}
 		
-		public function fetchItems($id_parent, $offset, $howmany, $filter, $search, $orderby) {
+		public function fetchItems($id_parent, $lang, $offset, $howmany, $filter, $search, $orderby) {
 		    $rs = $this->db->select(self::QUERY_SELECT_ITEMS_BY_PARENT, array(
-                $id_parent
+                $id_parent, $lang
             ));
             $items = $rs->fetchAll(\PDO::FETCH_ASSOC);
             
@@ -116,13 +118,15 @@
             );
 		}
 		
-		public function addItem($id_parent) {
-		    $last_id = $this->db->insert(self::QUERY_ADD_ITEM, array($id_parent));
-
-		    return array(
-		        "status" => "ok",
-		        "last_id" => intval($last_id)
-		    );
+		public function addItem($id_parent, $lang) {
+            $last_id = $this->db->insert(self::QUERY_ADD_ITEM, array(
+                $id_parent, $lang
+            ));
+            
+            return array(
+                "status" => "ok",
+                "last_id" => intval($last_id)
+            );
 		}
 		
 		public function deleteItem($id) {
@@ -132,6 +136,15 @@
 		        "status" => "ok",
 		        "affected_rows" => intval($affected_rows)
 		    );		    
+		}
+		
+		private function getOptions() {
+            $options = array();
+            $rs = $this->db->select(self::QUERY_SELECT_OPTIONS, array());
+            while($row = $rs->fetch(\PDO::FETCH_ASSOC)) {
+                $options[$row["option_name"]] = json_decode($row["option_value"]);
+            }
+            return $options;
 		}
     }
     

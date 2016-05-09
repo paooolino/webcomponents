@@ -3,13 +3,14 @@ import {
     ADDITEM_REQUEST, ADDITEM_FAILURE, ADDITEM_SUCCESS,
     DELETEITEM_REQUEST, DELETEITEM_FAILURE, DELETEITEM_SUCCESS,
     SAVEITEMFIELD_REQUEST, SAVEITEMFIELD_FAILURE, SAVEITEMFIELD_SUCCESS,
-    SELECT_ITEM, EXPAND_ITEM, UPDATE_ITEM_FIELD
+    SELECT_ITEM, EXPAND_ITEM, UPDATE_ITEM_FIELD,
+    SET_LANGUAGE
 } from '../actions/itemsActions';
 
 const initialState = {
     isFetching: false,
     items: [],
-    //item: {},
+    lang: '',
     parent: {},
     errorMessage: '',
     selected_id: 0,
@@ -148,7 +149,19 @@ export default function items(state=initialState, action) {
                 errorMessage: '',
                 invalidated: true
             };
+           
+           
+           
+        case SET_LANGUAGE:
+            return {
+                ...state,
+                lang: action.payload.lang,
+                errorMessage: '',
+                invalidated: true
+            };
             
+        
+        
         default:
             return state;
     }    

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import DataTable from './DataTable';
 import ItemCard from './ItemCard';
-import { fetchItems, addItem, selectItem, deleteItem, expandItem, updateItemField, saveItemField } from '../actions/itemsActions';
+import { fetchItems, addItem, selectItem, deleteItem, expandItem, 
+updateItemField, saveItemField, setLanguage } from '../actions/itemsActions';
 
 class AppBodyContainer extends Component {
     constructor(props) {
@@ -23,11 +24,14 @@ class AppBodyContainer extends Component {
                     last_added_id={this.props.last_added_id}
                     last_deleted_id={this.props.last_deleted_id}
                     selected_id={this.props.selected_id}
+                    available_languages={this.props.available_languages}
+                    lang={this.props.lang}
                     addItemHandler={this.addItemHandler}
                     deleteItemHandler={this.deleteItemHandler}
                     selectItemHandler={this.selectItemHandler}
                     contextMenuHandler={this.contextMenuHandler}
                     expandItemHandler={this.expandItemHandler}
+                    setLanguageHandler={this.setLanguageHandler}
                 />
                 { selected_item &&
                 <ItemCard 
@@ -41,7 +45,18 @@ class AppBodyContainer extends Component {
     }
     
     componentDidMount() {
-        this.props.dispatch(fetchItems(this.props.selected_id_parent));
+        if( this.props.lang == '' ) {
+            console.log("DIDMOUNT: SETTING LANGUAGE", this.props.main_language);
+            this.props.dispatch(setLanguage(
+                this.props.main_language
+            ));
+        } else {
+            console.log("FETCHING IN DIDMOUNT", this.props.lang);
+            this.props.dispatch(fetchItems(
+                this.props.selected_id_parent,
+                this.props.lang
+            ));
+        }
     }
     
     componentWillReceiveProps(nextProps) {
@@ -52,13 +67,16 @@ class AppBodyContainer extends Component {
         //  risposta al cambiamento di stato determinato da fetchItems
         // così invece se sta già facendo il fetch evito di rilanciarlo
         if( nextProps.invalidated && !nextProps.isFetching ) {
-            this.props.dispatch(fetchItems(nextProps.selected_id_parent));   
+            console.log("FETCHING WILLRECEIVEPROPS", nextProps.lang);
+            this.props.dispatch(fetchItems(
+                nextProps.selected_id_parent,
+                nextProps.lang
+            ));   
         }
     }
     
     addItemHandler = () => {
-        const id_parent = this.props.selected_id;
-        this.props.dispatch(addItem(id_parent));
+        this.props.dispatch(addItem(this.props.selected_id, this.props.lang));
     }
     
     deleteItemHandler = (id) => {
@@ -76,6 +94,10 @@ class AppBodyContainer extends Component {
     changeHandler = (event) => {
         this.props.dispatch(updateItemField(event.target.name, event.target.value));
     }
+    
+    setLanguageHandler = (event) => {
+        this.props.dispatch(setLanguage(event.target.value));
+    }
 
     blurHandler = (event) => {
         this.props.dispatch(saveItemField(this.props.selected_id, event.target.name, event.target.value));
@@ -84,10 +106,10 @@ class AppBodyContainer extends Component {
     contextMenuHandler = (id, id_parent, menuaction) => {
         switch(menuaction) {
             case "addChild":
-                this.props.dispatch(addItem(id));
+                this.props.dispatch(addItem(id, this.props.lang));
                 break;
             case "addSibling":
-                this.props.dispatch(addItem(id_parent));
+                this.props.dispatch(addItem(id_parent, this.props.lang));
                 break;
             case "deleteItem":
                 this.props.dispatch(deleteItem(id));
@@ -100,13 +122,16 @@ const mapStateToProps = function(store) {
     return {
         isFetching: store.items.isFetching,
         items: store.items.items,
+        lang: store.items.lang,
+        main_language: store.auth.options.languages.main_language,
         parent: store.items.parent,
         errorMessage: store.items.errorMessage,
         selected_id: store.items.selected_id,
         last_added_id: store.items.last_added_id,
         last_deleted_id: store.items.last_deleted_id,
         invalidated: store.items.invalidated,
-        selected_id_parent: store.items.selected_id_parent
+        selected_id_parent: store.items.selected_id_parent,
+        available_languages: store.auth.options.languages.languages
     };
 };
 

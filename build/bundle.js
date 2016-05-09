@@ -103,11 +103,9 @@
 	var load = storage.createLoader(engine);
 	load(store);
 
-	/*
-	store.subscribe(() =>
-	  console.log(store.getState())
-	);
-	*/
+	store.subscribe(function () {
+	  return console.log(store.getState());
+	});
 
 	// Provider: Makes the Redux store available to the connect() calls
 	// in the component hierarchy below.
@@ -22441,8 +22439,7 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AppBodyContainer).call(this, props));
 
 	        _this.addItemHandler = function () {
-	            var id_parent = _this.props.selected_id;
-	            _this.props.dispatch((0, _itemsActions.addItem)(id_parent));
+	            _this.props.dispatch((0, _itemsActions.addItem)(_this.props.selected_id, _this.props.lang));
 	        };
 
 	        _this.deleteItemHandler = function (id) {
@@ -22461,6 +22458,10 @@
 	            _this.props.dispatch((0, _itemsActions.updateItemField)(event.target.name, event.target.value));
 	        };
 
+	        _this.setLanguageHandler = function (event) {
+	            _this.props.dispatch((0, _itemsActions.setLanguage)(event.target.value));
+	        };
+
 	        _this.blurHandler = function (event) {
 	            _this.props.dispatch((0, _itemsActions.saveItemField)(_this.props.selected_id, event.target.name, event.target.value));
 	        };
@@ -22468,10 +22469,10 @@
 	        _this.contextMenuHandler = function (id, id_parent, menuaction) {
 	            switch (menuaction) {
 	                case "addChild":
-	                    _this.props.dispatch((0, _itemsActions.addItem)(id));
+	                    _this.props.dispatch((0, _itemsActions.addItem)(id, _this.props.lang));
 	                    break;
 	                case "addSibling":
-	                    _this.props.dispatch((0, _itemsActions.addItem)(id_parent));
+	                    _this.props.dispatch((0, _itemsActions.addItem)(id_parent, _this.props.lang));
 	                    break;
 	                case "deleteItem":
 	                    _this.props.dispatch((0, _itemsActions.deleteItem)(id));
@@ -22501,11 +22502,14 @@
 	                    last_added_id: this.props.last_added_id,
 	                    last_deleted_id: this.props.last_deleted_id,
 	                    selected_id: this.props.selected_id,
+	                    available_languages: this.props.available_languages,
+	                    lang: this.props.lang,
 	                    addItemHandler: this.addItemHandler,
 	                    deleteItemHandler: this.deleteItemHandler,
 	                    selectItemHandler: this.selectItemHandler,
 	                    contextMenuHandler: this.contextMenuHandler,
-	                    expandItemHandler: this.expandItemHandler
+	                    expandItemHandler: this.expandItemHandler,
+	                    setLanguageHandler: this.setLanguageHandler
 	                }),
 	                selected_item && _react2.default.createElement(_ItemCard2.default, {
 	                    item: selected_item,
@@ -22517,7 +22521,13 @@
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this.props.dispatch((0, _itemsActions.fetchItems)(this.props.selected_id_parent));
+	            if (this.props.lang == '') {
+	                console.log("DIDMOUNT: SETTING LANGUAGE", this.props.main_language);
+	                this.props.dispatch((0, _itemsActions.setLanguage)(this.props.main_language));
+	            } else {
+	                console.log("FETCHING IN DIDMOUNT", this.props.lang);
+	                this.props.dispatch((0, _itemsActions.fetchItems)(this.props.selected_id_parent, this.props.lang));
+	            }
 	        }
 	    }, {
 	        key: 'componentWillReceiveProps',
@@ -22529,7 +22539,8 @@
 	            //  risposta al cambiamento di stato determinato da fetchItems
 	            // così invece se sta già facendo il fetch evito di rilanciarlo
 	            if (nextProps.invalidated && !nextProps.isFetching) {
-	                this.props.dispatch((0, _itemsActions.fetchItems)(nextProps.selected_id_parent));
+	                console.log("FETCHING WILLRECEIVEPROPS", nextProps.lang);
+	                this.props.dispatch((0, _itemsActions.fetchItems)(nextProps.selected_id_parent, nextProps.lang));
 	            }
 	        }
 	    }]);
@@ -22541,13 +22552,16 @@
 	    return {
 	        isFetching: store.items.isFetching,
 	        items: store.items.items,
+	        lang: store.items.lang,
+	        main_language: store.auth.options.languages.main_language,
 	        parent: store.items.parent,
 	        errorMessage: store.items.errorMessage,
 	        selected_id: store.items.selected_id,
 	        last_added_id: store.items.last_added_id,
 	        last_deleted_id: store.items.last_deleted_id,
 	        invalidated: store.items.invalidated,
-	        selected_id_parent: store.items.selected_id_parent
+	        selected_id_parent: store.items.selected_id_parent,
+	        available_languages: store.auth.options.languages.languages
 	    };
 	};
 
@@ -22661,9 +22675,28 @@
 	    var selectItemHandler = _ref2.selectItemHandler;
 	    var contextMenuHandler = _ref2.contextMenuHandler;
 	    var expandItemHandler = _ref2.expandItemHandler;
+	    var available_languages = _ref2.available_languages;
+	    var setLanguageHandler = _ref2.setLanguageHandler;
+	    var lang = _ref2.lang;
 	    return _react2.default.createElement(
 	        'div',
 	        { className: 'datatable inner' },
+	        _react2.default.createElement(
+	            'div',
+	            null,
+	            'select language',
+	            _react2.default.createElement(
+	                'select',
+	                { value: lang, onChange: setLanguageHandler },
+	                available_languages.map(function (langitem) {
+	                    return _react2.default.createElement(
+	                        'option',
+	                        { key: langitem.lang },
+	                        langitem.lang
+	                    );
+	                })
+	            )
+	        ),
 	        parent && _react2.default.createElement(
 	            'div',
 	            { onDoubleClick: function onDoubleClick() {
@@ -22734,7 +22767,9 @@
 	    addItemHandler: _react.PropTypes.func.isRequired,
 	    selectItemHandler: _react.PropTypes.func.isRequired,
 	    contextMenuHandler: _react.PropTypes.func.isRequired,
-	    expandItemHandler: _react.PropTypes.func.isRequired
+	    expandItemHandler: _react.PropTypes.func.isRequired,
+	    setLanguageHandler: _react.PropTypes.func.isRequired,
+	    available_languages: _react.PropTypes.array.isRequired
 	};
 
 	exports.default = DataTable;
@@ -25518,7 +25553,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.saveItemField = exports.updateItemField = exports.expandItem = exports.selectItem = exports.deleteItem = exports.addItem = exports.fetchItems = exports.SAVEITEMFIELD_SUCCESS = exports.SAVEITEMFIELD_FAILURE = exports.SAVEITEMFIELD_REQUEST = exports.UPDATE_ITEM_FIELD = exports.EXPAND_ITEM = exports.SELECT_ITEM = exports.DELETEITEM_SUCCESS = exports.DELETEITEM_FAILURE = exports.DELETEITEM_REQUEST = exports.ADDITEM_SUCCESS = exports.ADDITEM_FAILURE = exports.ADDITEM_REQUEST = exports.FETCHITEMS_SUCCESS = exports.FETCHITEMS_FAILURE = exports.FETCHITEMS_REQUEST = undefined;
+	exports.setLanguage = exports.saveItemField = exports.updateItemField = exports.expandItem = exports.selectItem = exports.deleteItem = exports.addItem = exports.fetchItems = exports.SET_LANGUAGE = exports.SAVEITEMFIELD_SUCCESS = exports.SAVEITEMFIELD_FAILURE = exports.SAVEITEMFIELD_REQUEST = exports.UPDATE_ITEM_FIELD = exports.EXPAND_ITEM = exports.SELECT_ITEM = exports.DELETEITEM_SUCCESS = exports.DELETEITEM_FAILURE = exports.DELETEITEM_REQUEST = exports.ADDITEM_SUCCESS = exports.ADDITEM_FAILURE = exports.ADDITEM_REQUEST = exports.FETCHITEMS_SUCCESS = exports.FETCHITEMS_FAILURE = exports.FETCHITEMS_REQUEST = undefined;
 
 	var _utils = __webpack_require__(186);
 
@@ -25545,15 +25580,17 @@
 	var SAVEITEMFIELD_FAILURE = exports.SAVEITEMFIELD_FAILURE = 'SAVEITEMFIELD_FAILURE';
 	var SAVEITEMFIELD_SUCCESS = exports.SAVEITEMFIELD_SUCCESS = 'SAVEITEMFIELD_SUCCESS';
 
+	var SET_LANGUAGE = exports.SET_LANGUAGE = 'SET_LANGUAGE';
+
 	//
 	// action creators
 	//
-	var fetchItems = function fetchItems(id_parent, offset, howmany, filter, search, orderby) {
-	    return (0, _utils.createAsyncAction)("fetchItems", { id_parent: id_parent, offset: offset, howmany: howmany, filter: filter, search: search, orderby: orderby }, FETCHITEMS_REQUEST, FETCHITEMS_FAILURE, FETCHITEMS_SUCCESS);
+	var fetchItems = function fetchItems(id_parent, lang, offset, howmany, filter, search, orderby) {
+	    return (0, _utils.createAsyncAction)("fetchItems", { id_parent: id_parent, lang: lang, offset: offset, howmany: howmany, filter: filter, search: search, orderby: orderby }, FETCHITEMS_REQUEST, FETCHITEMS_FAILURE, FETCHITEMS_SUCCESS);
 	};
 
-	var addItem = function addItem(id_parent) {
-	    return (0, _utils.createAsyncAction)("addItem", { id_parent: id_parent }, ADDITEM_REQUEST, ADDITEM_FAILURE, ADDITEM_SUCCESS);
+	var addItem = function addItem(id_parent, lang) {
+	    return (0, _utils.createAsyncAction)("addItem", { id_parent: id_parent, lang: lang }, ADDITEM_REQUEST, ADDITEM_FAILURE, ADDITEM_SUCCESS);
 	};
 
 	var deleteItem = function deleteItem(id) {
@@ -25592,6 +25629,15 @@
 	    };
 	};
 
+	var setLanguage = function setLanguage(lang) {
+	    return {
+	        type: SET_LANGUAGE,
+	        payload: {
+	            lang: lang
+	        }
+	    };
+	};
+
 	//
 	// to be used by components
 	//
@@ -25603,6 +25649,7 @@
 	exports.expandItem = expandItem;
 	exports.updateItemField = updateItemField;
 	exports.saveItemField = saveItemField;
+	exports.setLanguage = setLanguage;
 
 /***/ },
 /* 249 */
@@ -29281,7 +29328,8 @@
 	var initialState = {
 	    isFetching: false,
 	    isAuthenticated: false,
-	    errorMessage: ''
+	    errorMessage: '',
+	    options: {}
 	};
 
 	function auth() {
@@ -29299,7 +29347,8 @@
 	            return _extends({}, state, {
 	                isFetching: false,
 	                isAuthenticated: true,
-	                errorMessage: ''
+	                errorMessage: '',
+	                options: action.payload.options
 	            });
 
 	        case _authActions.LOGIN_FAILURE:
@@ -29340,7 +29389,7 @@
 	var initialState = {
 	    isFetching: false,
 	    items: [],
-	    //item: {},
+	    lang: '',
 	    parent: {},
 	    errorMessage: '',
 	    selected_id: 0,
@@ -29452,6 +29501,13 @@
 	            return _extends({}, state, {
 	                isFetching: false,
 	                last_deleted_id: action.payload.last_deleted_id,
+	                errorMessage: '',
+	                invalidated: true
+	            });
+
+	        case _itemsActions.SET_LANGUAGE:
+	            return _extends({}, state, {
+	                lang: action.payload.lang,
 	                errorMessage: '',
 	                invalidated: true
 	            });

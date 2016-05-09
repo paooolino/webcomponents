@@ -34,11 +34,11 @@ let rootElement = document.getElementById('root');
 const load = storage.createLoader(engine);
 load(store);
 
-/*
+
 store.subscribe(() =>
   console.log(store.getState())
 );
-*/
+
 
 // Provider: Makes the Redux store available to the connect() calls 
 // in the component hierarchy below. 

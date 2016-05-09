@@ -46,9 +46,20 @@ class DataTableItemContextMenu extends Component {
 const DataTable = ({
     items, parent, isFetching, errorMessage, last_added_id, last_deleted_id, 
     selected_id, addItemHandler, deleteItemHandler, selectItemHandler,
-    contextMenuHandler, expandItemHandler
+    contextMenuHandler, expandItemHandler, available_languages,
+    setLanguageHandler, lang
 }) => (
     <div className="datatable inner">
+        <div>
+            select language 
+            <select value={lang} onChange={setLanguageHandler}>
+                {available_languages.map((langitem) => {
+                    return (
+                        <option key={langitem.lang}>{langitem.lang}</option>
+                    );
+                })}
+            </select>
+        </div>
         {parent &&
             <div onDoubleClick={()=>expandItemHandler(parent.id_parent)} className="datatable_element">{parent.id} {parent.name}</div>
         }
@@ -98,7 +109,9 @@ DataTable.propTypes = {
     addItemHandler: PropTypes.func.isRequired,
     selectItemHandler: PropTypes.func.isRequired,
     contextMenuHandler: PropTypes.func.isRequired,
-    expandItemHandler: PropTypes.func.isRequired
+    expandItemHandler: PropTypes.func.isRequired,
+    setLanguageHandler: PropTypes.func.isRequired,
+    available_languages: PropTypes.array.isRequired
 };
 
 export default DataTable;

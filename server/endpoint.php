@@ -25,6 +25,7 @@
         case "fetchItems":
             echo json_encode($de->fetchItems(
                 $ARR["data"]["id_parent"],
+                $ARR["data"]["lang"],
                 $ARR["data"]["offset"],
                 $ARR["data"]["howmany"],
                 $ARR["data"]["filter"],
@@ -42,7 +43,7 @@
         case "addItem":
             echo json_encode($de->addItem(
                 $ARR["data"]["id_parent"],
-                $ARR["data"]["itemdata"]
+                $ARR["data"]["lang"]
             ));
             break;
             
