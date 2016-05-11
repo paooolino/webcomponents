@@ -19,6 +19,8 @@ const ItemCard = ({
                         onBlur={blurHandler}
                     />
                 </div>
+            </div>
+            <div className="formRow">
                 <div className="formLabel">Slug</div>
                 <div className="formField">
                     <input type="text" name="slug" value={item.slug} 
@@ -27,6 +29,19 @@ const ItemCard = ({
                     />
                 </div>
             </div>
+            {item.fields.map((field) => {
+                return(
+                    <div key={field.idfd} className="formRow">
+                        <div className="formLabel">{field.field_name}</div>
+                        <div className="formField">
+                            <input type="text" name={field.field_name} value={field.field_value} 
+                                onChange={changeHandler} 
+                                onBlur={blurHandler}
+                            />
+                        </div>                        
+                    </div>
+                );
+            })}
         </div>
     );
 };

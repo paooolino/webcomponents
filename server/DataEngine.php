@@ -14,6 +14,19 @@
         const QUERY_UPDATE_NAME             = "UPDATE items SET name = ? WHERE id = ?";
         const QUERY_UPDATE_SLUG             = "UPDATE items SET slug = ? WHERE id = ?";
         const QUERY_SELECT_OPTIONS          = "SELECT * FROM options";
+        const QUERY_GET_FIELDS              = "SELECT * FROM field_definitions 
+                                                LEFT JOIN field_values ON id_definition = idfd
+                                                WHERE id_item = ? AND (inheritance = ? OR inheritance = -1)
+                                                AND (id_finalitem = ? or id_finalitem IS NULL)";
+        const QUERY_GET_PARENT              = "SELECT B.* FROM items AS A
+                                                LEFT JOIN items as B ON A.id_parent = B.id
+                                                WHERE A.id = ?";
+        const QUERY_GET_FIELD               = "SELECT * FROM field_definitions
+                                                LEFT JOIN field_values ON id_definition = idfd
+                                                WHERE idfd = ? AND id_finalitem = ?";
+        const QUERY_INSERT_FIELD            = "INSERT INTO field_values 
+                                                (id_definition, id_finalitem, field_value) VALUES (?, ?, ?)";
+        const QUERY_UPDATE_FIELD            = "UPDATE field_values SET field_value = ? WHERE idfv = ?";
         
         public $db;
         
@@ -59,7 +72,7 @@
             );
 		}
 		
-		public function saveItemField($id, $field, $value) {
+		public function saveItemField($id, $field_name, $field_value) {
             $query = "";
             switch( $field ) {
                 case "name":
@@ -69,10 +82,43 @@
                     $query = self::QUERY_UPDATE_SLUG;
                     break;
                 default:
+                    if($definition = $this->getFieldDefinition($id, $field_name)) {
+                        if($field = $this->getField($definition["idfd"], $id)) {
+                            // insert new field value    
+                            $affected_rows = $this->db->modify(
+                                self::QUERY_INSERT_FIELD,
+                                array(
+                                    $definition["idfd"], $id, $field_value
+                                )
+                            );
+                            if( $affected_rows == 1 ) {
+                    		    return array(
+                    		        "status" => "ok",
+                    		        "affected_rows" => intval($affected_rows)
+                    		    ); 
+                            }
+                        } else {
+                            // update existent field value
+                            $affected_rows = $this->db->modify(
+                                self::QUERY_UPDATE_FIELD,
+                                array(
+                                    $field_value, $definition["idfv"]
+                                )
+                            );
+                            if( $affected_rows == 1 ) {
+                    		    return array(
+                    		        "status" => "ok",
+                    		        "affected_rows" => intval($affected_rows)
+                    		    ); 
+                            }
+                        }
+                    }
+                    
+                    // not found any field matching this name.
         		    return array(
         		        "status" => "ko",
         		        "error" => "Field not valid."
-        		    );                    
+        		    );      
             }
             
             $affected_rows = $this->db->modify($query, array(
@@ -91,6 +137,12 @@
             ));
             $items = $rs->fetchAll(\PDO::FETCH_ASSOC);
             
+            // get the complete fields
+            for($i = 0; $i < count($items); $i++) {
+                $items[$i]["fields"] = $this->getFields($items[$i]["id"]);
+            }
+            
+            // get the parent item
             $parent = array();
             $rs = $this->db->select(self::QUERY_SELECT_ITEM, array(
                 $id_parent
@@ -138,6 +190,24 @@
 		    );		    
 		}
 		
+		private function getField($idfd, $id_finalitem) {
+		    print_r($idfd . " " . $id_finalitem);die();
+		    $rs = $this->db->select(self::QUERY_GET_FIELD, array(
+                $idfd, $id_finalitem     
+            ));
+            return $rs->fetch(\PDO::FETCH_ASSOC);
+		}
+		
+		private function getFieldDefinition($id, $field_name) {
+            $fields = $this->getFields($id);
+            
+            foreach($fields as $field) {
+                if( $field["field_name"] == $field_name ) {
+                    return $field;
+                }
+            }
+		}
+		
 		private function getOptions() {
             $options = array();
             $rs = $this->db->select(self::QUERY_SELECT_OPTIONS, array());
@@ -145,6 +215,55 @@
                 $options[$row["option_name"]] = json_decode($row["option_value"]);
             }
             return $options;
+		}
+		
+        private function getParent($id) {
+            $rs = $this->db->select(self::QUERY_GET_PARENT, array(
+                $id
+            ));
+            $parent = $rs->fetch(\PDO::FETCH_ASSOC);
+            
+            return $parent["id"] ? $parent : null;
+        }
+		
+        private function getParents($id) {
+            $parents = array();
+            
+            $current_id = $id;
+            while($parent = $this->getParent($current_id)) {
+                $current_id = $parent["id"];
+                array_push($parents, $parent);
+            }
+            
+            return $parents;
+        }
+		
+		private function getFields($id) {
+            $ids = array($id);
+            
+            // look for parents
+            $parents = $this->getParents($id);
+            foreach($parents as $parent) {
+                array_push($ids, $parent["id"]);
+            }
+            
+            // for each id, look for fields.
+            $fields = array();
+            $inheritance_level = 0;
+            foreach($ids as $id) {
+                $rs = $this->db->select(self::QUERY_GET_FIELDS, array(
+                    $id,
+                    $inheritance_level,
+                    $id
+                ));
+                while($row = $rs->fetch(\PDO::FETCH_ASSOC)) {
+                    array_push($fields, $row);
+                }
+                
+                $inheritance_level++;
+            }
+            
+            return $fields;
 		}
     }
     

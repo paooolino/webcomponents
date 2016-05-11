@@ -46,12 +46,10 @@ class AppBodyContainer extends Component {
     
     componentDidMount() {
         if( this.props.lang == '' ) {
-            console.log("DIDMOUNT: SETTING LANGUAGE", this.props.main_language);
             this.props.dispatch(setLanguage(
                 this.props.main_language
             ));
         } else {
-            console.log("FETCHING IN DIDMOUNT", this.props.lang);
             this.props.dispatch(fetchItems(
                 this.props.selected_id_parent,
                 this.props.lang
@@ -67,7 +65,6 @@ class AppBodyContainer extends Component {
         //  risposta al cambiamento di stato determinato da fetchItems
         // così invece se sta già facendo il fetch evito di rilanciarlo
         if( nextProps.invalidated && !nextProps.isFetching ) {
-            console.log("FETCHING WILLRECEIVEPROPS", nextProps.lang);
             this.props.dispatch(fetchItems(
                 nextProps.selected_id_parent,
                 nextProps.lang

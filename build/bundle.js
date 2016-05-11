@@ -22522,10 +22522,8 @@
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            if (this.props.lang == '') {
-	                console.log("DIDMOUNT: SETTING LANGUAGE", this.props.main_language);
 	                this.props.dispatch((0, _itemsActions.setLanguage)(this.props.main_language));
 	            } else {
-	                console.log("FETCHING IN DIDMOUNT", this.props.lang);
 	                this.props.dispatch((0, _itemsActions.fetchItems)(this.props.selected_id_parent, this.props.lang));
 	            }
 	        }
@@ -22539,7 +22537,6 @@
 	            //  risposta al cambiamento di stato determinato da fetchItems
 	            // così invece se sta già facendo il fetch evito di rilanciarlo
 	            if (nextProps.invalidated && !nextProps.isFetching) {
-	                console.log("FETCHING WILLRECEIVEPROPS", nextProps.lang);
 	                this.props.dispatch((0, _itemsActions.fetchItems)(nextProps.selected_id_parent, nextProps.lang));
 	            }
 	        }
@@ -25478,7 +25475,11 @@
 	                    onChange: changeHandler,
 	                    onBlur: blurHandler
 	                })
-	            ),
+	            )
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'formRow' },
 	            _react2.default.createElement(
 	                'div',
 	                { className: 'formLabel' },
@@ -25492,7 +25493,26 @@
 	                    onBlur: blurHandler
 	                })
 	            )
-	        )
+	        ),
+	        item.fields.map(function (field) {
+	            return _react2.default.createElement(
+	                'div',
+	                { key: field.idfd, className: 'formRow' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'formLabel' },
+	                    field.field_name
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'formField' },
+	                    _react2.default.createElement('input', { type: 'text', name: field.field_name, value: field.field_value,
+	                        onChange: changeHandler,
+	                        onBlur: blurHandler
+	                    })
+	                )
+	            );
+	        })
 	    );
 	};
 
