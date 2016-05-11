@@ -1,0 +1,1 @@
+export const API_ENDPOINT = 'http://127.0.0.1/webcomponents/server/endpoint.php';

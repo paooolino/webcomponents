@@ -1,6 +1,5 @@
+import { API_ENDPOINT } from '../../config';
 import fetch from 'isomorphic-fetch';
-
-const API_ENDPOINT = "http://webcomponents-paooolino1.c9users.io/web/server/endpoint.php";
 
 // assuming that:
 //  - server expects raw POST data in which there is an "action" name and a "data" object.
