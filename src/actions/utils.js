@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from '../../config';
+import { API_ENDPOINT } from '../config';
 import fetch from 'isomorphic-fetch';
 
 // assuming that:
