@@ -74,7 +74,7 @@
 		
 		public function saveItemField($id, $field_name, $field_value) {
             $query = "";
-            switch( $field ) {
+            switch( $field_name ) {
                 case "name":
                     $query = self::QUERY_UPDATE_NAME;
                     break;
@@ -122,7 +122,7 @@
             }
             
             $affected_rows = $this->db->modify($query, array(
-                $value, $id
+                $field_value, $id
             ));		
 		    return array(
 		        "status" => "ok",
@@ -131,7 +131,7 @@
 		   
 		}
 		
-		public function fetchItems($id_parent, $lang, $offset, $howmany, $filter, $search, $orderby) {
+		public function fetchItems($id_parent, $lang, $offset=null, $howmany=null, $filter=null, $search=null, $orderby=null) {
 		    $rs = $this->db->select(self::QUERY_SELECT_ITEMS_BY_PARENT, array(
                 $id_parent, $lang
             ));

@@ -56,6 +56,20 @@ CREATE TABLE IF NOT EXISTS `items` (
 
 -- Dump dei dati della tabella c9.items: ~0 rows (circa)
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
+REPLACE INTO `items` (`id`, `lang`, `id_parent`, `name`, `slug`, `ts`) VALUES
+	(1, 'en', 0, 'Homepage', '', '2016-05-12 12:38:45'),
+	(2, 'en', 0, 'About', '', '2016-05-12 12:38:45'),
+	(3, 'en', 0, 'Products', '', '2016-05-12 12:38:45'),
+	(4, 'en', 0, 'Contacts', '', '2016-05-12 12:38:45'),
+	(5, 'en', 3, 'Music', '', '2016-05-12 12:40:20'),
+	(6, 'en', 3, 'Books', '', '2016-05-12 12:40:26'),
+	(7, 'en', 5, 'Bob Marley', '', '2016-05-12 12:40:35'),
+	(8, 'en', 5, 'Michael Bublé', '', '2016-05-12 12:40:51'),
+	(9, 'en', 5, 'Madonna', '', '2016-05-12 12:41:11'),
+	(10, 'it', 0, 'Home page', '', '2016-05-12 12:41:19'),
+	(11, 'it', 0, 'Informazioni', '', '2016-05-12 12:41:29'),
+	(12, 'it', 0, 'Prodotti', '', '2016-05-12 12:41:37'),
+	(13, 'it', 0, 'Contatti', '', '2016-05-12 12:41:42');
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 
 
@@ -71,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `options` (
 -- Dump dei dati della tabella c9.options: ~1 rows (circa)
 /*!40000 ALTER TABLE `options` DISABLE KEYS */;
 REPLACE INTO `options` (`ido`, `option_name`, `option_value`) VALUES
-	(1, 'languages', '{\r\n"main_language": "it",\r\n"languages": [\r\n   {\r\n      "lang": "it"\r\n   },\r\n   {\r\n      "lang": "en"\r\n   }\r\n]\r\n}');
+	(1, 'languages', '{\r\n"main_language": "en",\r\n"languages": [\r\n   {\r\n      "lang": "it"\r\n   },\r\n   {\r\n      "lang": "en"\r\n   }\r\n]\r\n}');
 /*!40000 ALTER TABLE `options` ENABLE KEYS */;
 
 

@@ -22,7 +22,10 @@
 		// The tests are public methods that are named test*
 		public function testDummy() {
 			// inside the test methods, assertion methods such as assertEquals()
-			$this->assertEquals("c9", \CMS\DB_NAME);
+			$this->assertEquals("1", 1);
+		}
+		
+		public function testItems() {
 		}
 		
 		public static function tearDownAfterClass() {
