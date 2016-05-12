@@ -57,5 +57,9 @@
 			}
 		}
 		
+		public function exec($sql) {
+			$result = $this->handler->exec($sql);
+		}
+		
     }
     
