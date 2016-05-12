@@ -4,9 +4,9 @@
     require_once('vendor/autoload.php');
     use \Firebase\JWT\JWT;
 
-	/**
-	 * A class for managing database data.
-	 */
+    /**
+     * A class for managing database data.
+     */
     class DataEngine {
 
         const QUERY_SELECT_USERS            = "SELECT * FROM users WHERE username = ? AND password = ?";
@@ -33,23 +33,23 @@
         
         public $db;
         
-		function __construct($db) {
-			$this->db = $db;
-		}
-		
-		public function auth($username, $password) {
-		    $rs = $this->db->select(self::QUERY_SELECT_USERS, array(
-		        $username, md5(md5($password))
-		    ));
-		    $row = $rs->fetch(\PDO::FETCH_ASSOC);
+        function __construct($db) {
+            $this->db = $db;
+        }
 
-		    if( !$row )
-		        return array(
-		            "status" => "ko",
-		            "error" => "Invalid username or password."
-		        );
-		        
-		    $issuedAt = time();
+        public function auth($username, $password) {
+            $rs = $this->db->select(self::QUERY_SELECT_USERS, array(
+                $username, md5(md5($password))
+            ));
+            $row = $rs->fetch(\PDO::FETCH_ASSOC);
+
+            if( !$row )
+                return array(
+                    "status" => "ko",
+                    "error" => "Invalid username or password."
+                );
+                
+            $issuedAt = time();
             $token = array(
                 // tokee id
                 "jti" => base64_encode(mcrypt_create_iv(32)),
@@ -73,9 +73,9 @@
                 "authcode" => JWT::encode($token, \CMS\AUTH_JWT_KEY),
                 "options" => $this->getOptions()
             );
-		}
-		
-		public function saveItemField($id, $field_name, $field_value) {
+        }
+
+        public function saveItemField($id, $field_name, $field_value) {
             $query = "";
             switch( $field_name ) {
                 case "name":
@@ -95,10 +95,10 @@
                                 )
                             );
                             if( $affected_rows == 1 ) {
-                    		    return array(
-                    		        "status" => "ok",
-                    		        "affected_rows" => intval($affected_rows)
-                    		    ); 
+                                return array(
+                                    "status" => "ok",
+                                    "affected_rows" => intval($affected_rows)
+                                ); 
                             }
                         } else {
                             // update existent field value
@@ -109,33 +109,33 @@
                                 )
                             );
                             if( $affected_rows == 1 ) {
-                    		    return array(
-                    		        "status" => "ok",
-                    		        "affected_rows" => intval($affected_rows)
-                    		    ); 
+                                return array(
+                                    "status" => "ok",
+                                    "affected_rows" => intval($affected_rows)
+                                ); 
                             }
                         }
                     }
                     
                     // not found any field matching this name.
-        		    return array(
-        		        "status" => "ko",
-        		        "error" => "Field not valid."
-        		    );      
+                    return array(
+                        "status" => "ko",
+                        "error" => "Field not valid."
+                    );      
             }
             
             $affected_rows = $this->db->modify($query, array(
                 $field_value, $id
-            ));		
-		    return array(
-		        "status" => "ok",
-		        "affected_rows" => intval($affected_rows)
-		    );           
-		   
-		}
-		
-		public function fetchItems($id_parent, $lang, $offset=null, $howmany=null, $filter=null, $search=null, $orderby=null) {
-		    $rs = $this->db->select(self::QUERY_SELECT_ITEMS_BY_PARENT, array(
+            ));
+            return array(
+                "status" => "ok",
+                "affected_rows" => intval($affected_rows)
+            );           
+           
+        }
+        
+        public function fetchItems($id_parent, $lang, $offset=null, $howmany=null, $filter=null, $search=null, $orderby=null) {
+            $rs = $this->db->select(self::QUERY_SELECT_ITEMS_BY_PARENT, array(
                 $id_parent, $lang
             ));
             $items = $rs->fetchAll(\PDO::FETCH_ASSOC);
@@ -159,9 +159,9 @@
                 "items" => $items,
                 "parent" => $parent
             );
-		}
-		
-		public function fetchItem($id) {
+        }
+        
+        public function fetchItem($id) {
             $rs = $this->db->select(self::QUERY_SELECT_ITEM, array(
                 $id
             ));
@@ -171,9 +171,9 @@
                 "status" => "ok",
                 "item" => $item
             );
-		}
-		
-		public function addItem($id_parent, $lang) {
+        }
+        
+        public function addItem($id_parent, $lang) {
             $last_id = $this->db->insert(self::QUERY_ADD_ITEM, array(
                 $id_parent, $lang
             ));
@@ -182,26 +182,26 @@
                 "status" => "ok",
                 "last_id" => intval($last_id)
             );
-		}
-		
-		public function deleteItem($id) {
-		    $affected_rows = $this->db->modify(self::QUERY_DELETE_ITEM, array($id));
+        }
+        
+        public function deleteItem($id) {
+            $affected_rows = $this->db->modify(self::QUERY_DELETE_ITEM, array($id));
 
-		    return array(
-		        "status" => "ok",
-		        "affected_rows" => intval($affected_rows)
-		    );		    
-		}
-		
-		private function getField($idfd, $id_finalitem) {
-		    print_r($idfd . " " . $id_finalitem);die();
-		    $rs = $this->db->select(self::QUERY_GET_FIELD, array(
+            return array(
+                "status" => "ok",
+                "affected_rows" => intval($affected_rows)
+            );		    
+        }
+        
+        private function getField($idfd, $id_finalitem) {
+            print_r($idfd . " " . $id_finalitem);die();
+            $rs = $this->db->select(self::QUERY_GET_FIELD, array(
                 $idfd, $id_finalitem     
             ));
             return $rs->fetch(\PDO::FETCH_ASSOC);
-		}
-		
-		private function getFieldDefinition($id, $field_name) {
+        }
+        
+        private function getFieldDefinition($id, $field_name) {
             $fields = $this->getFields($id);
             
             foreach($fields as $field) {
@@ -209,17 +209,17 @@
                     return $field;
                 }
             }
-		}
-		
-		private function getOptions() {
+        }
+        
+        private function getOptions() {
             $options = array();
             $rs = $this->db->select(self::QUERY_SELECT_OPTIONS, array());
             while($row = $rs->fetch(\PDO::FETCH_ASSOC)) {
                 $options[$row["option_name"]] = json_decode($row["option_value"]);
             }
             return $options;
-		}
-		
+        }
+        
         private function getParent($id) {
             $rs = $this->db->select(self::QUERY_GET_PARENT, array(
                 $id
@@ -228,7 +228,7 @@
             
             return $parent["id"] ? $parent : null;
         }
-		
+        
         private function getParents($id) {
             $parents = array();
             
@@ -240,8 +240,8 @@
             
             return $parents;
         }
-		
-		private function getFields($id) {
+        
+        private function getFields($id) {
             $ids = array($id);
             
             // look for parents
@@ -267,6 +267,6 @@
             }
             
             return $fields;
-		}
+        }
     }
     

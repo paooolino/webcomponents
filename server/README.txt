@@ -15,4 +15,4 @@ vendor/bin/phpunit tests
 
 Generate docs
 ---------------
-vendor/bin/phpdoc -d ./ -t ./docs
+vendor/bin/apigen generate -s ./ -d ./docs

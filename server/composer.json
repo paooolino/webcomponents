@@ -1,10 +1,10 @@
 {
     "require": {
-        "firebase/php-jwt": "^3.0",
-        "phpdocumentor/phpdocumentor": "2.*"
+        "firebase/php-jwt": "^3.0"
     },
     
     "require-dev": {
-        "phpunit/phpunit": "5.3.*"
+        "phpunit/phpunit": "5.3.*",
+        "apigen/apigen": "^4.1"
     }
 }
