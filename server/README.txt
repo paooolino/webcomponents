@@ -10,5 +10,9 @@ composer install
 
 Running tests
 ---------------
-cd server
 vendor/bin/phpunit tests
+
+
+Generate docs
+---------------
+vendor/bin/phpdoc -d ./ -t ./docs

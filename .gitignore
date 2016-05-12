@@ -4,3 +4,4 @@ server/config.php
 build/bundle.js
 server/vendor
 composer.lock
+server/docs

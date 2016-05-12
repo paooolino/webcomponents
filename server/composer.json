@@ -1,6 +1,7 @@
 {
     "require": {
-        "firebase/php-jwt": "^3.0"
+        "firebase/php-jwt": "^3.0",
+        "phpdocumentor/phpdocumentor": "2.*"
     },
     
     "require-dev": {

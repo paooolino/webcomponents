@@ -4,6 +4,9 @@
     require_once('vendor/autoload.php');
     use \Firebase\JWT\JWT;
 
+	/**
+	 * A class for managing database data.
+	 */
     class DataEngine {
 
         const QUERY_SELECT_USERS            = "SELECT * FROM users WHERE username = ? AND password = ?";
