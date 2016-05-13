@@ -5,7 +5,7 @@
     use \Firebase\JWT\JWT;
 
     /**
-     * A class for managing database data.
+     *  Exposes public methods to manage the database elements.   
      */
     class DataEngine {
 
@@ -30,6 +30,10 @@
         const QUERY_INSERT_FIELD            = "INSERT INTO field_values 
                                                 (id_definition, id_finalitem, field_value) VALUES (?, ?, ?)";
         const QUERY_UPDATE_FIELD            = "UPDATE field_values SET field_value = ? WHERE idfv = ?";
+        
+        const QUERY_GET_EXTERNAL_FIELD      = "SELECT * FROM field_values WHERE id_item = ? AND field_name = ?";
+        const QUERY_INSERT_EXTERNAL_FIELD   = "INSERT INTO field_values (id_item, field_name, field_value) VALUES (?, ?, ?)";
+        const QUERY_UPDATE_EXTERNAL_FIELD   = "UPDATE field_values SET field_value = ? WHERE id_item = ? AND field_name = ?";
         
         public $db;
         
@@ -75,65 +79,45 @@
             );
         }
 
+        /**
+         * Save a field value associated to an item.
+         *
+         * @param int $id The id of the item.
+         * @param string $field_name The field name.
+         * @param string $field_value The field value.
+         *
+         * @uses saveIncludedItemField to save fields included in the items table.
+         * @uses saveExternalItemField to save fields in the external field_values table.
+         *
+         * @return mixed The number of affected rows or an error string on failure.
+         */ 
         public function saveItemField($id, $field_name, $field_value) {
-            $query = "";
-            switch( $field_name ) {
-                case "name":
-                    $query = self::QUERY_UPDATE_NAME;
-                    break;
-                case "slug":
-                    $query = self::QUERY_UPDATE_SLUG;
-                    break;
-                default:
-                    if($definition = $this->getFieldDefinition($id, $field_name)) {
-                        if($field = $this->getField($definition["idfd"], $id)) {
-                            // insert new field value    
-                            $affected_rows = $this->db->modify(
-                                self::QUERY_INSERT_FIELD,
-                                array(
-                                    $definition["idfd"], $id, $field_value
-                                )
-                            );
-                            if( $affected_rows == 1 ) {
-                                return array(
-                                    "status" => "ok",
-                                    "affected_rows" => intval($affected_rows)
-                                ); 
-                            }
-                        } else {
-                            // update existent field value
-                            $affected_rows = $this->db->modify(
-                                self::QUERY_UPDATE_FIELD,
-                                array(
-                                    $field_value, $definition["idfv"]
-                                )
-                            );
-                            if( $affected_rows == 1 ) {
-                                return array(
-                                    "status" => "ok",
-                                    "affected_rows" => intval($affected_rows)
-                                ); 
-                            }
-                        }
-                    }
-                    
-                    // not found any field matching this name.
-                    return array(
-                        "status" => "ko",
-                        "error" => "Field not valid."
-                    );      
-            }
+            // check if the field is included in the items table or is external.
+            $included_fields = array("name", "slug");
             
-            $affected_rows = $this->db->modify($query, array(
-                $field_value, $id
-            ));
-            return array(
-                "status" => "ok",
-                "affected_rows" => intval($affected_rows)
-            );           
-           
+            if( in_array($field_name, $included_fields) ) {
+                return $this->saveIncludedItemField($id, $field_name, $field_value);
+            } else {
+                return $this->saveExternalItemField($id, $field_name, $field_value);
+            }
         }
-        
+
+        /**
+         * Return a list of items having the same parent.
+         *
+         * @param int $id_parent The id of the parent. Pass 0 to retrieve the first-level childs of the tree.
+         * @param string $lang A string to filter items by lang field.
+         * @param mixed $offset Not yet used.
+         * @param mixed $howmany Not yet used.
+         * @param mixed $filter Not yet used.
+         * @param mixed $search Not yet used.
+         * @param mixed $orderby Not yet used.
+         *
+         * @uses getFields to retrieve the full list of associated field for each item.
+         * @uses QUERY_SELECT_ITEMS_BY_PARENT to get the items having the specified parent.
+         *
+         * @return array An array of items.
+         */        
         public function fetchItems($id_parent, $lang, $offset=null, $howmany=null, $filter=null, $search=null, $orderby=null) {
             $rs = $this->db->select(self::QUERY_SELECT_ITEMS_BY_PARENT, array(
                 $id_parent, $lang
@@ -145,70 +129,63 @@
                 $items[$i]["fields"] = $this->getFields($items[$i]["id"]);
             }
             
-            // get the parent item
-            $parent = array();
-            $rs = $this->db->select(self::QUERY_SELECT_ITEM, array(
-                $id_parent
-            ));
-            if( $rs->rowCount() == 1 ) {
-                $parent = $rs->fetch(\PDO::FETCH_ASSOC);
-            }
-            
-            return array(
-                "status" => "ok",
-                "items" => $items,
-                "parent" => $parent
-            );
+            return $items;
         }
         
+        /**
+         * Fetches a single item from the database by id.
+         *
+         * @param int $id The id of the element to retrieve.
+         *
+         * @uses getFields to retrieve the full list of associated field for the item.
+         * @uses QUERY_SELECT_ITEM to get the item.
+         *
+         * @return array An associative array containing the field values.
+         */
         public function fetchItem($id) {
             $rs = $this->db->select(self::QUERY_SELECT_ITEM, array(
                 $id
             ));
             $item = $rs->fetch(\PDO::FETCH_ASSOC);
+            
+            // get the complete fields
+            $item["fields"] = $this->getFields($item["id"]);
 
-            return array(
-                "status" => "ok",
-                "item" => $item
-            );
+            return $item;
         }
         
+        /**
+         * Add an item.
+         *
+         * @param int $id_parent The id of the parent element.
+         * @param string $lang The lang of the item.
+         *
+         * @uses QUERY_ADD_ITEM to insert an item.
+         *
+         * @return int The id of the inserted element.
+         */
         public function addItem($id_parent, $lang) {
             $last_id = $this->db->insert(self::QUERY_ADD_ITEM, array(
                 $id_parent, $lang
             ));
             
-            return array(
-                "status" => "ok",
-                "last_id" => intval($last_id)
-            );
+            return $last_id;
         }
         
+        /**
+         * Delete an item.
+         *
+         * @param int $id_parent The id of the parent element.
+         * @param string $lang The lang of the item.
+         *
+         * @uses QUERY_DELETE_ITEM to delete the item.
+         *
+         * @return int 1
+         */
         public function deleteItem($id) {
             $affected_rows = $this->db->modify(self::QUERY_DELETE_ITEM, array($id));
 
-            return array(
-                "status" => "ok",
-                "affected_rows" => intval($affected_rows)
-            );		    
-        }
-        
-        private function getField($idfd, $id_finalitem) {
-            print_r($idfd . " " . $id_finalitem);die();
-            $rs = $this->db->select(self::QUERY_GET_FIELD, array(
-                $idfd, $id_finalitem     
-            ));
-            return $rs->fetch(\PDO::FETCH_ASSOC);
-        }
-        
-        private function getFieldDefinition($id, $field_name) {
-            $fields = $this->getFields($id);
-            
-            foreach($fields as $field) {
-                if( $field["field_name"] == $field_name ) {
-                    return $field;
-                }
-            }
+            return $affected_rows;    
         }
         
         private function getOptions() {
@@ -220,15 +197,50 @@
             return $options;
         }
         
+        /**
+        * Get an external field record.
+        *
+        * @param int $id_item The id of the item.
+        * @param string $field_name The name of the field to retrieve.
+        *
+        * @uses QUERY_GET_EXTERNAL_FIELD to retrieve the field record.
+        *
+        * @return array|NULL The external field or NULL on failure.
+        */  
+        private function getExternalField($id_item, $field_name) {
+            $rs = $this->db->select(self::QUERY_GET_EXTERNAL_FIELD, array(
+                $id_item, $field_name
+            ));
+            return $rs->fetch(\PDO::FETCH_ASSOC);
+        }
+        
+        /**
+         * Retrieve the parent for an item.
+         *
+         * @param int $id The id of the item.
+         *
+         * @uses QUERY_GET_PARENT to retrieve the parent of the item.
+         *
+         * @return array A list of parents, the nearest first.
+         */  
         private function getParent($id) {
             $rs = $this->db->select(self::QUERY_GET_PARENT, array(
                 $id
             ));
             $parent = $rs->fetch(\PDO::FETCH_ASSOC);
             
-            return $parent["id"] ? $parent : null;
+            return $parent;
         }
         
+        /**
+         * Retrieve the list of parents for an item.
+         *
+         * @param int $id The id of the item.
+         *
+         * @uses getParent to retrieve the parent item.
+         *
+         * @return array A list of parents, the nearest first.
+         */  
         private function getParents($id) {
             $parents = array();
             
@@ -241,6 +253,17 @@
             return $parents;
         }
         
+        /**
+         * Retrieve the field definitions and values for an item. 
+         *
+         * @param int $id The id of the item.
+         *
+         * @uses getParents to retrieve the full list of parents in order to check for defined fields on them.
+         * @uses QUERY_GET_FIELDS to retrieve the fields defined on the item.
+         *
+         *
+         * @return array An associative array of fields with their values.
+         */         
         private function getFields($id) {
             $ids = array($id);
             
@@ -268,5 +291,64 @@
             
             return $fields;
         }
+        
+        /**
+         * Save a value in the items table.
+         *
+         * @param int $id The id of the item.
+         * @param string $field_name The field name.
+         * @param string $field_value The field value.
+         *
+         * @uses QUERY_UPDATE_NAME to update the "name" field.
+         * @uses QUERY_UPDATE_SLUG to update the "slug" field.
+         *
+         * @return mixed The number of affected rows or an error string on failure.
+         */ 
+        private function saveIncludedItemField($id, $field_name, $field_value) {
+            $query = "";
+            switch( $field_name ) {
+                case "name":
+                    $query = self::QUERY_UPDATE_NAME;
+                    break;
+                case "slug":
+                    $query = self::QUERY_UPDATE_SLUG;
+                    break;
+                default:
+                    // not found any field matching this name.
+                    return "Field not valid.";
+            }
+            $affected_rows = $this->db->modify($query, array(
+                $field_value, $id
+            ));
+            
+            return $affected_rows;
+        }
+ 
+        /**
+         * Save a value in the field_values table.
+         *
+         * @param int $id The id of the item.
+         * @param string $field_name The field name.
+         * @param string $field_value The field value.
+         *
+         * @uses getExternalField to check if the external field has been used yet.
+         * @uses QUERY_UPDATE_EXTERNAL_FIELD
+         * @uses QUERY_INSERT_EXTERNAL_FIELD
+         *
+         * @return int 1
+         */  
+        private function saveExternalItemField($id, $field_name, $field_value) {
+            if( $this->getExternalField($id, $field_name) ) {
+                $this->db->update(self::QUERY_UPDATE_EXTERNAL_FIELD, array(
+                    $field_value, $id, $field_name
+                ));
+                return 1;
+            } else {
+                $this->db->insert(self::QUERY_INSERT_EXTERNAL_FIELD, array(
+                    $id, $field_name, $field_value
+                ));
+                return 1;
+            }
+        }    
     }
     

@@ -30,11 +30,10 @@ CREATE TABLE IF NOT EXISTS `field_definitions` (
 -- Dump della struttura di tabella c9.field_values
 DROP TABLE IF EXISTS `field_values`;
 CREATE TABLE IF NOT EXISTS `field_values` (
-  `idfv` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `id_definition` bigint(20) NOT NULL DEFAULT '0',
-  `id_finalitem` bigint(20) NOT NULL DEFAULT '0',
-  `field_value` text NOT NULL,
-  PRIMARY KEY (`idfv`)
+	`id_item` BIGINT(20) NOT NULL DEFAULT '0',
+	`field_name` VARCHAR(255) NOT NULL DEFAULT '',
+	`field_value` TEXT NOT NULL,
+	PRIMARY KEY (`id_item`, `field_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dump dei dati della tabella c9.field_values: ~0 rows (circa)
