@@ -1,6 +1,6 @@
 node_modules
 src/config.js
-server/config.php
+server/src/config.php
 build/bundle.js
 server/vendor
 composer.lock

@@ -20,20 +20,26 @@ CREATE TABLE IF NOT EXISTS `field_definitions` (
   `field_options` text NOT NULL,
   `inheritance` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idfd`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- Dump dei dati della tabella c9.field_definitions: ~0 rows (circa)
 /*!40000 ALTER TABLE `field_definitions` DISABLE KEYS */;
+REPLACE INTO `field_definitions` (`idfd`, `id_item`, `field_name`, `field_type`, `field_options`, `inheritance`) VALUES
+	(1, 0, 'field_for_all', 'text', '', -1),
+	(2, 1, 'field_for_homepage', 'text', '', 0),
+	(3, 0, 'field_for_level_1', 'text', '', 1),
+	(4, 0, 'field_for_level_2', 'text', '', 2),
+	(5, 3, 'price_for_music_and_childs', 'text', '', -1);
 /*!40000 ALTER TABLE `field_definitions` ENABLE KEYS */;
 
 
 -- Dump della struttura di tabella c9.field_values
 DROP TABLE IF EXISTS `field_values`;
 CREATE TABLE IF NOT EXISTS `field_values` (
-	`id_item` BIGINT(20) NOT NULL DEFAULT '0',
-	`field_name` VARCHAR(255) NOT NULL DEFAULT '',
-	`field_value` TEXT NOT NULL,
-	PRIMARY KEY (`id_item`, `field_name`)
+  `id_item` bigint(20) NOT NULL DEFAULT '0',
+  `field_name` varchar(255) NOT NULL DEFAULT '',
+  `field_value` text NOT NULL,
+  PRIMARY KEY (`id_item`,`field_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dump dei dati della tabella c9.field_values: ~0 rows (circa)
@@ -51,9 +57,9 @@ CREATE TABLE IF NOT EXISTS `items` (
   `slug` varchar(255) NOT NULL DEFAULT '',
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
--- Dump dei dati della tabella c9.items: ~0 rows (circa)
+-- Dump dei dati della tabella c9.items: ~13 rows (circa)
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
 REPLACE INTO `items` (`id`, `lang`, `id_parent`, `name`, `slug`, `ts`) VALUES
 	(1, 'en', 0, 'Homepage', '', '2016-05-12 12:38:45'),
@@ -81,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `options` (
   PRIMARY KEY (`ido`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dump dei dati della tabella c9.options: ~1 rows (circa)
+-- Dump dei dati della tabella c9.options: ~0 rows (circa)
 /*!40000 ALTER TABLE `options` DISABLE KEYS */;
 REPLACE INTO `options` (`ido`, `option_name`, `option_value`) VALUES
 	(1, 'languages', '{\r\n"main_language": "en",\r\n"languages": [\r\n   {\r\n      "lang": "it"\r\n   },\r\n   {\r\n      "lang": "en"\r\n   }\r\n]\r\n}');
@@ -98,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`idu`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dump dei dati della tabella c9.users: ~1 rows (circa)
+-- Dump dei dati della tabella c9.users: ~0 rows (circa)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 REPLACE INTO `users` (`idu`, `username`, `password`, `permissions`) VALUES
 	(1, 'admin', 'c3284d0f94606de1fd2af172aba15bf3', NULL);

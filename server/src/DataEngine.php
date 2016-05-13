@@ -17,10 +17,10 @@
         const QUERY_UPDATE_NAME             = "UPDATE items SET name = ? WHERE id = ?";
         const QUERY_UPDATE_SLUG             = "UPDATE items SET slug = ? WHERE id = ?";
         const QUERY_SELECT_OPTIONS          = "SELECT * FROM options";
-        const QUERY_GET_FIELDS              = "SELECT * FROM field_definitions 
-                                                LEFT JOIN field_values ON id_definition = idfd
-                                                WHERE id_item = ? AND (inheritance = ? OR inheritance = -1)
-                                                AND (id_finalitem = ? or id_finalitem IS NULL)";
+        const QUERY_GET_FIELDS              = "SELECT A.field_name, B.field_value FROM field_definitions as A
+LEFT JOIN field_values as B ON A.field_name = B.field_name
+WHERE (A.id_item = ? OR A.id_item = 0) AND (inheritance = ? OR inheritance = -1)
+AND (B.id_item = ? or B.id_item IS NULL)";
         const QUERY_GET_PARENT              = "SELECT B.* FROM items AS A
                                                 LEFT JOIN items as B ON A.id_parent = B.id
                                                 WHERE A.id = ?";
@@ -34,6 +34,8 @@
         const QUERY_GET_EXTERNAL_FIELD      = "SELECT * FROM field_values WHERE id_item = ? AND field_name = ?";
         const QUERY_INSERT_EXTERNAL_FIELD   = "INSERT INTO field_values (id_item, field_name, field_value) VALUES (?, ?, ?)";
         const QUERY_UPDATE_EXTERNAL_FIELD   = "UPDATE field_values SET field_value = ? WHERE id_item = ? AND field_name = ?";
+        
+        const QUERY_ADD_FIELD_DEFINITION    = "INSERT INTO field_definitions (id_item, field_name, field_type, field_options, inheritance) VALUES (?, ?, ?, ?, ?)";
         
         public $db;
         
@@ -187,6 +189,26 @@
 
             return $affected_rows;    
         }
+
+        /**
+         * Add a field definition.
+         *
+         * @param int $id_item
+         * @param string $field_name
+         * @param string $field_type The type of the field. Should be one of the following: text, textarea, image, attachment, select, multiselect
+         * @param string $field_options
+         * @param int $inheritance
+         *
+         * @uses QUERY_ADD_FIELD_DEFINITION
+         *
+         * @return int 1
+         */        
+        public function addFieldDefinition($id_item, $field_name, $field_type, $field_options, $inheritance) {
+            $rs = $this->db->insert(self::QUERY_ADD_FIELD_DEFINITION, array(
+                $id_item, $field_name, $field_type, $field_options, $inheritance
+            ));
+            return 1;
+        }
         
         private function getOptions() {
             $options = array();
@@ -283,7 +305,7 @@
                     $id
                 ));
                 while($row = $rs->fetch(\PDO::FETCH_ASSOC)) {
-                    array_push($fields, $row);
+                    $fields[$row["field_name"]] = $row["field_value"];
                 }
                 
                 $inheritance_level++;
