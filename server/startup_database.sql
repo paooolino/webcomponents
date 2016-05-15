@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS `field_values` (
 
 -- Dump dei dati della tabella c9.field_values: ~0 rows (circa)
 /*!40000 ALTER TABLE `field_values` DISABLE KEYS */;
+REPLACE INTO `field_values` (`id_item`, `field_name`, `field_value`) VALUES
+	(9, 'author_description_for_music_childs', 'A rising star.');
 /*!40000 ALTER TABLE `field_values` ENABLE KEYS */;
 
 

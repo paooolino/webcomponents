@@ -17,13 +17,16 @@
         const QUERY_UPDATE_NAME             = "UPDATE items SET name = ? WHERE id = ?";
         const QUERY_UPDATE_SLUG             = "UPDATE items SET slug = ? WHERE id = ?";
         const QUERY_SELECT_OPTIONS          = "SELECT * FROM options";
-        const QUERY_GET_FIELDS              = "SELECT A.field_name, B.field_value FROM field_definitions as A
-LEFT JOIN field_values as B ON A.field_name = B.field_name
-WHERE A.id_item = ? AND (inheritance = ? OR inheritance = -1)
-AND (B.id_item = ? or B.id_item IS NULL)";
-        const QUERY_GET_PARENT              = "SELECT B.* FROM items AS A
-                                                LEFT JOIN items as B ON A.id_parent = B.id
-                                                WHERE A.id = ?";
+        const QUERY_GET_AVAILABLE_FIELDS    = "
+            SELECT field_name FROM field_definitions
+            WHERE id_item = ? AND (inheritance = ? OR inheritance = -1)
+        ";
+        const QUERY_GET_PARENT              = "
+            SELECT B.* FROM items AS A
+            JOIN items as B ON A.id_parent = B.id
+            WHERE A.id = ?
+        ";
+        const QUERY_GET_FIELD_VALUE         = "SELECT * FROM field_values WHERE id_item = ? AND field_name = ?";
         const QUERY_GET_FIELD               = "SELECT * FROM field_definitions
                                                 LEFT JOIN field_values ON id_definition = idfd
                                                 WHERE idfd = ? AND id_finalitem = ?";
@@ -43,6 +46,16 @@ AND (B.id_item = ? or B.id_item IS NULL)";
             $this->db = $db;
         }
 
+        /**
+         * User authentication
+         *
+         * @param string $username The field name.
+         * @param string $password The field value.
+         *
+         * @uses QUERY_SELECT_USERS
+         *
+         * @return string The JWT token, or empty string if failure.
+         */ 
         public function auth($username, $password) {
             $rs = $this->db->select(self::QUERY_SELECT_USERS, array(
                 $username, md5(md5($password))
@@ -50,17 +63,12 @@ AND (B.id_item = ? or B.id_item IS NULL)";
             $row = $rs->fetch(\PDO::FETCH_ASSOC);
 
             if( !$row )
-                return array(
-                    "status" => "ko",
-                    "error" => "Invalid username or password."
-                );
+                return "";
                 
             $issuedAt = time();
             $token = array(
                 // tokee id
                 "jti" => base64_encode(mcrypt_create_iv(32)),
-                // issuer
-                "iss" => $_SERVER["SERVER_NAME"],
                 // issued at
                 "iat" => $issuedAt,
                 // not before
@@ -74,11 +82,7 @@ AND (B.id_item = ? or B.id_item IS NULL)";
                 )
             );
 
-            return array(
-                "status" => "ok",
-                "authcode" => JWT::encode($token, \CMS\AUTH_JWT_KEY),
-                "options" => $this->getOptions()
-            );
+            return JWT::encode($token, \CMS\AUTH_JWT_KEY);
         }
 
         /**
@@ -144,15 +148,15 @@ AND (B.id_item = ? or B.id_item IS NULL)";
          *
          * @return array An associative array containing the field values.
          */
-        public function fetchItem($id) {
+        public function fetchItem($id) {          
             $rs = $this->db->select(self::QUERY_SELECT_ITEM, array(
                 $id
             ));
             $item = $rs->fetch(\PDO::FETCH_ASSOC);
             
             // get the complete fields
-            $item["fields"] = $this->getFields($item["id"]);
-
+            $item["fields"] = $this->getFields($id);
+            
             return $item;
         }
         
@@ -249,9 +253,7 @@ AND (B.id_item = ? or B.id_item IS NULL)";
             $rs = $this->db->select(self::QUERY_GET_PARENT, array(
                 $id
             ));
-            $parent = $rs->fetch(\PDO::FETCH_ASSOC);
-            
-            return $parent;
+            return $rs->fetch(\PDO::FETCH_ASSOC);
         }
         
         /**
@@ -274,6 +276,25 @@ AND (B.id_item = ? or B.id_item IS NULL)";
             
             return $parents;
         }
+
+        /**
+         * Retrieve the value for an external field. 
+         *
+         * @param int $id The id of the item.
+         * @param string $field_name The name of the field to retrieve.
+         *
+         * @uses QUERY_GET_FIELD_VALUE to retrieve the fields defined on the item.
+         *
+         * @return string The field value.
+         */        
+        private function getFieldValue($id, $field_name) {
+            $rs = $this->db->select(self::QUERY_GET_FIELD_VALUE, array(
+                $id, $field_name
+            ));
+            $row = $rs->fetch(\PDO::FETCH_ASSOC);
+            
+            return $row ? $row["field_value"] : ""; 
+        }
         
         /**
          * Retrieve the field definitions and values for an item. 
@@ -281,8 +302,8 @@ AND (B.id_item = ? or B.id_item IS NULL)";
          * @param int $id The id of the item.
          *
          * @uses getParents to retrieve the full list of parents in order to check for defined fields on them.
-         * @uses QUERY_GET_FIELDS to retrieve the fields defined on the item.
-         *
+         * @uses getFieldValue to retrieve the value for the found external fields.
+         * @uses QUERY_GET_AVAILABLE_FIELDS to retrieve the fields defined on the item.
          *
          * @return array An associative array of fields with their values.
          */         
@@ -298,14 +319,13 @@ AND (B.id_item = ? or B.id_item IS NULL)";
             // for each id, look for fields.
             $fields = array();
             $inheritance_level = 0;
-            foreach($ids as $id) {
-                $rs = $this->db->select(self::QUERY_GET_FIELDS, array(
-                    $id,
-                    $inheritance_level,
-                    $id
+            foreach($ids as $the_id) {
+                $rs = $this->db->select(self::QUERY_GET_AVAILABLE_FIELDS, array(
+                    $the_id,
+                    $inheritance_level
                 ));
                 while($row = $rs->fetch(\PDO::FETCH_ASSOC)) {
-                    $fields[$row["field_name"]] = $row["field_value"];
+                    $fields[$row["field_name"]] = $this->getFieldValue($id, $row["field_name"]);
                 }
                 
                 $inheritance_level++;
@@ -335,9 +355,6 @@ AND (B.id_item = ? or B.id_item IS NULL)";
                 case "slug":
                     $query = self::QUERY_UPDATE_SLUG;
                     break;
-                default:
-                    // not found any field matching this name.
-                    return "Field not valid.";
             }
             $affected_rows = $this->db->modify($query, array(
                 $field_value, $id
@@ -361,7 +378,7 @@ AND (B.id_item = ? or B.id_item IS NULL)";
          */  
         private function saveExternalItemField($id, $field_name, $field_value) {
             if( $this->getExternalField($id, $field_name) ) {
-                $this->db->update(self::QUERY_UPDATE_EXTERNAL_FIELD, array(
+                $this->db->modify(self::QUERY_UPDATE_EXTERNAL_FIELD, array(
                     $field_value, $id, $field_name
                 ));
                 return 1;

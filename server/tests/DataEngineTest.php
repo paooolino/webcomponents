@@ -23,11 +23,7 @@
 			// inside the test methods, assertion methods such as assertEquals()
 			$this->assertEquals("1", 1);
 		}
-        
-        /**
-         * @covers DataEngine::fetchItem
-         * @covers DataEngine::getFields
-         */        
+               
         public function testFetchItem() {
             $item = $this->de->fetchItem(1);
             $this->assertEquals($item["id"], 1);
@@ -64,11 +60,18 @@
             $this->assertEquals(array_key_exists("field_for_level_1", $item["fields"]), false);
             $this->assertEquals(array_key_exists("field_for_level_2", $item["fields"]), false);
             $this->assertEquals(array_key_exists("author_description_for_music_childs", $item["fields"]), true);  
-        }
 
-        /**
-         * @covers DataEngine::fetchItems
-         */		
+            $item = $this->de->fetchItem(9);
+            $this->assertEquals($item["id"], 9);
+            $this->assertEquals($item["name"], "Madonna");
+            $this->assertEquals(array_key_exists("field_for_all", $item["fields"]), true);
+            $this->assertEquals(array_key_exists("field_for_homepage", $item["fields"]), false);
+            $this->assertEquals(array_key_exists("field_for_level_1", $item["fields"]), false);
+            $this->assertEquals(array_key_exists("field_for_level_2", $item["fields"]), false);
+            $this->assertEquals(array_key_exists("author_description_for_music_childs", $item["fields"]), true);  
+            $this->assertEquals($item["fields"]["author_description_for_music_childs"], "A rising star.");
+        }
+	
 		public function testFetchItems() {
 			$result = $this->de->fetchItems(0, "en");
 			$this->assertEquals(count($result), 1);
@@ -89,25 +92,47 @@
 		}
 		
 		public function testSaveItemField() {
+            // save internal field
 			$this->de->saveItemField(1, "name", "Test");
 			$this->de->saveItemField(1, "slug", "test");
 			
 			$result = $this->de->fetchItem(1);
-			
 			$this->assertEquals($result["name"], "Test");
 			$this->assertEquals($result["slug"], "test");
-		}
+            
+            // save external field
+            $this->de->saveItemField(8, "author_description_for_music_childs", "An old style folk.");
+            
+            $result = $this->de->fetchItem(8);
+            $this->assertEquals($result["fields"]["author_description_for_music_childs"], "An old style folk.");
+        
+            $this->de->saveItemField(8, "author_description_for_music_childs", "An old style folk that rocks!");
+
+            $result = $this->de->fetchItem(8);
+            $this->assertEquals($result["fields"]["author_description_for_music_childs"], "An old style folk that rocks!");
+        }
         
         public function testAddFieldDefinition() {
-            /*
-            $this->de->addFieldDefinition(0, "field_for_all", "text", "", -1);
-            $this->de->addFieldDefinition(0, "field_for_homepage", "text", "", 0);
-            $this->de->addFieldDefinition(0, "field_for_level_1", "text", "", 1);
-            $this->de->addFieldDefinition(0, "field_for_level_2", "text", "", 2);
-            $this->de->addFieldDefinition(3, "price_for_products", "text", "", 0);
-            */
+            $this->de->addFieldDefinition(5, "author_picture", "text", "", 1);
+            
+            $item = $this->de->fetchItem(8);
+            $this->assertEquals(array_key_exists("author_picture", $item["fields"]), true);
         }
-		
+
+        public function testAuth() {
+            $token = $this->de->auth("admin", "admin");
+            $this->assertNotEquals($token, "");
+            
+            $token = $this->de->auth("admin", "wrong password");
+            $this->assertEquals($token, "");
+            
+            $token = $this->de->auth("wrong username", "wrong password");
+            $this->assertEquals($token, "");
+            
+            $token = $this->de->auth("", "");
+            $this->assertEquals($token, "");
+        }
+        
 		public function tearDown() {
 			//
 		}
