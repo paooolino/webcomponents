@@ -134,10 +134,14 @@
         }
         
         public function testDeleteItem() {
-            $this->de->deleteItem(8);
+            $affected_rows = $this->de->deleteItem(8);
+            $this->assertEquals($affected_rows, 1);
             
             $item = $this->de->fetchItem(8);
             $this->assertEquals($item, 0);
+            
+            $affected_rows = $this->de->deleteItem(8);
+            $this->assertEquals($affected_rows, 0);
         }
         
 		public function tearDown() {
