@@ -23,7 +23,11 @@
 			// inside the test methods, assertion methods such as assertEquals()
 			$this->assertEquals("1", 1);
 		}
-              
+        
+        /**
+         * @covers DataEngine::fetchItem
+         * @covers DataEngine::getFields
+         */        
         public function testFetchItem() {
             $item = $this->de->fetchItem(1);
             $this->assertEquals($item["id"], 1);
@@ -32,7 +36,7 @@
             $this->assertEquals(array_key_exists("field_for_homepage", $item["fields"]), true);
             $this->assertEquals(array_key_exists("field_for_level_1", $item["fields"]), false);
             $this->assertEquals(array_key_exists("field_for_level_2", $item["fields"]), false);
-            $this->assertEquals(array_key_exists("price_for_music_and_childs", $item["fields"]), false);    
+            $this->assertEquals(array_key_exists("author_description_for_music_childs", $item["fields"]), false);    
 
             $item = $this->de->fetchItem(3);
             $this->assertEquals($item["id"], 3);
@@ -41,7 +45,7 @@
             $this->assertEquals(array_key_exists("field_for_homepage", $item["fields"]), false);
             $this->assertEquals(array_key_exists("field_for_level_1", $item["fields"]), true);
             $this->assertEquals(array_key_exists("field_for_level_2", $item["fields"]), false);
-            $this->assertEquals(array_key_exists("price_for_music_and_childs", $item["fields"]), false);    
+            $this->assertEquals(array_key_exists("author_description_for_music_childs", $item["fields"]), false);    
              
             $item = $this->de->fetchItem(5);
             $this->assertEquals($item["id"], 5);
@@ -50,12 +54,24 @@
             $this->assertEquals(array_key_exists("field_for_homepage", $item["fields"]), false);
             $this->assertEquals(array_key_exists("field_for_level_1", $item["fields"]), false);
             $this->assertEquals(array_key_exists("field_for_level_2", $item["fields"]), true);
-            $this->assertEquals(array_key_exists("price_for_music_and_childs", $item["fields"]), true);           
+            $this->assertEquals(array_key_exists("author_description_for_music_childs", $item["fields"]), false);
+            
+            $item = $this->de->fetchItem(8);
+            $this->assertEquals($item["id"], 8);
+            $this->assertEquals($item["name"], "Michael Bublé");
+            $this->assertEquals(array_key_exists("field_for_all", $item["fields"]), true);
+            $this->assertEquals(array_key_exists("field_for_homepage", $item["fields"]), false);
+            $this->assertEquals(array_key_exists("field_for_level_1", $item["fields"]), false);
+            $this->assertEquals(array_key_exists("field_for_level_2", $item["fields"]), false);
+            $this->assertEquals(array_key_exists("author_description_for_music_childs", $item["fields"]), true);  
         }
-		
+
+        /**
+         * @covers DataEngine::fetchItems
+         */		
 		public function testFetchItems() {
 			$result = $this->de->fetchItems(0, "en");
-			$this->assertEquals(count($result), 4);
+			$this->assertEquals(count($result), 1);
 			
 			$result = $this->de->fetchItems(3, "en");
 			$this->assertEquals(count($result), 2);

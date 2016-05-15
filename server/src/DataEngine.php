@@ -19,7 +19,7 @@
         const QUERY_SELECT_OPTIONS          = "SELECT * FROM options";
         const QUERY_GET_FIELDS              = "SELECT A.field_name, B.field_value FROM field_definitions as A
 LEFT JOIN field_values as B ON A.field_name = B.field_name
-WHERE (A.id_item = ? OR A.id_item = 0) AND (inheritance = ? OR inheritance = -1)
+WHERE A.id_item = ? AND (inheritance = ? OR inheritance = -1)
 AND (B.id_item = ? or B.id_item IS NULL)";
         const QUERY_GET_PARENT              = "SELECT B.* FROM items AS A
                                                 LEFT JOIN items as B ON A.id_parent = B.id

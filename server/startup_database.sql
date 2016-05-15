@@ -22,14 +22,14 @@ CREATE TABLE IF NOT EXISTS `field_definitions` (
   PRIMARY KEY (`idfd`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
--- Dump dei dati della tabella c9.field_definitions: ~0 rows (circa)
+-- Dump dei dati della tabella c9.field_definitions: ~5 rows (circa)
 /*!40000 ALTER TABLE `field_definitions` DISABLE KEYS */;
 REPLACE INTO `field_definitions` (`idfd`, `id_item`, `field_name`, `field_type`, `field_options`, `inheritance`) VALUES
-	(1, 0, 'field_for_all', 'text', '', -1),
+	(1, 1, 'field_for_all', 'text', '', -1),
 	(2, 1, 'field_for_homepage', 'text', '', 0),
-	(3, 0, 'field_for_level_1', 'text', '', 1),
-	(4, 0, 'field_for_level_2', 'text', '', 2),
-	(5, 3, 'price_for_music_and_childs', 'text', '', -1);
+	(3, 1, 'field_for_level_1', 'text', '', 1),
+	(4, 1, 'field_for_level_2', 'text', '', 2),
+	(5, 5, 'author_description_for_music_childs', 'text', '', 1);
 /*!40000 ALTER TABLE `field_definitions` ENABLE KEYS */;
 
 
@@ -63,18 +63,18 @@ CREATE TABLE IF NOT EXISTS `items` (
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
 REPLACE INTO `items` (`id`, `lang`, `id_parent`, `name`, `slug`, `ts`) VALUES
 	(1, 'en', 0, 'Homepage', '', '2016-05-12 12:38:45'),
-	(2, 'en', 0, 'About', '', '2016-05-12 12:38:45'),
-	(3, 'en', 0, 'Products', '', '2016-05-12 12:38:45'),
-	(4, 'en', 0, 'Contacts', '', '2016-05-12 12:38:45'),
+	(2, 'en', 1, 'About', '', '2016-05-12 12:38:45'),
+	(3, 'en', 1, 'Products', '', '2016-05-12 12:38:45'),
+	(4, 'en', 1, 'Contacts', '', '2016-05-12 12:38:45'),
 	(5, 'en', 3, 'Music', '', '2016-05-12 12:40:20'),
 	(6, 'en', 3, 'Books', '', '2016-05-12 12:40:26'),
 	(7, 'en', 5, 'Bob Marley', '', '2016-05-12 12:40:35'),
 	(8, 'en', 5, 'Michael Bublé', '', '2016-05-12 12:40:51'),
 	(9, 'en', 5, 'Madonna', '', '2016-05-12 12:41:11'),
-	(10, 'it', 0, 'Home page', '', '2016-05-12 12:41:19'),
-	(11, 'it', 0, 'Informazioni', '', '2016-05-12 12:41:29'),
-	(12, 'it', 0, 'Prodotti', '', '2016-05-12 12:41:37'),
-	(13, 'it', 0, 'Contatti', '', '2016-05-12 12:41:42');
+	(10, 'it', 1, 'Home page', '', '2016-05-12 12:41:19'),
+	(11, 'it', 1, 'Informazioni', '', '2016-05-12 12:41:29'),
+	(12, 'it', 1, 'Prodotti', '', '2016-05-12 12:41:37'),
+	(13, 'it', 1, 'Contatti', '', '2016-05-12 12:41:42');
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 
 
