@@ -155,7 +155,9 @@
             $item = $rs->fetch(\PDO::FETCH_ASSOC);
             
             // get the complete fields
-            $item["fields"] = $this->getFields($id);
+            if( $item ) {
+                $item["fields"] = $this->getFields($id);
+            }
             
             return $item;
         }

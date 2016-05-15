@@ -133,6 +133,13 @@
             $this->assertEquals($token, "");
         }
         
+        public function testDeleteItem() {
+            $this->de->deleteItem(8);
+            
+            $item = $this->de->fetchItem(8);
+            $this->assertEquals($item, 0);
+        }
+        
 		public function tearDown() {
 			//
 		}
