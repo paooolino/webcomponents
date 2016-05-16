@@ -6,8 +6,16 @@ import App from './components/App';
 import reducer from './reducers/reducers';
 import thunkMiddleware from 'redux-thunk';
 import * as storage from 'redux-storage';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import './css/main.css';
+
+// Needed for onTouchTap
+// Check this repo:
+// https://github.com/zilverline/react-tap-event-plugin
+injectTapEventPlugin();
 
 // Storage: We need to wrap the base reducer
 const st_reducer = storage.reducer(reducer);
@@ -45,10 +53,12 @@ store.subscribe(() =>
 // Normally, you can’t use connect() without wrapping the root component in <Provider>.
 
 render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  rootElement
+    <Provider store={store}>
+        <MuiThemeProvider muiTheme={getMuiTheme()}>
+            <App />
+        </MuiThemeProvider>
+    </Provider>,
+    rootElement
 );
 
 // per connettere un componente React a uno Store uso connect()
