@@ -22,6 +22,10 @@
             ));
             break;
         
+        case "getOptions":
+            echo json_encode($de->getOptions());
+            break;
+            
         case "fetchItems":
             echo json_encode($de->fetchItems(
                 $ARR["data"]["id_parent"],

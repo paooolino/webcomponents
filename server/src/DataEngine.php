@@ -41,7 +41,10 @@
         const QUERY_ADD_FIELD_DEFINITION    = "INSERT INTO field_definitions (id_item, field_name, field_type, field_options, inheritance) VALUES (?, ?, ?, ?, ?)";
         
         public $db;
-        
+ 
+        /**
+         * @codeCoverageIgnore
+         */ 
         function __construct($db) {
             $this->db = $db;
         }
@@ -216,11 +219,18 @@
             return 1;
         }
         
-        private function getOptions() {
+        /**
+         * Return the defined general options for the CMS.
+         *
+         * @uses QUERY_SELECT_OPTIONS
+         *
+         * @return array
+         */ 
+        public function getOptions() {
             $options = array();
             $rs = $this->db->select(self::QUERY_SELECT_OPTIONS, array());
             while($row = $rs->fetch(\PDO::FETCH_ASSOC)) {
-                $options[$row["option_name"]] = json_decode($row["option_value"]);
+                $options[$row["option_name"]] = json_decode($row["option_value"], true);
             }
             return $options;
         }

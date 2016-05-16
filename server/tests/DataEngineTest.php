@@ -17,13 +17,14 @@
 		public function setUp() {
 			$this->de->db->exec(file_get_contents("startup_database.sql"));	
 		}
-		
-		// The tests are public methods that are named test*
-		public function testDummy() {
-			// inside the test methods, assertion methods such as assertEquals()
-			$this->assertEquals("1", 1);
-		}
-               
+
+        public function testGetOptions() {
+            $options = $this->de->getOptions();
+
+            $this->assertEquals(array_key_exists("languages", $options), true);
+            $this->assertEquals($options["languages"]["main_language"], "en");
+        }
+        
         public function testFetchItem() {
             $item = $this->de->fetchItem(1);
             $this->assertEquals($item["id"], 1);
