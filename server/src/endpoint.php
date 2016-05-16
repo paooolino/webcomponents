@@ -16,26 +16,57 @@
     switch($action) {
         
         case "login":
-            echo json_encode($de->auth(
+            $authcode = $de->auth(
                 $ARR["data"]["username"], 
                 $ARR["data"]["password"]
-            ));
+            );
+            if( $authcode == "" ) {
+                echo json_encode(array(
+                    "status" => "ko",
+                    "error" => "Username or password not valid."
+                ));
+            } else {
+                echo json_encode(array(
+                    "status" => "ok",
+                    "authcode" => $authcode,
+                    "options" => $de->getOptions()
+                ));
+            }
             break;
         
-        case "getOptions":
-            echo json_encode($de->getOptions());
-            break;
-            
         case "fetchItems":
-            echo json_encode($de->fetchItems(
+            $items = $de->fetchItems(
                 $ARR["data"]["id_parent"],
-                $ARR["data"]["lang"],
+                $ARR["data"]["lang"]/*,
                 $ARR["data"]["offset"],
                 $ARR["data"]["howmany"],
                 $ARR["data"]["filter"],
                 $ARR["data"]["search"],
-                $ARR["data"]["orderby"]
+                $ARR["data"]["orderby"]*/
+            );
+            echo json_encode(array(
+                "status" => "ok",
+                "items" => $items,
+                "parent" => $de->fetchItem($ARR["data"]["id_parent"])
             ));
+            break;
+            
+        case "saveItemField":
+            $result = $de->saveItemField(                
+                $ARR["data"]["id"],
+                $ARR["data"]["name"],
+                $ARR["data"]["value"]
+            );
+            if( $result == 0 ) {
+                echo json_encode(array(
+                    "status" => "ko",
+                    "error" => "Data not modified."
+                ));               
+            } else {
+                echo json_encode(array(
+                    "status" => "ok"
+                ));
+            }
             break;
             
         case "fetchItem":
@@ -54,14 +85,6 @@
         case "deleteItem":
             echo json_encode($de->deleteItem(                
                 $ARR["data"]["id"]
-            ));
-            break;
-            
-        case "saveItemField":
-            echo json_encode($de->saveItemField(                
-                $ARR["data"]["id"],
-                $ARR["data"]["name"],
-                $ARR["data"]["value"]
             ));
             break;
             

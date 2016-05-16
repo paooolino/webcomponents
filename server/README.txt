@@ -1,6 +1,6 @@
 Configuration setup
 --------------------
-cp config.sample.php config.php
+cp src/config.sample.php src/config.php
  
 
 Installing dependencies

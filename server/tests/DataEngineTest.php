@@ -2,7 +2,7 @@
 	include("src/config.php");
 	include("src/DB.php");
 	include("src/DataEngine.php");
-	
+    
 	// The tests for a class DataEngine go into a class DataEngineTest.
 	// The test class inherits (most of the time) from PHPUnit_Framework_TestCase.
 	class DataEngineTest extends PHPUnit_Framework_TestCase {
@@ -76,6 +76,7 @@
 		public function testFetchItems() {
 			$result = $this->de->fetchItems(0, "en");
 			$this->assertEquals(count($result), 1);
+            $this->assertEquals(count($result[0]["fields"]), 2);
 			
 			$result = $this->de->fetchItems(3, "en");
 			$this->assertEquals(count($result), 2);

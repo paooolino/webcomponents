@@ -1,7 +1,7 @@
 <?php
     namespace CMS;
     
-    require_once('vendor/autoload.php');
+    require_once(__DIR__.'/../vendor/autoload.php');
     use \Firebase\JWT\JWT;
 
     /**
@@ -18,7 +18,7 @@
         const QUERY_UPDATE_SLUG             = "UPDATE items SET slug = ? WHERE id = ?";
         const QUERY_SELECT_OPTIONS          = "SELECT * FROM options";
         const QUERY_GET_AVAILABLE_FIELDS    = "
-            SELECT field_name FROM field_definitions
+            SELECT * FROM field_definitions
             WHERE id_item = ? AND (inheritance = ? OR inheritance = -1)
         ";
         const QUERY_GET_PARENT              = "
@@ -114,6 +114,9 @@
         /**
          * Return a list of items having the same parent.
          *
+         * This method is intended to be used only by back-end calls.
+         * It make uses of the getFieldsWithDefsInfos to get all the needed informations for the UI.
+         *
          * @param int $id_parent The id of the parent. Pass 0 to retrieve the first-level childs of the tree.
          * @param string $lang A string to filter items by lang field.
          * @param mixed $offset Not yet used.
@@ -122,7 +125,7 @@
          * @param mixed $search Not yet used.
          * @param mixed $orderby Not yet used.
          *
-         * @uses getFields to retrieve the full list of associated field for each item.
+         * @uses getFieldsWithDefsInfos to retrieve the full list of associated field for each item.
          * @uses QUERY_SELECT_ITEMS_BY_PARENT to get the items having the specified parent.
          *
          * @return array An array of items.
@@ -135,7 +138,8 @@
             
             // get the complete fields
             for($i = 0; $i < count($items); $i++) {
-                $items[$i]["fields"] = $this->getFields($items[$i]["id"]);
+                $withDefs = true;
+                $items[$i]["fields"] = $this->getFields($items[$i]["id"], $withDefs);
             }
             
             return $items;
@@ -309,9 +313,10 @@
         }
         
         /**
-         * Retrieve the field definitions and values for an item. 
+         * Retrieve the field values for an item. 
          *
          * @param int $id The id of the item.
+         * @withDefs bool Whether return the field definitions together
          *
          * @uses getParents to retrieve the full list of parents in order to check for defined fields on them.
          * @uses getFieldValue to retrieve the value for the found external fields.
@@ -319,7 +324,7 @@
          *
          * @return array An associative array of fields with their values.
          */         
-        private function getFields($id) {
+        private function getFields($id, $withDefs=false) {
             $ids = array($id);
             
             // look for parents
@@ -337,7 +342,12 @@
                     $inheritance_level
                 ));
                 while($row = $rs->fetch(\PDO::FETCH_ASSOC)) {
-                    $fields[$row["field_name"]] = $this->getFieldValue($id, $row["field_name"]);
+                    if( $withDefs ) {
+                        $row["field_value"] = $this->getFieldValue($id, $row["field_name"]);
+                        array_push($fields, $row);
+                    } else {
+                        $fields[$row["field_name"]] = $this->getFieldValue($id, $row["field_name"]);
+                    }
                 }
                 
                 $inheritance_level++;
