@@ -70,6 +70,16 @@ class App extends Component {
                     <Col xs={12} className="appcontent">
                         <Grid fluid>
                             <Row>
+                                <Col sx={12}>
+                                    <h5 className="breadcrumbs-title">Forms</h5>
+                                    <ol className="breadcrumbs">
+                                        <li><a href="index.html">Dashboard</a></li>
+                                        <li><a href="#">Forms</a></li>
+                                        <li className="active">Forms Layouts</li>
+                                    </ol>
+                                </Col>
+                            </Row>
+                            <Row>
                                 <Col xs={6}>
                                     <Paper zDepth={1}>
                                         <TextField
