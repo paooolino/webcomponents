@@ -1,4 +1,4 @@
 .gridcontainer{padding:0;}
-.navbar {
-    flex: 0 0 240px; /* don't grow, don't shrink, stay at 220px width */
-}
+.navbar{position:fixed;top:0;left:0;width:260px;padding-top:64px;}
+.appcontent{margin-left:260px;}
+.navlist div span{font-size:14px;line-height:14px;}
