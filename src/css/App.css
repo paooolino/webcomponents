@@ -1,0 +1,4 @@
+.gridcontainer{padding:0;}
+.navbar {
+    flex: 0 0 240px; /* don't grow, don't shrink, stay at 220px width */
+}

@@ -5,4 +5,5 @@ body{
     color: #333;
     background-color:#eee;
     font-size:14pt;
+    overflow:hidden;
 }
