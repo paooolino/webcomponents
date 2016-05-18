@@ -68,26 +68,36 @@ class App extends Component {
                         </Paper>
                     </div>
                     <Col xs={12} className="appcontent">
+                        <div className="contentheader">
+                            <ol className="breadcrumbs">
+                                <li><a href="index.html">Dashboard</a></li>
+                                <li><a href="#">Forms</a></li>
+                                <li className="active">Forms Layouts</li>
+                            </ol>
+                        </div>
+
                         <Grid fluid>
                             <Row>
-                                <Col sx={12}>
-                                    <h5 className="breadcrumbs-title">Forms</h5>
-                                    <ol className="breadcrumbs">
-                                        <li><a href="index.html">Dashboard</a></li>
-                                        <li><a href="#">Forms</a></li>
-                                        <li className="active">Forms Layouts</li>
-                                    </ol>
-                                </Col>
-                            </Row>
-                            <Row>
                                 <Col xs={6}>
-                                    <Paper zDepth={1}>
+                                    <div className="contentbody">
+                                        <div className="contentTitle">Element name</div>
                                         <TextField
-                                            hintText="Hint Text"
-                                            floatingLabelText="Fixed Floating Label Text"
-                                            floatingLabelFixed={true}
+                                            floatingLabelText="Name"
+                                            fullWidth={true}
                                         />
-                                    </Paper>
+                                        <TextField
+                                            floatingLabelText="Slug"
+                                            fullWidth={true}
+                                        />
+                                        <TextField
+                                            floatingLabelText="Any other field"
+                                            fullWidth={true}
+                                        />
+                                        <TextField
+                                            floatingLabelText="Any other field"
+                                            fullWidth={true}
+                                        />
+                                    </div>
                                 </Col>
                             </Row>
                         </Grid>
