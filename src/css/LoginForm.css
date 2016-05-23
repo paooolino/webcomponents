@@ -1,31 +1,10 @@
-.loginformpicture{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+.loginFormContainer{
     height: 100%;
-    z-index: 900;
-    
-    background-image: url('images/loginbackground.jpg');
-    background-size: cover;
-}
-.loginformopacity {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    
-    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNi8AEAAFUATydJphIAAAAASUVORK5CYII=');
+    background-color: #00bcd4;
+    padding-top: 80px;
 }
 
-.loginformcontainer {
-    width: 400px;
-    padding-top: 8%;
+.loginFormPaper{
+    width: 300px;
     margin: 0 auto;
-}
-
-.loginform{
-    background-color:#fff;
 }
