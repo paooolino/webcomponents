@@ -3,28 +3,66 @@ import { reduxForm } from 'redux-form';
 import {createValidator, required, minLength} from '../utils/validation';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import Checkbox from 'material-ui/Checkbox';
+import ActionLockOutline from 'material-ui/svg-icons/action/lock-outline';
+import SocialPersonOutline from 'material-ui/svg-icons/social/person-outline';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
+import { grey500 } from 'material-ui/styles/colors';
 
 import '../css/LoginForm.css';
+
+const iconstyle = {marginLeft: '10px', height: '30px', width: '30px', marginTop: '32px'};
 
 const LoginForm = ({fields:{username, password}, handleSubmit, resetForm, submitting, isFetching, errorMessage}) => (
     <div className="loginFormContainer">
         <Paper className="loginFormPaper" zDepth={3}>
-            <Grid fluid>
-                <Row>
-                    <Col xs={12}>
-                        <TextField
-                            floatingLabelText="Username"
-                            fullWidth={true}
-                        />
-                        <TextField
-                            floatingLabelText="Password"
-                            fullWidth={true}
-                            type="password"
-                        />
-                    </Col>
-                </Row>
-            </Grid>
+            <div className="loginLogo">
+            </div>
+            <div className="loginTitle marginedV">
+                WebComponents admin
+            </div>
+            <div className="loginRow">
+                <div className="loginSx">
+                    <SocialPersonOutline color={grey500} style={iconstyle} />
+                </div>
+                <div className="loginDx">
+                    <TextField
+                        floatingLabelText="Username"
+                        fullWidth={true}
+                    />
+                </div>
+                <div className="close"></div>
+            </div>
+            <div className="loginRow">
+                <div className="loginSx">
+                    <ActionLockOutline color={grey500} style={iconstyle} />
+                </div>
+                <div className="loginDx">
+                    <TextField
+                        floatingLabelText="Password"
+                        fullWidth={true}
+                        type="password"
+                    />
+                </div>
+                <div className="close"></div>
+            </div>  
+            
+            <div className="loginRow marginedV">
+                <Checkbox label="Remember me" labelStyle={{color:'#9e9e9e'}} />                
+            </div> 
+
+            <RaisedButton label="login" style={{display: 'block'}} secondary={true} />
+
+            <div className="loginRow marginedV">
+                <div className="sx">
+                    Register
+                </div>
+                <div className="dx">
+                    Forgot password?
+                </div>
+                <div className="close"></div>
+            </div>             
         </Paper>
     </div>
 );

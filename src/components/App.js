@@ -7,7 +7,7 @@ class App extends Component {
     render() {
         const content = this.props.isAuthenticated ? <AppContent /> : <LoginFormContainer />;
         return (
-            <div className="allheight">{content}</div>
+            <div>{content}</div>
         );
     }
 }

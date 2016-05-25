@@ -1,10 +1,39 @@
 .loginFormContainer{
+    position:absolute;
+    width: 100%;
     height: 100%;
+    top:0;left:0;
     background-color: #00bcd4;
-    padding-top: 80px;
 }
 
 .loginFormPaper{
-    width: 300px;
-    margin: 0 auto;
+    position:absolute;
+    width:300px;
+    left:50%;
+    top:80px;
+    margin-left:-150px;
+    padding:20px;
 }
+
+.loginLogo{}
+
+.loginTitle{
+    text-align:center;
+    text-transform:uppercase;
+    font-size:14pt;
+}
+
+.loginRow{
+    font-size: 12pt;
+    color: #9e9e9e;
+}
+
+.loginSx{
+    float:left;width:50px;
+}
+.loginDx{
+    margin-left:60px;
+}
+
+.sx{float:left;width:50%;}
+.dx{margin-left:50%;text-align:right;}
