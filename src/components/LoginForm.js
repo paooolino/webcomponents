@@ -17,52 +17,59 @@ const iconstyle = {marginLeft: '10px', height: '30px', width: '30px', marginTop:
 const LoginForm = ({fields:{username, password}, handleSubmit, resetForm, submitting, isFetching, errorMessage}) => (
     <div className="loginFormContainer">
         <Paper className="loginFormPaper" zDepth={3}>
-            <div className="loginLogo">
-            </div>
-            <div className="loginTitle marginedV">
-                WebComponents admin
-            </div>
-            <div className="loginRow">
-                <div className="loginSx">
-                    <SocialPersonOutline color={grey500} style={iconstyle} />
+            <form onSubmit={handleSubmit}>
+                <div className="loginLogo">
                 </div>
-                <div className="loginDx">
-                    <TextField
-                        floatingLabelText="Username"
-                        fullWidth={true}
-                    />
+                <div className="loginTitle marginedV">
+                    WebComponents admin
                 </div>
-                <div className="close"></div>
-            </div>
-            <div className="loginRow">
-                <div className="loginSx">
-                    <ActionLockOutline color={grey500} style={iconstyle} />
+                <div className="errorMessage">{errorMessage}</div>
+                <div className="loginRow">
+                    <div className="loginSx">
+                        <SocialPersonOutline color={grey500} style={iconstyle} />
+                    </div>
+                    <div className="loginDx">
+                        <TextField
+                            floatingLabelText="Username"
+                            fullWidth={true}
+                            {...username}
+                            errorText={username.error}
+                        />
+                    </div>
+                    <div className="close"></div>
                 </div>
-                <div className="loginDx">
-                    <TextField
-                        floatingLabelText="Password"
-                        fullWidth={true}
-                        type="password"
-                    />
-                </div>
-                <div className="close"></div>
-            </div>  
-            
-            <div className="loginRow marginedV">
-                <Checkbox label="Remember me" labelStyle={{color:'#9e9e9e'}} />                
-            </div> 
+                <div className="loginRow">
+                    <div className="loginSx">
+                        <ActionLockOutline color={grey500} style={iconstyle} />
+                    </div>
+                    <div className="loginDx">
+                        <TextField
+                            floatingLabelText="Password"
+                            fullWidth={true}
+                            type="password"
+                            {...password}
+                            errorText={password.error}
+                        />
+                    </div>
+                    <div className="close"></div>
+                </div>  
+                
+                <div className="loginRow marginedV">
+                    <Checkbox label="Remember me" labelStyle={{color:'#9e9e9e'}} />                
+                </div> 
 
-            <RaisedButton label="login" style={{display: 'block'}} secondary={true} />
+                <RaisedButton type="submit" label="login" style={{display: 'block'}} secondary={true} />
 
-            <div className="loginRow marginedV">
-                <div className="sx">
-                    Register
-                </div>
-                <div className="dx">
-                    Forgot password?
-                </div>
-                <div className="close"></div>
-            </div>             
+                <div className="loginRow marginedV">
+                    <div className="sx">
+                        Register
+                    </div>
+                    <div className="dx">
+                        Forgot password?
+                    </div>
+                    <div className="close"></div>
+                </div>  
+            </form>
         </Paper>
     </div>
 );

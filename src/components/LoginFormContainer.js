@@ -7,6 +7,7 @@ import { login } from '../actions/authActions';
 const mapDispatchToProps = function(dispatch) {
     return {
         onSubmit: function(data) {
+            console.log('submitting...', data);
             dispatch(login(
                 data.username,
                 data.password

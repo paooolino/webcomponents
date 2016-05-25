@@ -6,7 +6,7 @@ const initialState = {
     isFetching: false,
     isAuthenticated: false,
     errorMessage: '',
-    options: {}
+    loginPayload: {}
 };
 
 export default function auth(state=initialState, action) {
@@ -24,7 +24,7 @@ export default function auth(state=initialState, action) {
                 isFetching: false,
                 isAuthenticated: true,
                 errorMessage: '',
-                options: action.payload.options
+                loginPayload: action.payload
             };
             
         case LOGIN_FAILURE:
