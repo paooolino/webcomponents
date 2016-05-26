@@ -1,0 +1,23 @@
+.appbody{margin-left:260px;}
+.contentheader{background-color:#f3f3f3;padding:19px;}
+.contentTitle{
+    font-size: 1.4rem;
+    line-height: 1.604rem;
+}
+.breadcrumbs {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-size:15px;
+}
+.breadcrumbs>li {
+    display: inline-block;
+}
+.breadcrumbs>li+li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/\00a0";
+}
+.contentbody{
+    padding:20px;
+}
