@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import AppContent from './AppContent';
+import AppSkeleton from './AppSkeleton';
 import LoginFormContainer from './LoginFormContainer';
 
 class App extends Component {
     render() {
-        const content = this.props.isAuthenticated ? <AppContent /> : <LoginFormContainer />;
+        const content = this.props.isAuthenticated ? <AppSkeleton /> : <LoginFormContainer />;
         return (
             <div>{content}</div>
         );

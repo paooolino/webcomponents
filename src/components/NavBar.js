@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-export default class AppContent extends Component {
+export default class AppBody extends Component {
     render() {
         return(
-            <div>AppContent.</div>
+            <div>NavBar</div>
         );
     }
 }
