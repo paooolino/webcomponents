@@ -15,17 +15,31 @@ import { setWindowHeight } from '../actions/appActions';
 import '../css/NavBar.css';
 
 class NavBar extends Component {
-    handleResize = (e) => {
-        this.props.dispatch(setWindowHeight(window.innerHeight));
-    }
-
+    
     componentDidMount() {
         this.props.dispatch(setWindowHeight(window.innerHeight));
         window.addEventListener('resize', this.handleResize);
+
+        if( this.props.lang == '' ) {
+            this.props.dispatch(setLanguage(
+                this.props.main_language
+            ));
+        } else {
+            /*
+            this.props.dispatch(fetchItems(
+                this.props.selected_id_parent,
+                this.props.lang
+            ));
+            */
+        }
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.handleResize);
+    }
+
+    handleResize = (e) => {
+        this.props.dispatch(setWindowHeight(window.innerHeight));
     }
     
     render() {
@@ -55,7 +69,9 @@ class NavBar extends Component {
 
 const mapStateToProps = function(store) {
     return {
-        windowHeight: store.app.windowHeight
+        windowHeight: store.app.windowHeight,
+        main_language: store.app.langInfos.main_language,
+        lang: store.items.lang
     };
 };
 

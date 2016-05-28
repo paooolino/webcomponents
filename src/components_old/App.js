@@ -5,9 +5,17 @@ import StatusBar from './StatusBar';
 import LoginFormContainer from './LoginFormContainer';
 import { connect } from 'react-redux';
 
+import { getLangInfos } from '../actions/appActions';
+
 import '../css/App.css';
 
 class App extends Component {
+    
+    componentDidMount() {
+        console.log('uhu?');
+        this.props.dispatch(getLangInfos());
+    }
+    
     render() {
         return (
             <div>

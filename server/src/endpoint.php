@@ -28,12 +28,20 @@
             } else {
                 echo json_encode(array(
                     "status" => "ok",
-                    "authcode" => $authcode,
-                    "options" => $de->getOptions()
+                    "authcode" => $authcode
                 ));
             }
             break;
         
+        case "getLangInfos":
+            $options = $de->getOptions();
+            
+            echo json_encode(array(
+                "status" => "ok",
+                "langInfos" => $options["languages"]
+            ));
+            break;
+            
         case "fetchItems":
             $items = $de->fetchItems(
                 $ARR["data"]["id_parent"],

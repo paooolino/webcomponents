@@ -2,8 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import AppSkeleton from './AppSkeleton';
 import LoginFormContainer from './LoginFormContainer';
+import { getLangInfos } from '../actions/appActions';
 
 class App extends Component {
+    
+    componentDidMount() {
+        this.props.dispatch(getLangInfos());
+    }
+    
     render() {
         const content = this.props.isAuthenticated ? <AppSkeleton /> : <LoginFormContainer />;
         return (
