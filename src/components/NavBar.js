@@ -17,8 +17,6 @@ import '../css/NavBar.css';
 class NavBar extends Component {
     
     componentDidMount() {
-        this.props.dispatch(setWindowHeight(window.innerHeight));
-        window.addEventListener('resize', this.handleResize);
 
         if( this.props.lang == '' ) {
             this.props.dispatch(setLanguage(
@@ -34,13 +32,6 @@ class NavBar extends Component {
         }
     }
 
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.handleResize);
-    }
-
-    handleResize = (e) => {
-        this.props.dispatch(setWindowHeight(window.innerHeight));
-    }
     
     render() {
         return(
