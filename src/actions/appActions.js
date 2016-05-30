@@ -1,4 +1,4 @@
-import {API_ENDPOINT, createAsyncAction} from './utils.js';
+import { createAsyncAction } from './utils.js';
 
 //
 // to be used by the reducer

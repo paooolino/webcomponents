@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register",
+    "test": "mocha --require ignore-styles --compilers js:babel-register --recursive",
     "test:watch": "npm test -- --watch",
     "build": "webpack",
     "start": "webpack-dev-server"
@@ -21,9 +21,13 @@
     "babel-preset-stage-0": "*",
     "babel-register": "*",
     "css-loader": "*",
-    "expect": "^1.20.1",
+    "expect": "*",
     "file-loader": "*",
-    "mocha": "^2.5.3",
+    "ignore-styles": "*",
+    "mocha": "*",
+    "nock": "^8.0.0",
+    "react-addons-test-utils": "*",
+    "redux-mock-store": "^1.0.4",
     "style-loader": "*",
     "webpack": "*",
     "webpack-dev-server": "*"

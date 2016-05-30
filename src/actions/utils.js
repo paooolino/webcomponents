@@ -49,28 +49,21 @@ export function createAsyncAction(actionName, data, request, error, success) {
                 return(json);
             })
             .then(function(json){
-                if( json.status == 'ok') {
-                    dispatch({
-                        type: success,
-                        payload: json
-                    });
-                } else if( json.status == 'ko') {
-                    dispatch({
-                        type: error,
-                        payload: {
-                            errorMessage: json.error
-                        }
-                    });
-                }
-            })/*
-            .catch(err => {
-                console.log(err);
-                dispatch({
-                    type: error,
-                    payload: {
-                        errorMessage: err.message
+                if( json ) {
+                    if( json.status == 'ok') {
+                        dispatch({
+                            type: success,
+                            payload: json
+                        });
+                    } else if( json.status == 'ko') {
+                        dispatch({
+                            type: error,
+                            payload: {
+                                errorMessage: json.error
+                            }
+                        });
                     }
-                });
-    		})*/;
+                }
+            })
 	};
 }
