@@ -17,7 +17,7 @@ import { setWindowHeight, getLangInfos } from '../actions/appActions';
     It attaches the handle to update the window height in the store.
     It dispatches an action to retrieve language informations.
 */
-class App extends Component {
+export class App extends Component {
     
     componentDidMount() {
         this.props.dispatch(setWindowHeight(window.innerHeight));
@@ -52,3 +52,5 @@ const mapStateToProps = function(store) {
 export default connect(
     mapStateToProps
 )(App);
+
+
