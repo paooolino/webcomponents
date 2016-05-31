@@ -24,6 +24,7 @@
     "expect": "*",
     "file-loader": "*",
     "ignore-styles": "*",
+    "jsdom": "^9.2.1",
     "mocha": "*",
     "nock": "^8.0.0",
     "react-addons-test-utils": "*",
