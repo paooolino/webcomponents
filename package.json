@@ -21,6 +21,7 @@
     "babel-preset-stage-0": "*",
     "babel-register": "*",
     "css-loader": "*",
+    "enzyme": "^2.3.0",
     "expect": "*",
     "file-loader": "*",
     "ignore-styles": "*",
