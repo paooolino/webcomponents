@@ -18,14 +18,11 @@ export const DELETEITEM_FAILURE = 'DELETEITEM_FAILURE';
 export const DELETEITEM_SUCCESS = 'DELETEITEM_SUCCESS';
 
 export const SELECT_ITEM = 'SELECT_ITEM';
-export const EXPAND_ITEM = 'EXPAND_ITEM';
 export const UPDATE_ITEM_FIELD = 'UPDATE_ITEM_FIELD';
 
 export const SAVEITEMFIELD_REQUEST = 'SAVEITEMFIELD_REQUEST';
 export const SAVEITEMFIELD_FAILURE = 'SAVEITEMFIELD_FAILURE'; 
 export const SAVEITEMFIELD_SUCCESS = 'SAVEITEMFIELD_SUCCESS';
-
-export const SET_LANGUAGE = 'SET_LANGUAGE';
 
 
 
@@ -66,16 +63,7 @@ const saveItemField = (id, name, value) => {
 
 const selectItem = (id) => ({
     type: SELECT_ITEM,
-    payload: {
-        id
-    }
-});
-
-const expandItem = (id) => ({
-    type: EXPAND_ITEM,
-    payload: {
-        id
-    }
+    id
 });
 
 const updateItemField = (name, value) => ({
@@ -83,13 +71,6 @@ const updateItemField = (name, value) => ({
     payload: {
         name,
         value
-    }
-});
-
-const setLanguage = (lang) => ({
-    type: SET_LANGUAGE,
-    payload: {
-        lang
     }
 });
 
@@ -102,7 +83,6 @@ export { fetchItems };  // this is ES6 syntax to export a function defined earli
 export { addItem };
 export { deleteItem };
 export { selectItem };
-export { expandItem };
 export { updateItemField };
 export { saveItemField };
 export { setLanguage };

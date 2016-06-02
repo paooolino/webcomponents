@@ -1,41 +1,31 @@
-import React from 'react';
-import TestUtils from 'react-addons-test-utils';
-import { Provider } from 'react-redux';
-import expect from 'expect';
-import { shallow } from 'enzyme';
-//import configureMockStore from 'redux-mock-store';
-
-//const mockStore = configureMockStore([]);
-
-/*
-const store = mockStore({
-    auth: {
-        isAuthenticated: false
-    }
-});
-*/
+describe('App component rendering', () => {
     
-import { App } from '../src/components/App';
+    describe('When the user is not authenticated', () => {
+        
+        it('should render the LoginForm component');
+        it('should not render the logout button in the #appBar');
+        
+    });
     
-describe('AppRendering', () => {
-    it('should render a wrapper div', () => {
-        //const renderer = TestUtils.createRenderer();
-        //renderer.render(<App isAuthenticated={false} />);
-        //const output = renderer.getRenderOutput();
-        const output = shallow(<App isAuthenticated={false} />);
-        expect(output.type()).toBe('div');
+    describe('When the user is authenticated', () => {
+        
+        it('should render the ItemsManager component');
+        it('should render the logout button in the #appBar');
+        
+        it('should dispatch the logout action when the logout button is clicked');
+        
     });
-    it('should render the AppSkeleton wrapped component if user authenticated', () => {
-        //const renderer = TestUtils.createRenderer();
-        //renderer.render(<App isAuthenticated={true} />);
-        //const output = renderer.getRenderOutput();
-        const output = shallow(<App isAuthenticated={true} />);
-        console.log(output.html());
-        //expect(output.find('AppSkeleton').length).toBe(1);
+    
+    describe('When the app is fetching', () => {
+        
+        it('should render the #fetching overlay');
+        
     });
-    it('should render the LoginFormContainer component if user is not authenticated', () => {
-        //const output = shallow(<App isAuthenticated={true} />);
-        //expect(output.find('LoginFormContainer').length).toBe(1);
-    });
+    
+    it('should render the #appBar');
+    it('should render the #languageSelector in the #appBar');
+    it('should render the #statusBar');
+    
+    it('should dispatch the changeLanguage action when a new language is picked');
+    
 });
-
