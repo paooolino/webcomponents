@@ -16,6 +16,7 @@ state {
         authcode: ''
     },
     items: {
+        invalidated: true,
         loadedItems: [],
         selectedItemId: 0,
         ancestors: []
