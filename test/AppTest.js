@@ -27,5 +27,5 @@ describe('App component rendering', () => {
     it('should render the #statusBar');
     
     it('should dispatch the changeLanguage action when a new language is picked');
-    
+    it('should dispatch the getLangInfos actions when the component is mounted');
 });

@@ -3,10 +3,8 @@ import {
 } from '../actions/authActions';
 
 const initialState = {
-    isFetching: false,
     isAuthenticated: false,
-    errorMessage: '',
-    loginPayload: {}
+    authcode: ''
 };
 
 export default function auth(state=initialState, action) {

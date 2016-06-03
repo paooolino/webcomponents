@@ -38,7 +38,7 @@
             
             echo json_encode(array(
                 "status" => "ok",
-                "langInfos" => $options["languages"]
+                "langInfos" => $options["langInfos"]
             ));
             break;
             

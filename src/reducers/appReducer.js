@@ -1,23 +1,15 @@
 import {
     SET_WINDOW_HEIGHT,
+    CHANGE_LANGUAGE,
     GET_LANG_INFOS_REQUEST, GET_LANG_INFOS_FAILURE, GET_LANG_INFOS_SUCCESS
 } from '../actions/appActions';
 
 const initialState = {
-    // the browser window height. 
-    // May be used by various components to adjust their height according to this.
     windowHeight: 0,
-    // tell if the app is fetching data from server.
     isFetching: false,
-    // tell a description of the current fetching.
-    fetchingDescription: '',
-    // tell if there was an error while fetching.
-    fetchingErrorMessage: '',
-    // the App language infos gathered from the first server fetch.
-    langInfos: {
-        languages: [],
-        main_language: ''
-    }
+    statusMessage: '',
+    languages: [],
+    selectedLanguage: ''
 };
 
 export default function items(state=initialState, action) {

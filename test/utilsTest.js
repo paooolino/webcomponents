@@ -10,7 +10,7 @@
     i.e., the getLangInfos action.
     
     The createAsyncAction will return an action of type success/error
-    and a payload containing the errorMessage in case of failure
+    and an errorMessage in case of failure
     or the entire response json if ok.
 */
 
@@ -63,7 +63,7 @@ describe('createAsyncAction', () => {
                 expect(actions.length).toBe(2);
                 expect(actions[0].type).toBe(GET_LANG_INFOS_REQUEST);
                 expect(actions[1].type).toBe(GET_LANG_INFOS_FAILURE);
-                expect(actions[1].payload.errorMessage).toBe('whatever message from the endpoint');
+                expect(actions[1].errorMessage).toBe('whatever message from the endpoint');
             });
     });
     
@@ -80,7 +80,7 @@ describe('createAsyncAction', () => {
                 expect(actions.length).toBe(2);
                 expect(actions[0].type).toBe(GET_LANG_INFOS_REQUEST);
                 expect(actions[1].type).toBe(GET_LANG_INFOS_FAILURE);
-                expect(actions[1].payload.errorMessage).toBe('500 Internal Server Error');
+                expect(actions[1].errorMessage).toBe('500 Internal Server Error');
             });
     });
 });
