@@ -13,10 +13,10 @@ export const GET_LANG_INFOS_SUCCESS = 'GET_LANG_INFOS_SUCCESS';
 //
 // action creators
 //
-const changeLanguage = (newLang) => {
+const changeLanguage = (newLang) => ({
     type: CHANGE_LANGUAGE,
     newLang
-};
+});
 
 const setWindowHeight = (h) => ({
     type: SET_WINDOW_HEIGHT,

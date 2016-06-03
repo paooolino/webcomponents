@@ -39,7 +39,7 @@ export function createAsyncAction(actionName, data, request, error, success) {
                 if(!response.ok) {
                     dispatch({
                         type: error,
-                        errorMessage: response.status + ' ' + response.statusText
+                        description: response.status + ' ' + response.statusText
                     });
                 } else {
                     json = response.json();
@@ -56,7 +56,7 @@ export function createAsyncAction(actionName, data, request, error, success) {
                     } else if( json.status == 'ko') {
                         dispatch({
                             type: error,
-                            errorMessage: json.error
+                            description: json.description
                         });
                     }
                 }

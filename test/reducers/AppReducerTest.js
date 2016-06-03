@@ -1,7 +1,8 @@
 import nock from 'nock';
+import {expect} from 'chai';
 
-import { changeLanguage, setWindowHeight, getLangInfos } from '../src/actions/appActions';
-import reducer from '../src/reducers/reducers';
+import { changeLanguage, setWindowHeight, getLangInfos } from '../../src/actions/appActions';
+import reducer from '../../src/reducers/appReducer';
 
 const ENDPOINT_HOST = 'http://127.0.0.1';
 const ENDPOINT_PATH = '/webcomponents/server/src/endpoint.php';
@@ -16,13 +17,11 @@ describe('App reducer', () => {
         
         it('changes language', () => {
             const initialState = {
-                app: {
-                    languages: ["it", "en", "de"],
-                    selectedLanguage: ''
-                }
+                languages: ["it", "en", "de"],
+                selectedLanguage: ''
             }
             const nextState = reducer(initialState, changeLanguage('it'));
-            expect(nextState.app.selectedLanguage).to.equal('it');
+            expect(nextState.selectedLanguage).to.equal('it');
         });    
 
     });
@@ -35,20 +34,18 @@ describe('App reducer', () => {
                 .reply(200, { 
                     status: 'ok', 
                     langInfos: [
-                        {language:'it'}, 
-                        {language:'en'}
+                        {language: 'it'}, 
+                        {language: 'en'}
                     ] 
                 });
                 
             const initialState = {
-                app: {
-                    languages: [],
-                    selectedLanguage: ''
-                }
+                languages: [],
+                selectedLanguage: ''
             }
             const nextState = reducer(initialState, getLangInfos());
-            expect(nextState.app.languages).to.equal(['it', 'en']);            
-            expect(nextState.app.selectedLanguage).to.equal('it');            
+            expect(nextState.languages).to.equal([{language: 'it'}, {language: 'en'}]);            
+            expect(nextState.selectedLanguage).to.equal('it');            
         });
         
     });
@@ -57,12 +54,10 @@ describe('App reducer', () => {
         
         it('sets the window heigth', () => {
             const initialState = {
-                app: {
-                    windowHeight: 0
-                }
+                windowHeight: 0
             }
             const nextState = reducer(initialState, setWindowHeight(300));
-            expect(nextState.app.windowHeight).to.equal(300);            
+            expect(nextState.windowHeight).to.equal(300);            
         });
         
     });    

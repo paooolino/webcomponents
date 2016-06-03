@@ -12,8 +12,14 @@ const initialState = {
     selectedLanguage: ''
 };
 
-export default function items(state=initialState, action) {
+export default function(state=initialState, action) {
     switch (action.type) {
+        case CHANGE_LANGUAGE:
+            return {
+                ...state,
+                selectedLanguage: action.newLang
+            };
+            
         case SET_WINDOW_HEIGHT:
             return {
                 ...state,
@@ -22,10 +28,7 @@ export default function items(state=initialState, action) {
             
         case GET_LANG_INFOS_REQUEST:
             return {
-                ...state,
-                fetchingDescription: 'Requesting language informations...',
-                isFetching: true,
-                fetchingErrorMessage: ''
+                ...state
             };
             
         case GET_LANG_INFOS_FAILURE:
@@ -37,12 +40,10 @@ export default function items(state=initialState, action) {
             };            
             
         case GET_LANG_INFOS_SUCCESS:
-             return {
+            return {
                 ...state,
-                fetchingDescription: '',
-                isFetching: false,
-                fetchingErrorMessage: '',
-                langInfos: action.payload.langInfos
+                languages: action.payload.langInfos,
+                selectedLanguage: action.payload.langInfos[0].language
             };       
             
         default:

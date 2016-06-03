@@ -23,7 +23,7 @@
             if( $authcode == "" ) {
                 echo json_encode(array(
                     "status" => "ko",
-                    "error" => "Username or password not valid."
+                    "description" => "Username or password not valid."
                 ));
             } else {
                 echo json_encode(array(
@@ -68,7 +68,7 @@
             if( $result == 0 ) {
                 echo json_encode(array(
                     "status" => "ko",
-                    "error" => "Data not modified."
+                    "description" => "Data not modified."
                 ));               
             } else {
                 echo json_encode(array(
@@ -102,7 +102,7 @@
         default:
             echo json_encode(array(
                 "status" => "ko",
-                "error" => "No valid action"
+                "description" => "No valid action"
             ));
     }
     
