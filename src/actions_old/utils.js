@@ -49,10 +49,9 @@ export function createAsyncAction(actionName, data, request, error, success) {
             .then(function(json){
                 if( json ) {
                     if( json.status == 'ok') {
-                        delete json.status;
                         dispatch({
                             type: success,
-                            ...json
+                            payload: json
                         });
                     } else if( json.status == 'ko') {
                         dispatch({
