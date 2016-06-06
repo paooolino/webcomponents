@@ -2,43 +2,42 @@ import expect from 'expect';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as actions from '../../src/actions/AppActions';
+import * as actions from '../../src/actions/AuthActions';
 
 const mockStore = configureMockStore([thunk]);
 const ENDPOINT_HOST = 'http://127.0.0.1';
 const ENPOINT_PATH = '/webcomponents/server/src/endpoint.php';
 
-describe('App actions', () => {
-    
+describe('Auth actions', () => {
+
     afterEach(() => {
         nock.cleanAll();
     })
-  
-    it('should create GET_LANGUAGE_INFOS_SUCCESS when the request has been done', () => {
+    
+    it('should create LOGIN_SUCCESS when login action has been dispatched', () => {
         nock(ENDPOINT_HOST)
             .post(ENPOINT_PATH)
             .reply(200, {
                 status: 'ok',
-                languageInfos: [{ lang: 'it' },{ lang: 'en' }]
+                authcode: '#user_authcode#'
             });
 
         const expectedActions = [
-            { type: actions.GET_LANGUAGE_INFOS_REQUEST },
-            { type: actions.GET_LANGUAGE_INFOS_SUCCESS, languageInfos: [{ lang: 'it' },{ lang: 'en' }] }
+            { type: actions.LOGIN_REQUEST },
+            { type: actions.LOGIN_SUCCESS, authcode: '#user_authcode#' }
         ];
         const store = mockStore({});
-        return store.dispatch(actions.getLanguageInfos())
+        return store.dispatch(actions.login('admin', 'admin'))
             .then(() => { // return of async actions
             expect(store.getActions()).toEqual(expectedActions)
-        })
+        })        
     });
     
-    it('should create an action change language', () => {
+    it('should create an action to logout', () => {
         const expectedAction = {
-            type: actions.CHANGE_LANGUAGE,
-            newLanguage: 'it'
+            type: actions.LOGOUT,
         }
-        expect(actions.changeLanguage('it')).toEqual(expectedAction);
+        expect(actions.logout()).toEqual(expectedAction);        
     });
     
 });

@@ -24,9 +24,7 @@ export function createAsyncAction(actionName, data, request, error, success) {
 	    
         // First dispatch: the app state is updated to inform
         // that the API call is starting.
-		dispatch({
-		    type: request
-		});
+		dispatch(request());
 
         // The function called by the thunk middleware can return a value,
         // that is passed on as the return value of the dispatch method.
@@ -37,10 +35,7 @@ export function createAsyncAction(actionName, data, request, error, success) {
             .then(function(response){
                 let json;
                 if(!response.ok) {
-                    dispatch({
-                        type: error,
-                        description: response.status + ' ' + response.statusText
-                    });
+                    dispatch(error(response.status + ' ' + response.statusText));
                 } else {
                     json = response.json();
                 }
@@ -50,15 +45,9 @@ export function createAsyncAction(actionName, data, request, error, success) {
                 if( json ) {
                     if( json.status == 'ok') {
                         delete json.status;
-                        dispatch({
-                            type: success,
-                            ...json
-                        });
+                        dispatch(success(json));
                     } else if( json.status == 'ko') {
-                        dispatch({
-                            type: error,
-                            description: json.description
-                        });
+                        dispatch(error(json.description))
                     }
                 }
             })
