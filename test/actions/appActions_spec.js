@@ -6,7 +6,7 @@ import * as actions from '../../src/actions/appActions';
 
 const mockStore = configureMockStore([thunk]);
 const ENDPOINT_HOST = 'http://127.0.0.1';
-const ENPOINT_PATH = '/webcomponents/server/src/endpoint.php';
+const ENDPOINT_PATH = '/webcomponents/server/src/endpoint.php';
 
 describe('App actions', () => {
     
@@ -16,7 +16,7 @@ describe('App actions', () => {
   
     it('should create GET_LANGUAGE_INFOS_SUCCESS when getLanguageInfos has been dispatched', () => {
         nock(ENDPOINT_HOST)
-            .post(ENPOINT_PATH)
+            .post(ENDPOINT_PATH)
             .reply(200, {
                 status: 'ok',
                 languageInfos: [{ lang: 'it' },{ lang: 'en' }]

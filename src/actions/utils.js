@@ -1,12 +1,11 @@
 import { API_ENDPOINT } from '../config';
 import fetch from 'isomorphic-fetch';
 
-// assuming that:
-//  - server expects raw POST data in which there is an "action" name and a "data" object.
-//  - server responds with a json in which a status field is "ok" or "ko".
-//  - if status is "ko" a field "error" is valorized with an error message.
-
-export function createAsyncAction(actionName, data, request, error, success) {
+export function createAsyncAction(actionName, request, error, success) {
+    
+    const requestAction = request();
+    let requestData = {...requestAction};
+    delete requestData.type;
     
     let config = {
         method: 'POST',
@@ -16,7 +15,7 @@ export function createAsyncAction(actionName, data, request, error, success) {
         },
         body: JSON.stringify({
             action: actionName,
-            data
+            data: requestData
         })
     };
 

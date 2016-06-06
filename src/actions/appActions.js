@@ -27,7 +27,6 @@ const getLanguageInfosSuccess = (languageInfos) => ({
 const getLanguageInfos = () => {
     return createAsyncAction(
         "getLanguageInfos",
-        {},
         getLanguageInfosRequest, getLanguageInfosFailure, getLanguageInfosSuccess
     );
 };

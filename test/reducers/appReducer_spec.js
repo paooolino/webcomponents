@@ -1,6 +1,6 @@
 import expect from 'expect';
-import * as actions from '../actions/appActions';
-import reducer from '../reducers/appReducer';
+import * as actions from '../../src/actions/appActions';
+import reducer from '../../src/reducers/appReducer';
 
 describe('App reducer', () => {
     
@@ -11,7 +11,7 @@ describe('App reducer', () => {
             languages: [],
             selectedLanguage: ''
         };
-        const nextState = reducer(state, actions.getlanguageInfosRequest);
+        const nextState = reducer(state, actions.getLanguageInfosRequest());
         const expectedState = {
             nFetching: 1,
             statusMessage: 'Requesting languages',
@@ -21,7 +21,7 @@ describe('App reducer', () => {
         expect(nextState).toEqual(expectedState);
     });
 
-    it('should handle getlanguageInfosFailure', () => {
+    it('should handle getLanguageInfosFailure', () => {
         const state = {
             nFetching: 1,
             statusMessage: 'Requesting languages',
@@ -29,7 +29,7 @@ describe('App reducer', () => {
             selectedLanguage: ''
         };
         const errorMessage = 'An unspecified error occurred.';
-        const nextState = reducer(state, actions.getlanguageInfosFailure(errorMessage));
+        const nextState = reducer(state, actions.getLanguageInfosFailure(errorMessage));
         const expectedState = {
             nFetching: 0,
             statusMessage: 'Error in requesting languages: ' + errorMessage,
@@ -49,7 +49,7 @@ describe('App reducer', () => {
         const languageInfos = {
             languageInfos: [{ lang: 'it' }, { lang: 'en' }]
         };
-        const nextState = reducer(state, actions.getlanguageInfosSuccess(languageInfos));
+        const nextState = reducer(state, actions.getLanguageInfosSuccess(languageInfos));
         const expectedState = {
             nFetching: 0,
             statusMessage: 'Languages loaded.',
@@ -62,15 +62,15 @@ describe('App reducer', () => {
     describe('changeLanguage', () => {
         it('should change a language if present in the available languages', () => {
             const state = {
+                statusMessage: '',
                 languages: ['it', 'en'],
                 selectedLanguage: 'it'
             };
             const newLanguage = 'en';
             const nextState = reducer(state, actions.changeLanguage(newLanguage));
             const expectedState = {
-                nFetching: 0,
                 statusMessage: 'Language was changed to ' + newLanguage,
-                languages: ['it', newLanguage],
+                languages: ['it', 'en'],
                 selectedLanguage: newLanguage
             };        
             expect(nextState).toEqual(expectedState);         
@@ -78,13 +78,13 @@ describe('App reducer', () => {
 
         it('should not change a language if not present in the available languages', () => {
             const state = {
+                statusMessage: '',
                 languages: ['it', 'en'],
                 selectedLanguage: 'it'
             };
             const newLanguage = 'de';
             const nextState = reducer(state, actions.changeLanguage(newLanguage));
             const expectedState = {
-                nFetching: 0,
                 statusMessage: 'Failed change to unavailable language ' + newLanguage,
                 languages: ['it', 'en'],
                 selectedLanguage: 'it'
@@ -94,3 +94,4 @@ describe('App reducer', () => {
     });
 
 });
+
