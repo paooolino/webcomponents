@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
+import LoginForm from './LoginForm';
+import ItemManager from './ItemManager';
 
-export default class App extends Component {
+class App extends Component {
     render() {
+        console.log(this.props);
+        const component = this.props.isAuthenticated ? <ItemManager /> : <LoginForm />;
         return (
             <div>
-                App.
+                {component}
             </div>
         );
     }
 }
+
+export default App;
+export { App };
