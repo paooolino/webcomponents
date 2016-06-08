@@ -4,11 +4,20 @@ import ItemManager from './ItemManager';
 
 class App extends Component {
     render() {
-        console.log(this.props);
         const component = this.props.isAuthenticated ? <ItemManager /> : <LoginForm />;
+        const logout_button = this.props.isAuthenticated ? <button id="logout_button"></button> : '';
+        const fetching_overlay = this.props.isFetching ? <div id="fetching_overlay"></div> : '';
         return (
             <div>
                 {component}
+                <div id="appBar">
+                    <div id="languageSelector">
+                        {logout_button}
+                    </div>
+                </div>
+                <div id="statusBar">
+                </div>
+                {fetching_overlay}
             </div>
         );
     }
