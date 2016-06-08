@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import LoginForm from './LoginForm';
 import ItemManager from './ItemManager';
 
@@ -14,7 +15,7 @@ class App extends Component {
     render() {
         const component = this.props.isAuthenticated ? <ItemManager /> : <LoginForm />;
         const logout_button = this.props.isAuthenticated ? <button onClick={this.props.handleLogout} id="logout_button"></button> : '';
-        const fetching_overlay = this.props.isFetching ? <div id="fetching_overlay"></div> : '';
+        const fetching_overlay = this.props.nFetching > 0 ? <div id="fetching_overlay"></div> : '';
         
         return (
             <div id="appContainer">
@@ -37,5 +38,34 @@ class App extends Component {
     }
 }
 
-export default App;
+App.propTypes = {
+    isAuthenticated: PropTypes.bool.isRequired,
+    nFetching: PropTypes.number.isRequired,
+    handleLogout: PropTypes.func.isRequired,
+    handleGetLangInfos: PropTypes.func.isRequired,
+    handleChangeLanguage: PropTypes.func.isRequired,
+    languages: PropTypes.array.isRequired
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        handleLogout: function(data) {},
+        handleGetLangInfos: function(data) {},
+        handleChangeLanguage: function(data) {}
+    }; 
+};
+
+const mapStateToProps = (state) => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+        nFetching: state.app.nFetching,
+        languages: state.app.languages
+    }
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App);
+
 export { App };

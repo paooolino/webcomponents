@@ -8,7 +8,7 @@ import { ItemManager } from '../../src/components/ItemManager';
 
 const defaultProps = {
     isAuthenticated: false,
-    isFetching: false,
+    nFetching: 0,
     handleLogout: expect.createSpy(),
     handleGetLangInfos: expect.createSpy(),
     handleChangeLanguage: expect.createSpy(),
@@ -106,7 +106,7 @@ describe('App component', () => {
         
         describe('When the app is fetching', () => {
             
-            const output = setupShallow({isFetching: true});
+            const output = setupShallow({nFetching: 1});
             
             it('should render the #fetching_overlay', () => {
                 expect(output.find('#fetching_overlay').length).toBe(1);  
@@ -116,7 +116,7 @@ describe('App component', () => {
         
         describe('When the app is not fetching', () => {
             
-            const output = setupShallow({isFetching: false});
+            const output = setupShallow({nFetching: 0});
             
             it('should not render the #fetching_overlay', () => {
                 expect(output.find('#fetching_overlay').length).toBe(0);  
