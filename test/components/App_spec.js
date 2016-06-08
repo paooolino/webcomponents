@@ -12,7 +12,8 @@ const defaultProps = {
     handleLogout: expect.createSpy(),
     handleGetLangInfos: expect.createSpy(),
     handleChangeLanguage: expect.createSpy(),
-    languages: []
+    languages: [],
+    statusMessage: ''
 };
     
 function setupDom() {
@@ -71,6 +72,11 @@ describe('App component', () => {
         it('should render the #statusBar', () => {
             const output = setupShallow({isAuthenticated: false});
             expect(output.find('#statusBar').length).toBe(1);
+        });
+        
+        it('should display the statusMessage in the #statusBar', () => {
+            const output = setupShallow({statusMessage: 'A custom status message.'});
+            expect(output.find('#statusBar').text()).toEqual('A custom status message.');
         });
         
         describe('When the user is not authenticated', () => {

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import LoginForm from './LoginForm';
 import ItemManager from './ItemManager';
+import { getLanguageInfos } from '../actions/appActions';
 
 class App extends Component {
     constructor(props) {
@@ -31,6 +32,7 @@ class App extends Component {
                     {logout_button}
                 </div>
                 <div id="statusBar">
+                    {this.props.statusMessage}
                 </div>
                 {fetching_overlay}
             </div>
@@ -44,13 +46,16 @@ App.propTypes = {
     handleLogout: PropTypes.func.isRequired,
     handleGetLangInfos: PropTypes.func.isRequired,
     handleChangeLanguage: PropTypes.func.isRequired,
-    languages: PropTypes.array.isRequired
+    languages: PropTypes.array.isRequired,
+    statusMessage: PropTypes.string.isRequired
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         handleLogout: function(data) {},
-        handleGetLangInfos: function(data) {},
+        handleGetLangInfos: function(data) {
+            dispatch(getLanguageInfos());
+        },
         handleChangeLanguage: function(data) {}
     }; 
 };
@@ -59,7 +64,8 @@ const mapStateToProps = (state) => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
         nFetching: state.app.nFetching,
-        languages: state.app.languages
+        languages: state.app.languages,
+        statusMessage: state.app.statusMessage
     }
 };
 
