@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import LoginForm from './LoginForm';
 import ItemManager from './ItemManager';
-import { getLanguages } from '../actions/appActions';
+import { getLanguages, changeLanguage } from '../actions/appActions';
 
 class App extends Component {
     constructor(props) {
@@ -52,11 +52,15 @@ App.propTypes = {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        handleLogout: function(data) {},
-        handleGetLangInfos: function(data) {
+        handleLogout: function() {
+            //dispatch(logout());
+        },
+        handleGetLangInfos: function() {
             dispatch(getLanguages());
         },
-        handleChangeLanguage: function(data) {}
+        handleChangeLanguage: function(newLanguage) {
+            dispatch(changeLanguage(newLanguage));
+        }
     }; 
 };
 
