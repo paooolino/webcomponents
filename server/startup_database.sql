@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `options` (
 -- Dump dei dati della tabella c9.options: ~0 rows (circa)
 /*!40000 ALTER TABLE `options` DISABLE KEYS */;
 REPLACE INTO `options` (`ido`, `option_name`, `option_value`) VALUES
-	(1, 'languages', '{\r\n"main_language": "en",\r\n"languages": [\r\n   {\r\n      "lang": "it"\r\n   },\r\n   {\r\n      "lang": "en"\r\n   }\r\n]\r\n}');
+	(1, 'languages', '[\r\n   {\r\n      "lang": "it"\r\n   },\r\n   {\r\n      "lang": "en"\r\n   }\r\n]');
 /*!40000 ALTER TABLE `options` ENABLE KEYS */;
 
 

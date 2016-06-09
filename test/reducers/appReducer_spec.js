@@ -4,14 +4,14 @@ import reducer from '../../src/reducers/appReducer';
 
 describe('App reducer', () => {
     
-    it('should handle getlanguageInfosRequest', () => {
+    it('should handle getlanguagesRequest', () => {
         const state = {
             nFetching: 0,
             statusMessage: '',
             languages: [],
             selectedLanguage: ''
         };
-        const nextState = reducer(state, actions.getLanguageInfosRequest());
+        const nextState = reducer(state, actions.getLanguagesRequest());
         const expectedState = {
             nFetching: 1,
             statusMessage: 'Requesting languages',
@@ -21,7 +21,7 @@ describe('App reducer', () => {
         expect(nextState).toEqual(expectedState);
     });
 
-    it('should handle getLanguageInfosFailure', () => {
+    it('should handle getLanguagesFailure', () => {
         const state = {
             nFetching: 1,
             statusMessage: 'Requesting languages',
@@ -29,7 +29,7 @@ describe('App reducer', () => {
             selectedLanguage: ''
         };
         const errorMessage = 'An unspecified error occurred.';
-        const nextState = reducer(state, actions.getLanguageInfosFailure(errorMessage));
+        const nextState = reducer(state, actions.getLanguagesFailure(errorMessage));
         const expectedState = {
             nFetching: 0,
             statusMessage: 'Error in requesting languages: ' + errorMessage,
@@ -39,17 +39,17 @@ describe('App reducer', () => {
         expect(nextState).toEqual(expectedState);        
     });
 
-    it('should handle getLanguageInfosSuccess', () => {
+    it('should handle getLanguagesSuccess', () => {
         const state = {
             nFetching: 1,
             statusMessage: 'Requesting languages',
             languages: [],
             selectedLanguage: ''
         };
-        const languageInfos = {
-            languageInfos: [{ lang: 'it' }, { lang: 'en' }]
+        const languages = {
+            languages: [{ lang: 'it' }, { lang: 'en' }]
         };
-        const nextState = reducer(state, actions.getLanguageInfosSuccess(languageInfos));
+        const nextState = reducer(state, actions.getLanguagesSuccess(languages));
         const expectedState = {
             nFetching: 0,
             statusMessage: 'Languages loaded.',

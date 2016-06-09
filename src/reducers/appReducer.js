@@ -1,8 +1,8 @@
 import {
     CHANGE_LANGUAGE,
-    GET_LANGUAGE_INFOS_REQUEST,
-    GET_LANGUAGE_INFOS_FAILURE,
-    GET_LANGUAGE_INFOS_SUCCESS
+    GET_LANGUAGES_REQUEST,
+    GET_LANGUAGES_FAILURE,
+    GET_LANGUAGES_SUCCESS
 } from '../actions/appActions.js';
 
 const initialState = {
@@ -14,7 +14,7 @@ const initialState = {
 
 export default function(state=initialState, action) {
     switch (action.type) {
-        case GET_LANGUAGE_INFOS_REQUEST:
+        case GET_LANGUAGES_REQUEST:
             return {
                 ...state,
                 nFetching: state.nFetching + 1,
@@ -23,7 +23,7 @@ export default function(state=initialState, action) {
                 selectedLanguage: ''
             };
             
-        case GET_LANGUAGE_INFOS_FAILURE:
+        case GET_LANGUAGES_FAILURE:
             return {
                 ...state,
                 nFetching: state.nFetching - 1,
@@ -32,8 +32,8 @@ export default function(state=initialState, action) {
                 selectedLanguage: ''
             };
         
-        case GET_LANGUAGE_INFOS_SUCCESS:
-            const languages = action.languageInfos.map((language) => {
+        case GET_LANGUAGES_SUCCESS:
+            const languages = action.languages.map((language) => {
                 return language.lang
             });
             const selectedLanguage = languages[0];

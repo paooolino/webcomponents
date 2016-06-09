@@ -33,12 +33,12 @@
             }
             break;
         
-        case "getLangInfos":
+        case "getLanguages":
             $options = $de->getOptions();
             
             echo json_encode(array(
                 "status" => "ok",
-                "langInfos" => $options["langInfos"]
+                "languages" => $options["languages"]
             ));
             break;
             

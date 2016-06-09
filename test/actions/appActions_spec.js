@@ -14,20 +14,20 @@ describe('App actions', () => {
         nock.cleanAll();
     });
   
-    it('should create GET_LANGUAGE_INFOS_SUCCESS when getLanguageInfos has been dispatched', () => {
+    it('should create GET_LANGUAGES_SUCCESS when getLanguages has been dispatched', () => {
         nock(ENDPOINT_HOST)
             .post(ENDPOINT_PATH)
             .reply(200, {
                 status: 'ok',
-                languageInfos: [{ lang: 'it' },{ lang: 'en' }]
+                languages: [{ lang: 'it' },{ lang: 'en' }]
             });
 
         const expectedActions = [
-            { type: actions.GET_LANGUAGE_INFOS_REQUEST },
-            { type: actions.GET_LANGUAGE_INFOS_SUCCESS, languageInfos: [{ lang: 'it' },{ lang: 'en' }] }
+            { type: actions.GET_LANGUAGES_REQUEST },
+            { type: actions.GET_LANGUAGES_SUCCESS, languages: [{ lang: 'it' },{ lang: 'en' }] }
         ];
         const store = mockStore({});
-        return store.dispatch(actions.getLanguageInfos())
+        return store.dispatch(actions.getLanguages())
             .then(() => { // return of async actions
             expect(store.getActions()).toEqual(expectedActions)
         })

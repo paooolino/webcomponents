@@ -1,38 +1,38 @@
 import { createAsyncAction } from './utils.js';
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
-export const GET_LANGUAGE_INFOS_REQUEST = 'GET_LANG_INFOS_REQUEST';
-export const GET_LANGUAGE_INFOS_FAILURE = 'GET_LANG_INFOS_FAILURE';
-export const GET_LANGUAGE_INFOS_SUCCESS = 'GET_LANG_INFOS_SUCCESS';
+export const GET_LANGUAGES_REQUEST = 'GET_LANGUAGES_REQUEST';
+export const GET_LANGUAGES_FAILURE = 'GET_LANGUAGES_FAILURE';
+export const GET_LANGUAGES_SUCCESS = 'GET_LANGUAGES_SUCCESS';
 
 const changeLanguage = (newLanguage) => ({
     type: CHANGE_LANGUAGE,
     newLanguage
 });
 
-const getLanguageInfosRequest = () => ({
-    type: GET_LANGUAGE_INFOS_REQUEST
+const getLanguagesRequest = () => ({
+    type: GET_LANGUAGES_REQUEST
 });
 
-const getLanguageInfosFailure = (errorMessage) => ({
-    type: GET_LANGUAGE_INFOS_FAILURE,
+const getLanguagesFailure = (errorMessage) => ({
+    type: GET_LANGUAGES_FAILURE,
     errorMessage
 });
 
-const getLanguageInfosSuccess = (languageInfos) => ({
-    type: GET_LANGUAGE_INFOS_SUCCESS,
-    ...languageInfos
+const getLanguagesSuccess = (languages) => ({
+    type: GET_LANGUAGES_SUCCESS,
+    ...languages
 });
 
-const getLanguageInfos = () => {
+const getLanguages = () => {
     return createAsyncAction(
-        "getLanguageInfos",
-        getLanguageInfosRequest, getLanguageInfosFailure, getLanguageInfosSuccess
+        "getLanguages",
+        getLanguagesRequest, getLanguagesFailure, getLanguagesSuccess
     );
 };
 
 export { changeLanguage };
-export { getLanguageInfosRequest };
-export { getLanguageInfosFailure };
-export { getLanguageInfosSuccess };
-export { getLanguageInfos };
+export { getLanguagesRequest };
+export { getLanguagesFailure };
+export { getLanguagesSuccess };
+export { getLanguages };

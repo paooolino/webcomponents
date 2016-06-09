@@ -22,7 +22,7 @@
             $options = $this->de->getOptions();
 
             $this->assertEquals(array_key_exists("languages", $options), true);
-            $this->assertEquals($options["languages"]["main_language"], "en");
+            $this->assertEquals($options["languages"][0]["lang"], "it");
         }
         
         public function testFetchItem() {
