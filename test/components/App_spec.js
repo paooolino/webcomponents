@@ -81,12 +81,11 @@ describe('App component', () => {
             
             const output = setupShallow({isAuthenticated: false});
 
-            /*
-            it('should render the LoginForm component as first child', () => {
-                const firstChild = output.childAt(0);
-                expect(firstChild.instance()).toBeA(LoginForm); 
+            
+            it('should render the LoginForm component', () => {
+                expect(output.find('LoginForm').length).toBe(1);
             });
-            */
+            
             
             it('should not render the #logout_button in the #appBar', () => {
                 expect(output.find('#logout_button').length).toBe(0);                
@@ -98,12 +97,9 @@ describe('App component', () => {
             
             const output = setupShallow({isAuthenticated: true});
             
-            /*
-            it('should render the ItemManager component as first child', () => {
-                const firstChild = output.childAt(0);
-                expect(firstChild.is(ItemManager)).toBe(true); 
+            it('should render the ItemManager component', () => {
+                expect(output.find('ItemManager').length).toBe(1);
             });
-            */
             
             it('should render the #logout_button in the #appBar', () => {
                 expect(output.find('#appBar #logout_button').length).toBe(1);    
