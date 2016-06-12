@@ -1,7 +1,2 @@
 node_modules
-server/src/config.php
-server/coverage
 build/bundle.js
-server/vendor
-composer.lock
-server/docs

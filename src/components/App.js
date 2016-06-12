@@ -1,81 +1,58 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 import LoginForm from './LoginForm';
 import ItemManager from './ItemManager';
-import { getLanguages, changeLanguage } from '../actions/appActions';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-    
+
     componentDidMount() {
-        this.props.handleGetLangInfos();
+        this.props.handleGetLanguages();
     }
     
     render() {
-        const component = this.props.isAuthenticated ? <ItemManager /> : <LoginForm />;
-        const logout_button = this.props.isAuthenticated ? <button onClick={this.props.handleLogout} id="logout_button"></button> : '';
-        const fetching_overlay = this.props.nFetching > 0 ? <div id="fetching_overlay"></div> : '';
-        
         return (
-            <div id="appContainer">
-                {component}
-                <div id="appBar">
-                    <div id="languageSelector">
+            <div>
+                <div className="appBar">
+                    <div className="languageSelector">
                         <ul>
                             {this.props.languages.map( (language) => (
-                                <li onClick={ () => {this.props.handleChangeLanguage(language);} } key={language}>{language}</li>
+                                <li key="{language}">{language}</li>
                             ))}
                         </ul>
                     </div>
-                    {logout_button}
+                    {(() => {
+                        if(this.props.isAuthenticated) {
+                            return <button className="logout_button">Logout</button>
+                        }
+                    })()}
                 </div>
-                <div id="statusBar">
+                <div className="statusBar">
                     {this.props.statusMessage}
                 </div>
-                {fetching_overlay}
+                {(() => {
+                    if(!this.props.isAuthenticated) {
+                        return <LoginForm />
+                    } else {
+                        return <ItemManager />
+                    }
+                })()}
+                {(() => {
+                    if(this.props.isFetching) {
+                        return <div className="fetching_overlay"></div>
+                    }
+                })()}                
             </div>
         );
     }
+
 }
 
 App.propTypes = {
-    isAuthenticated: PropTypes.bool.isRequired,
-    nFetching: PropTypes.number.isRequired,
-    handleLogout: PropTypes.func.isRequired,
-    handleGetLangInfos: PropTypes.func.isRequired,
-    handleChangeLanguage: PropTypes.func.isRequired,
     languages: PropTypes.array.isRequired,
-    statusMessage: PropTypes.string.isRequired
+    statusMessage: PropTypes.string.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    handleGetLanguages: PropTypes.func.isRequired
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        handleLogout: function() {
-            //dispatch(logout());
-        },
-        handleGetLangInfos: function() {
-            dispatch(getLanguages());
-        },
-        handleChangeLanguage: function(newLanguage) {
-            dispatch(changeLanguage(newLanguage));
-        }
-    }; 
-};
-
-const mapStateToProps = (state) => {
-    return {
-        isAuthenticated: state.auth.isAuthenticated,
-        nFetching: state.app.nFetching,
-        languages: state.app.languages,
-        statusMessage: state.app.statusMessage
-    }
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(App);
-
+export default App;
 export { App };
