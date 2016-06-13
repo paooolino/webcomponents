@@ -4,7 +4,7 @@ import jsdom from 'jsdom';
 import { shallow, mount } from 'enzyme';
 import sinon from 'sinon';
 
-import { App } from '../src/components/App';
+import { App } from '../../src/App/App';
 
 const defaultProps = {
     languages: [],

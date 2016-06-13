@@ -1,7 +1,7 @@
 import expect from 'expect';
-import reducer from '../src/reducers/appReducer';
-import {changeLanguage, logout} from '../src/actions/AppActions';
-import {getLanguagesRequest, getLanguagesFailure, getLanguagesSuccess} from '../src/actions/AppActions';
+import reducer from '../../src/App/appReducer';
+import {changeLanguage, logout} from '../../src/App/AppActions';
+import {getLanguagesRequest, getLanguagesFailure, getLanguagesSuccess} from '../../src/App/AppActions';
 
 describe('App reducer', () => {
     

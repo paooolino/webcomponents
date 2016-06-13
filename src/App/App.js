@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import LoginForm from './LoginForm';
-import ItemManager from './ItemManager';
+import LoginForm from '../LoginForm/LoginForm';
+import ItemManager from '../ItemManager/ItemManager';
 
 class App extends Component {
 

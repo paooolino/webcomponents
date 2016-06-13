@@ -1,6 +1,6 @@
 import expect from 'expect';
-import {changeLanguage, logout, getLanguages} from '../src/actions/AppActions';
-import {handleChangeLanguage, handleLogout, handleGetLanguages} from '../src/components/AppContainer';
+import {changeLanguage, logout, getLanguages} from '../../src/App/AppActions';
+import {handleChangeLanguage, handleLogout, handleGetLanguages} from '../../src/App/AppContainer';
 
 describe('App container', () => {
         
