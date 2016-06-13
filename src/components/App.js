@@ -15,13 +15,19 @@ class App extends Component {
                     <div className="languageSelector">
                         <ul>
                             {this.props.languages.map( (language) => (
-                                <li key="{language}">{language}</li>
+                                <li 
+                                    key={language}
+                                    onClick={(language)=>{this.props.handleChangeLanguage(language);}}
+                                >{language}</li>
                             ))}
                         </ul>
                     </div>
                     {(() => {
                         if(this.props.isAuthenticated) {
-                            return <button className="logout_button">Logout</button>
+                            return <button 
+                                    onClick={this.props.handleLogout} 
+                                    className="logout_button"
+                                >Logout</button>
                         }
                     })()}
                 </div>
@@ -51,7 +57,9 @@ App.propTypes = {
     statusMessage: PropTypes.string.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
     isFetching: PropTypes.bool.isRequired,
-    handleGetLanguages: PropTypes.func.isRequired
+    handleGetLanguages: PropTypes.func.isRequired,
+    handleLogout: PropTypes.func.isRequired,
+    handleChangeLanguage: PropTypes.func.isRequired
 };
 
 export default App;

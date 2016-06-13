@@ -2,6 +2,7 @@ import expect from 'expect';
 import React from 'react';
 import jsdom from 'jsdom';
 import { shallow, mount } from 'enzyme';
+import sinon from 'sinon';
 
 import { App } from '../src/components/App';
 
@@ -10,7 +11,9 @@ const defaultProps = {
     statusMessage: '',
     isAuthenticated: false,
     isFetching: false,
-    handleGetLanguages: function(){}
+    handleGetLanguages: function(){},
+    handleLogout: function(){},
+    handleChangeLanguage: function(){}
 };
 
 function setupDom() {
@@ -29,9 +32,31 @@ function setupShallow(props) {
     return output;
 };
 
-function setupMount(props, opts){
+// here we stub the sub-components
+// https://gist.github.com/TimothyRHuertas/d7d06313c5411fe242bb
+function setupMount(props, stubbedComponents){
+    const originalCreateElement = React.createElement;
+    const DivFactory = React.createFactory('div');
+     
+    const sandbox = sinon.sandbox.create();
+
+    // to do: verify that stubbing works when components have required props
+    sandbox.stub(React, 'createElement', function(component, props){
+        if( typeof component == 'function' ) {
+            if(stubbedComponents.indexOf(component.name) !== -1){
+                
+                const componentFactory = React.createFactory(component);
+                return componentFactory();
+                
+            }
+        }
+        return originalCreateElement.apply(React, arguments);   
+    });
+            
     const actualProps = {...defaultProps, ...props};
-    const output = mount(<App {...actualProps} />, opts);
+    const output = mount(<App {...actualProps} />);
+    
+    sandbox.restore();
     return output;
 }
 
@@ -137,18 +162,32 @@ describe('App component', () => {
     describe('behaviour', () => {
         
         it('should call handleGetLanguages when the component is mounted', () => {
-            // use enzyme mount and mock components here
-            // https://gist.github.com/TimothyRHuertas/d7d06313c5411fe242bb
             const handleGetLanguages = expect.createSpy();
             const output = setupMount({
                 handleGetLanguages
-            });
+            }, ['LoginForm']);
             expect(handleGetLanguages.calls.length).toBe(1);   
         });
         
-        it('should call handleLogout when the logout button is clicked', () => {});
+        it('should call handleLogout when the .logout_button is clicked', () => {
+            const handleLogout = expect.createSpy();
+            const output = setupShallow({
+                isAuthenticated: true,
+                handleLogout
+            });
+            output.find('.logout_button').simulate('click');
+            expect(handleLogout.calls.length).toBe(1);
+        });
         
-        it('should call handleChangeLanguage when a new language is clicked', () => {});
+        it('should call handleChangeLanguage when a new language is clicked', () => {
+            const handleChangeLanguage = expect.createSpy();
+            const output = setupShallow({
+                languages: ['it', 'en'],
+                handleChangeLanguage 
+            });
+            output.find('.languageSelector ul').childAt(0).simulate('click');
+            expect(handleChangeLanguage.calls.length).toBe(1);
+        });
             
     });
     
