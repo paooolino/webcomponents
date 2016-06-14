@@ -4,8 +4,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {CHANGE_LANGUAGE, LOGOUT} from '../../src/App/AppActions';
 import {GET_LANGUAGES_REQUEST, GET_LANGUAGES_FAILURE, GET_LANGUAGES_SUCCESS} from '../../src/App/AppActions';
-import {changeLanguage, logout} from '../../src/App/AppActions';
-import {getLanguages} from '../../src/App/AppActions';
+import {changeLanguage, logout, getLanguages} from '../../src/App/AppActions';
 import {getLanguagesRequest, getLanguagesFailure, getLanguagesSuccess} from '../../src/App/AppActions';
 
 const mockStore = configureMockStore([thunk]);
@@ -90,10 +89,5 @@ describe('[App/AppActions_spec]', () => {
         });
     
     });
-    
-    
-    
-    
 
-    
 });

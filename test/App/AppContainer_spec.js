@@ -1,32 +1,44 @@
 import expect from 'expect';
-import {changeLanguage, logout, getLanguages} from '../../src/App/AppActions';
-import {handleChangeLanguage, handleLogout, handleGetLanguages} from '../../src/App/AppContainer';
+import {mapDispatchToProps} from '../../src/App/AppContainer';
+import {changeLanguage, logout, getLanguages } from '../../src/App/AppActions';
 
-describe('App container', () => {
+describe('[App/AppContainer_spec]', () => {
         
     describe('handleChangeLanguage', () => {
         
-        xit('should dispatch the changeLanguage action with the passed language', () => {
-            const dispatchedAction = handleChangeLanguage('it');
-            expect(dispatchedAction).toEqual(changeLanguage('it'));
+        it('should return an handleChangeLanguage function that dispatches the changeLanguage action', () => {
+            const dispatchSpy = expect.createSpy();
+            const handlers = mapDispatchToProps(dispatchSpy);
+            expect(handlers.handleChangeLanguage).toBeA('function');
+            
+            handlers.handleChangeLanguage('it');
+            expect(dispatchSpy.calls[0].arguments[0]).toEqual(changeLanguage('it'));
         });
         
     });
     
     describe('handleLogout', () => {
         
-        xit('should dispatch the handleLogout action', () => {
-            const dispatchedAction = handleLogout();
-            expect(dispatchedAction).toEqual(handleLogout());
+        it('should return an handleLogout function that dispatches the logout action', () => {
+            const dispatchSpy = expect.createSpy();
+            const handlers = mapDispatchToProps(dispatchSpy);
+            expect(handlers.handleLogout).toBeA('function');
+            
+            handlers.handleLogout();
+            expect(dispatchSpy.calls[0].arguments[0]).toEqual(logout());
         });
         
     });
     
     describe('handleGetLanguages', () => {
         
-        xit('should dispatch the handleGetLanguages async action', () => {
-            const dispatchedAction = handleGetLanguages();
-            expect(handleGetLanguages).toEqual(handleGetLanguages());
+        it('should return an handleGetLanguages function that dispatches the getLanguages action', () => {
+            const dispatchSpy = expect.createSpy();
+            const handlers = mapDispatchToProps(dispatchSpy);
+            expect(handlers.handleGetLanguages).toBeA('function');
+            
+            handlers.handleGetLanguages();
+            expect(dispatchSpy.calls[0].arguments[0]).toEqual(getLanguages());
         });
         
     });
