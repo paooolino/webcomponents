@@ -10,7 +10,7 @@ const defaultProps = {
     languages: [],
     statusMessage: '',
     isAuthenticated: false,
-    isFetching: false,
+    nFetching: 0,
     handleGetLanguages: function(){},
     handleLogout: function(){},
     handleChangeLanguage: function(){}
@@ -62,7 +62,7 @@ function setupMount(props, stubbedComponents){
 
 setupDom();
 
-describe('App component', () => {
+describe('[App/App_spec] App component', () => {
     
     describe('rendering', () => {
         
@@ -135,7 +135,7 @@ describe('App component', () => {
         describe('When the app is fetching', () => {
 
             const output = setupShallow({
-                isFetching: true
+                nFetching: 1
             });
                 
             it('should render the .fetching_overlay div', () => {
@@ -148,7 +148,7 @@ describe('App component', () => {
         describe('When the app is not fetching', () => {
             
             const output = setupShallow({
-                isFetching: false
+                nFetching: 0
             });
             
             it('should NOT render the .fetching_overlay div', () => {

@@ -3,14 +3,14 @@ import {
     GET_LANGUAGES_REQUEST,
     GET_LANGUAGES_FAILURE,
     GET_LANGUAGES_SUCCESS
-} from './appActions.js';
+} from './AppActions.js';
 
 const initialState = {
     nFetching: 0,
     statusMessage: '',
     languages: [],
     selectedLanguage: '',
-    isLogged: false
+    isAuthenticated: false
 };
 
 export default function(state=initialState, action) {

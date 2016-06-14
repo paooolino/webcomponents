@@ -16,8 +16,13 @@ export const mapDispatchToProps = (dispatch) => {
     };
 };
 
-const mapStateToProps = (state) => {
-    return {};
+export const mapStateToProps = (state) => {
+    return {
+        languages: state.languages,
+        statusMessage: state.statusMessage,
+        isAuthenticated: state.isAuthenticated,
+        nFetching: state.nFetching
+    };
 };
 
 const AppContainer = connect(

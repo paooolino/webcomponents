@@ -17,7 +17,7 @@ class App extends Component {
                             {this.props.languages.map( (language) => (
                                 <li 
                                     key={language}
-                                    onClick={(language)=>{this.props.handleChangeLanguage(language);}}
+                                    onClick={()=>{this.props.handleChangeLanguage(language);}}
                                 >{language}</li>
                             ))}
                         </ul>
@@ -42,7 +42,7 @@ class App extends Component {
                     }
                 })()}
                 {(() => {
-                    if(this.props.isFetching) {
+                    if(this.props.nFetching > 0) {
                         return <div className="fetching_overlay"></div>
                     }
                 })()}                
@@ -56,7 +56,7 @@ App.propTypes = {
     languages: PropTypes.array.isRequired,
     statusMessage: PropTypes.string.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
-    isFetching: PropTypes.bool.isRequired,
+    nFetching: PropTypes.number.isRequired,
     handleGetLanguages: PropTypes.func.isRequired,
     handleLogout: PropTypes.func.isRequired,
     handleChangeLanguage: PropTypes.func.isRequired
