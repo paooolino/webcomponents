@@ -1,5 +1,5 @@
 import expect from 'expect';
-import reducer from '../../src/App/appReducer';
+import reducer from '../../src/App/AppReducer';
 import {
     CHANGE_LANGUAGE, LOGOUT,
     GET_LANGUAGES_REQUEST,
