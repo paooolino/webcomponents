@@ -46,8 +46,8 @@ const getLanguages = function() {
     );
 }
 
-export { changeLanguage }
-export { logout }
+export { changeLanguage };
+export { logout };
 export { getLanguages };
 export { getLanguagesRequest };
 export { getLanguagesFailure };

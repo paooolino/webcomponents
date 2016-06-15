@@ -10,7 +10,7 @@ const ENDPOINT_PATH = '/webcomponents/server/src/endpoint.php';
 const middlewares = [thunkMiddleware];
 const mockStore = configureMockStore(middlewares);
 
-describe('Action utils', () => {
+describe('[utils_spec]', () => {
     
     const actionRequest = () => ({ type: 'ACTION_REQUEST' });
     const actionFailure = (errorMessage) => ({ type: 'ACTION_FAILURE', errorMessage });

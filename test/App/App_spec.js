@@ -4,7 +4,7 @@ import jsdom from 'jsdom';
 import { shallow, mount } from 'enzyme';
 import sinon from 'sinon';
 
-import { App } from '../../src/App/App';
+import App from '../../src/App/App';
 
 const defaultProps = {
     languages: [],
@@ -63,6 +63,12 @@ function setupMount(props, stubbedComponents){
 setupDom();
 
 describe('[App/App_spec] App component', () => {
+    
+    describe('propTypes', () => {
+        it('should define the correct propTypes', () => {
+            expect(Object.keys(App.propTypes)).toEqual(Object.keys(defaultProps));
+        });
+    });
     
     describe('rendering', () => {
         

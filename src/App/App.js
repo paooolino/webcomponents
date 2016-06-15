@@ -63,4 +63,3 @@ App.propTypes = {
 };
 
 export default App;
-export { App };

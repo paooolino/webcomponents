@@ -40,7 +40,7 @@ export default function(state=initialState, action) {
         case LOGOUT:
             return {
                 ...state,
-                isLogged: false
+                isAuthenticated: false
             };
             
         case CHANGE_LANGUAGE:

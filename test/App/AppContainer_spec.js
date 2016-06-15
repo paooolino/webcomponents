@@ -13,6 +13,13 @@ describe('[App/AppContainer_spec]', () => {
         
     describe('mapDispatchToProps', () => {
         
+        it('should map the correct handlers types', () => {
+            const props = mapDispatchToProps();
+            expect(props.handleChangeLanguage).toBeA('function');
+            expect(props.handleLogout).toBeA('function');
+            expect(props.handleGetLanguages).toBeA('function');
+        });
+        
         it('should return an handleChangeLanguage function that dispatches the changeLanguage action', () => {
             const dispatchSpy = expect.createSpy();
             const handlers = mapDispatchToProps(dispatchSpy);
