@@ -1,11 +1,7 @@
 import { API_ENDPOINT } from '../config';
 import fetch from 'isomorphic-fetch';
 
-export function createAsyncAction(actionName, request, error, success) {
-    
-    const requestAction = request();
-    let requestData = {...requestAction};
-    delete requestData.type;
+export function createAsyncAction(actionName, data, request, error, success) {
     
     let config = {
         method: 'POST',
@@ -15,7 +11,7 @@ export function createAsyncAction(actionName, request, error, success) {
         },
         body: JSON.stringify({
             action: actionName,
-            data: requestData
+            ...data
         })
     };
 
@@ -46,7 +42,7 @@ export function createAsyncAction(actionName, request, error, success) {
                         delete json.status;
                         dispatch(success(json));
                     } else if( json.status == 'ko') {
-                        dispatch(error(json.description))
+                        dispatch(error(json.serverErrorMessage))
                     }
                 }
             })
