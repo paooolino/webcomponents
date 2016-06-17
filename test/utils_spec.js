@@ -1,4 +1,5 @@
 /*
+    external imports
 */
 import expect from 'expect';
 import nock from 'nock';
@@ -6,26 +7,30 @@ import configureMockStore from 'redux-mock-store';
 import thunkMiddleware from 'redux-thunk';
 
 /*
+    internal imports
 */
 import { createAsyncAction } from '../src/utils';
 
-
-
+/*
+    setup
+*/
 const ENDPOINT_HOST = 'http://127.0.0.1';
 const ENDPOINT_PATH = '/webcomponents/server/src/endpoint.php';
 
 const middlewares = [thunkMiddleware];
 const mockStore = configureMockStore(middlewares);
 
-
-
-// mocking actions types
+/*
+    mocking actions types
+*/
 const MOCKACTION_REQUEST = 'MOCKACTION_REQUEST';
 const MOCKACTION_FAILURE = 'MOCKACTION_FAILURE';
 const MOCKACTION_SUCCESS = 'MOCKACTION_SUCCESS';
 const MOCKACTION = 'MOCKACTION';
 
-// mocking creators
+/*
+    mocking creators
+*/
 const mockAction_request = () => ({
     type: MOCKACTION_REQUEST
 });
@@ -44,15 +49,16 @@ const mockAction = (param1, param2) => {
     );
 }
 
-
-
+/*
+    tests
+*/
 describe('Action utils', () => {
 
     afterEach(() => {
         nock.cleanAll();
     });
         
-    xit('passes the parameters to the server', () => {
+    it('passes the parameters to the server', () => {
         nock(ENDPOINT_HOST).post(ENDPOINT_PATH)
             .reply(200, function(uri, requestBody){
                 expect(requestBody.param1).toBe('value1');
@@ -65,7 +71,7 @@ describe('Action utils', () => {
         return store.dispatch(mockAction('value1', 'value2'));
     });
     
-    xit('calls the SUCCESS action when the response status is ok', () => {
+    it('calls the SUCCESS action when the response status is ok', () => {
         nock(ENDPOINT_HOST).post(ENDPOINT_PATH)
             .reply(200, { status: 'ok' } );  
 
@@ -81,7 +87,7 @@ describe('Action utils', () => {
             });
     });
     
-    xit('calls the FAILURE action when the response status is ko, and pass the serverErrorMessage', () => {
+    it('calls the FAILURE action when the response status is ko, and pass the serverErrorMessage', () => {
         const serverErrorMessage = 'whatever message from the endpoint';
         nock(ENDPOINT_HOST).post(ENDPOINT_PATH)
             .reply(200, { status: 'ko', serverErrorMessage });
@@ -112,12 +118,25 @@ describe('Action utils', () => {
                 expect(actions.length).toBe(2);
                 expect(actions[0].type).toBe('MOCKACTION_REQUEST');
                 expect(actions[1].type).toBe('MOCKACTION_FAILURE');
-                expect(actions[1].errorMessage).toBe('500 Internal Server Error');
+                expect(actions[1].errorMessage).toBe('Error while mockAction: 500 Internal Server Error');
             });        
     });
     
-    xit('calls the FAILURE action when the response is not a JSON', () => {
-        
+    it('calls the FAILURE action when the response is not a JSON', () => {
+        nock(ENDPOINT_HOST).post(ENDPOINT_PATH)
+            .reply(200, "Parse error: syntax error, unexpected T_PAAMAYIM_NEKUDOTAYIM");
+
+        const store = mockStore({});
+
+        return store.dispatch(mockAction())
+            .then(() => {
+                const actions = store.getActions();
+                
+                expect(actions.length).toBe(2);
+                expect(actions[0].type).toBe('MOCKACTION_REQUEST');
+                expect(actions[1].type).toBe('MOCKACTION_FAILURE');
+                expect(actions[1].errorMessage).toBe('Error while mockAction: JSON parsing error');
+            });   
     });
     
 });
