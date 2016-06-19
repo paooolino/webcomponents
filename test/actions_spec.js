@@ -5,8 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 /* internal imports */
-import { actionTypes as types } from '../src/actions';
-import { actionCreators as creators } from '../src/actions';
+import { types, creators } from '../src/actions';
 
 const mockStore = configureMockStore([thunk]);
 const ENDPOINT_HOST = 'http://127.0.0.1';
@@ -14,7 +13,7 @@ const ENDPOINT_PATH = '/webcomponents/server/src/endpoint.php';
 
 describe('[actions_spec]', () => {
     
-    xit('should export the correct Types', () => {
+    it('should export the correct Types', () => {
         const expectedTypes = [
             'CHANGE_LANGUAGE',
             'LOGOUT',      
@@ -44,90 +43,87 @@ describe('[actions_spec]', () => {
             'SAVE_ITEM_FIELD_FAILURE',
             'SAVE_ITEM_FIELD_SUCCESS'
         ];
-        expect(Object.keys(types)).toEqual(Object.keys(expectedTypes));
+        expect(Object.keys(types)).toEqual(expectedTypes);
     });
     
-    xit('should export the correct Creators', () => {
+    it('should export the correct Creators', () => {
         const expectedCreators = [
             'changeLanguage',
             'logout',
             'selectItem',
             
-            'login',
             'loginRequest',
             'loginFailure',
             'loginSuccess',
+            'login',
             
-            'getLanguages',
             'getLanguagesRequest',
             'getLanguagesFailure',
             'getLanguagesSuccess',
+            'getLanguages',
             
-            'fetchItems',
             'fetchItemsRequest',
             'fetchItemsFailure',
             'fetchItemsSuccess',
+            'fetchItems',
             
-            'addItem',
             'addItemRequest',
             'addItemFailure',
             'addItemSuccess',
+            'addItem',
             
-            'deleteItem',
             'deleteItemRequest',
             'deleteItemFailure',
             'deleteItemSuccess',
+            'deleteItem',
             
-            'saveItemField',
             'saveItemFieldRequest',
             'saveItemFieldFailure',
-            'saveItemFieldSuccess'   
+            'saveItemFieldSuccess',
+            'saveItemField'
+                        
         ];
-        expect(Object.keys(types)).toEqual(Object.keys(expectedCreators));
+        expect(Object.keys(creators)).toEqual(expectedCreators);
     });
     
     describe('Sync action creators', () => {
         
-        xit('should create an action to change language', () => {
+        it('should create an action to change language', () => {
             expect(creators.changeLanguage('it')).toEqual({
                 type: types.CHANGE_LANGUAGE,
                 newLanguage: 'it'
             });
         });
         
-        xit('should create an action to logout', () => {
+        it('should create an action to logout', () => {
             expect(creators.logout()).toEqual({
                 type: types.LOGOUT
             });
         });
         
-        xit('should create an action to select an item', () => {
+        it('should create an action to select an item', () => {
             const item_id = 3;
             expect(creators.selectItem(item_id)).toEqual({
                 type: types.SELECT_ITEM,
-                selectedItem: item_id
+                item_id
             });
         });
         
         describe('login', () => {
             
-            xit('should create an action to request a login', () => {
-                const user = 'whatever_username';
-                const pass = 'whatever_password';
-                expect(creators.loginRequest(user, pass)).toEqual({
-                    type: types.LOGIN_REQUEST,
-                    user,
-                    pass
+            it('should create an action to request a login', () => {
+                expect(creators.loginRequest()).toEqual({
+                    type: types.LOGIN_REQUEST
                 });
             });
-            xit('should create an action to fail a login', () => {
+            it('should create an action to fail a login', () => {
                 const errorMessage = 'whatever error message';
-                expect(creators.loginFailure()).toEqual({
+                expect(creators.loginFailure(errorMessage)).toEqual({
                     type: types.LOGIN_FAILURE,
                     errorMessage
                 });
             });
-            xit('should create an action to success a login', () => {
+            it('should create an action to success a login', () => {
                 expect(creators.loginSuccess()).toEqual({
                     type: types.LOGIN_SUCCESS
                 });
@@ -137,23 +133,23 @@ describe('[actions_spec]', () => {
         
         describe('getLanguages', () => {
             
-            xit('should create an action to request a get languages', () => {
+            it('should create an action to request a get languages', () => {
                 expect(creators.getLanguagesRequest()).toEqual({
                     type: types.GET_LANGUAGES_REQUEST
                 });
             });
-            xit('should create an action to fail a get languages', () => {
+            it('should create an action to fail a get languages', () => {
                 const errorMessage = 'whatever error message';
-                expect(creators.getLanguagesFailure()).toEqual({
+                expect(creators.getLanguagesFailure(errorMessage)).toEqual({
                     type: types.GET_LANGUAGES_FAILURE,
                     errorMessage
                 });
             });
-            xit('should create an action to success a get languages', () => {
-                const languages = ['it', 'en'];
-                expect(creators.getLanguagesSuccess(languages)).toEqual({
+            it('should create an action to success a get languages', () => {
+                const serverData = { languages: ['it', 'en'] };
+                expect(creators.getLanguagesSuccess(serverData)).toEqual({
                     type: types.GET_LANGUAGES_SUCCESS,
-                    languages
+                    languages: serverData.languages
                 });
             });
             
@@ -161,19 +157,19 @@ describe('[actions_spec]', () => {
         
         describe('fetchItems', () => {
             
-            xit('should create an action to request an items fetch', () => {
+            it('should create an action to request an items fetch', () => {
                 expect(creators.fetchItemsRequest()).toEqual({
                     type: types.FETCH_ITEMS_REQUEST
                 });
             });
-            xit('should create an action to fail an items fetch', () => {
+            it('should create an action to fail an items fetch', () => {
                 const errorMessage = 'whatever error message';
-                expect(creators.fetchItemsFailure()).toEqual({
+                expect(creators.fetchItemsFailure(errorMessage)).toEqual({
                     type: types.FETCH_ITEMS_FAILURE,
                     errorMessage
                 });            
             });
-            xit('should create an action to success an items fetch', () => {
+            it('should create an action to success an items fetch', () => {
                 const items = [{id: 1}, {id: 2}];
                 expect(creators.fetchItemsSuccess(items)).toEqual({
                     type: types.FETCH_ITEMS_SUCCESS,
@@ -185,19 +181,19 @@ describe('[actions_spec]', () => {
         
         describe('addItem', () => {
             
-            xit('should create an action to request an item addition', () => {
+            it('should create an action to request an item addition', () => {
                 expect(creators.addItemRequest()).toEqual({
                     type: types.ADD_ITEM_REQUEST
                 });
             });
-            xit('should create an action to fail an item addition', () => {
+            it('should create an action to fail an item addition', () => {
                 const errorMessage = 'whatever error message';
-                expect(creators.addItemFailure()).toEqual({
+                expect(creators.addItemFailure(errorMessage)).toEqual({
                     type: types.ADD_ITEM_FAILURE,
                     errorMessage
                 });   
             });
-            xit('should create an action to success an item addition', () => {
+            it('should create an action to success an item addition', () => {
                 expect(creators.addItemSuccess()).toEqual({
                     type: types.ADD_ITEM_SUCCESS
                 });
@@ -206,20 +202,20 @@ describe('[actions_spec]', () => {
         });
         
         describe('deleteItem', () => {
-            xit('should create an action to request an item deletion', () => {
+            it('should create an action to request an item deletion', () => {
                 const id = 1;
                 expect(creators.deleteItemRequest(id)).toEqual({
                     type: types.DELETE_ITEM_REQUEST
                 });
             });
-            xit('should create an action to fail an item deletion', () => {
+            it('should create an action to fail an item deletion', () => {
                 const errorMessage = 'whatever error message';
-                expect(creators.deleteItemFailure()).toEqual({
+                expect(creators.deleteItemFailure(errorMessage)).toEqual({
                     type: types.DELETE_ITEM_FAILURE,
                     errorMessage
                 });  
             });
-            xit('should create an action to success an item deletion', () => {
+            it('should create an action to success an item deletion', () => {
                 expect(creators.deleteItemSuccess()).toEqual({
                     type: types.DELETE_ITEM_SUCCESS
                 });
@@ -227,22 +223,19 @@ describe('[actions_spec]', () => {
         });
         
         describe('saveItemField', () => {
-            xit('should create an action to request an item field save', () => {
-                const id = 1;
-                const fieldName = 'field_name';
-                const fieldValue = 'field value';
-                expect(creators.saveItemFieldRequest(id, fieldName, fieldValue)).toEqual({
+            it('should create an action to request an item field save', () => {
+                expect(creators.saveItemFieldRequest()).toEqual({
                     type: types.SAVE_ITEM_FIELD_REQUEST
                 });
             });
-            xit('should create an action to fail an item field save', () => {
+            it('should create an action to fail an item field save', () => {
                 const errorMessage = 'whatever error message';
-                expect(creators.saveItemFieldFailure()).toEqual({
+                expect(creators.saveItemFieldFailure(errorMessage)).toEqual({
                     type: types.SAVE_ITEM_FIELD_FAILURE,
                     errorMessage
                 });  
             });
-            xit('should create an action to success an item field save', () => {
+            it('should create an action to success an item field save', () => {
                 expect(creators.saveItemFieldSuccess()).toEqual({
                     type: types.SAVE_ITEM_FIELD_SUCCESS
                 });
@@ -255,22 +248,22 @@ describe('[actions_spec]', () => {
         
         // just check if they are functions
         xit('should create an async action to login', () => {
-             expect(login()).toBeA('function');
+             expect(creators.login()).toBeA('function');
         });
         xit('should create an async action to get languages', () => {
-             expect(getLanguages()).toBeA('function');
+             expect(creators.getLanguages()).toBeA('function');
         });
         xit('should create an async action to fetch items', () => {
-             expect(fetchItems()).toBeA('function');
+             expect(creators.fetchItems()).toBeA('function');
         });
         xit('should create an async action to add an item', () => {
-             expect(addItem()).toBeA('function');
+             expect(creators.addItem()).toBeA('function');
         });
         xit('should create an async action to delete an item', () => {
-             expect(deleteItem()).toBeA('function');
+             expect(creators.deleteItem()).toBeA('function');
         });
         xit('should create an async action to save an item field', () => {
-             expect(saveItemField()).toBeA('function');
+             expect(creators.saveItemField()).toBeA('function');
         });
         
     });
@@ -286,16 +279,18 @@ describe('[actions_spec]', () => {
                 .reply(200, serverReply);
             
             const expectedActions = [
-                { type: LOGIN_REQUEST },
-                { type: LOGIN_SUCCESS }
+                { type: types.LOGIN_REQUEST },
+                { type: types.LOGIN_SUCCESS }
             ];
             const store = mockStore({});
-            return store.dispatch(login())
+            const username = 'admin';
+            const password = 'admin';
+            return store.dispatch(creators.login(username, password))
                 .then(() => { // return of async actions
                 expect(store.getActions()).toEqual(expectedActions)
             })          
         });
-        xit('should dispatch request and success actions when requestLanguages has been dispatched', () => {
+        it('should dispatch request and success actions when requestLanguages has been dispatched', () => {
             const serverReply = {
                 status: 'ok',
                 languages: ['it', 'en']
@@ -308,11 +303,11 @@ describe('[actions_spec]', () => {
             delete dataToPass.status;
             
             const expectedActions = [
-                { type: GET_LANGUAGES_REQUEST },
-                { type: GET_LANGUAGES_SUCCESS, ...dataToPass }
+                { type: types.GET_LANGUAGES_REQUEST },
+                { type: types.GET_LANGUAGES_SUCCESS, ...dataToPass }
             ];
             const store = mockStore({});
-            return store.dispatch(getLanguages())
+            return store.dispatch(creators.getLanguages())
                 .then(() => { // return of async actions
                 expect(store.getActions()).toEqual(expectedActions)
             })
