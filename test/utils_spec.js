@@ -38,8 +38,9 @@ const mockAction_failure = (errorMessage) => ({
     type: MOCKACTION_FAILURE,
     errorMessage: 'Error while mockAction: ' + errorMessage
 });
-const mockAction_success = () => ({
-    type: MOCKACTION_SUCCESS
+const mockAction_success = (serverData) => ({
+    type: MOCKACTION_SUCCESS,
+    ...serverData
 });
 const mockAction = (param1, param2) => {
     return createAsyncAction(
@@ -69,6 +70,30 @@ describe('Action utils', () => {
         const store = mockStore({});
 
         return store.dispatch(mockAction('value1', 'value2'));
+    });
+    
+    it('passes the serverData fields to SUCCESS action', () => {
+        nock(ENDPOINT_HOST).post(ENDPOINT_PATH)
+            .reply(200, { 
+                status: 'ok',
+                serverField1: 'value 1',
+                serverField2: 'value 2'
+            });  
+
+        const store = mockStore({});
+        
+        const expectedAction = {
+            type: MOCKACTION_SUCCESS,
+            serverField1: 'value 1',
+            serverField2: 'value 2'
+        };
+        
+        return store.dispatch(mockAction())
+            .then(() => {
+                const actions = store.getActions();
+                
+                expect(actions[1]).toEqual(expectedAction);
+            });
     });
     
     it('calls the SUCCESS action when the response status is ok', () => {

@@ -71,7 +71,7 @@ const getLanguagesFailure = (errorMessage) => ({
 const getLanguagesSuccess = (serverData) => {
     return {
         type: types.GET_LANGUAGES_SUCCESS,
-        languages: serverData.languages
+        ...serverData
     }
 };
 
@@ -92,9 +92,9 @@ const fetchItemsFailure = (errorMessage) => ({
     errorMessage
 });
 
-const fetchItemsSuccess = (items) => ({
+const fetchItemsSuccess = (serverData) => ({
     type: types.FETCH_ITEMS_SUCCESS,
-    items
+    ...serverData
 });
 
 const fetchItems = () => {
