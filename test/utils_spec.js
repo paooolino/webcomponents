@@ -53,7 +53,7 @@ const mockAction = (param1, param2) => {
 /*
     tests
 */
-describe('Action utils', () => {
+describe('[utils_spec]', () => {
 
     afterEach(() => {
         nock.cleanAll();
