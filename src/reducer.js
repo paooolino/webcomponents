@@ -1,26 +1,28 @@
-import { types } from './actions';
+/*
+    external imports
+*/
+
+/*
+    internal imports
+*/
+
+import * as types from './actionTypes';
+
+/*
+    setup
+*/
 
 const initialState = {
-    selectedLanguage: '',
-    isAuthenticated: false
+    
 };
 
+/*
+    reducer definition
+*/
+
 export default (state=initialState, action) => {
-    switch (action.type) {
-        
-        case types.CHANGE_LANGUAGE:
-            return {
-                ...initialState,
-                selectedLanguage: action.newLanguage
-            }
-            
-        case types.LOGOUT:
-            return {
-                ...initialState,
-                isAuthenticated: false
-            }
-            
+    switch(action.type) {
         default:
             return state;
     }
-};
+}
