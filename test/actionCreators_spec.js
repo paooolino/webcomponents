@@ -3,19 +3,30 @@
 */
 
 import expect from 'expect';
+import configureMockStore from 'redux-mock-store';
+import thunkMiddleware from 'redux-thunk';
+import nock from 'nock';
 
 /*
     internal imports
 */
 
+const ENDPOINT_HOST = 'http://127.0.0.1';
+const ENDPOINT_PATH = '/webcomponents/server/src/endpoint.php';
+
 import * as creators from '../src/actionCreators';
 import * as types from '../src/actionTypes';
 
 /*
-    mocking
+    setup
 */
 
-const createAsyncAction = expect.createSpy();
+const middlewares = [thunkMiddleware];
+const mockStore = configureMockStore(middlewares);
+
+/*
+    tests
+*/
 
 describe('[actionCreators_spec]', () => {
     
@@ -48,23 +59,21 @@ describe('[actionCreators_spec]', () => {
             }); 
         });
         
-        it('creates the LOGIN async action', () => {
-            const action = creators.login('admin', 'admin');
-            const asyncAction = action('admin', 'admin');
-            console.log("======================");
-            console.log(asyncAction);
-            /*
-            expect(createAsyncAction).toHaveBeenCalledWith(
-                'login', 
-                {
-                    username: 'admin',
-                    password: 'admin'
-                },
-                creators.loginRequest,
-                creators.loginFailure,
-                creators.loginSuccess
-            );
-            */
+        it('creates the LOGIN action which passes the correct parameters to the server', () => {
+            let passedBody;
+            nock(ENDPOINT_HOST).post(ENDPOINT_PATH)
+                .reply(200, function(uri, requestBody){
+                    passedBody = requestBody;
+                });
+               
+            const store = mockStore({});
+
+            return store.dispatch(creators.login('admin', 'admin'))
+                .then(() => {
+                    expect(passedBody.action).toBe('login');
+                    expect(passedBody.username).toBe('admin');
+                    expect(passedBody.password).toBe('admin');
+                });
         });
         
     });
