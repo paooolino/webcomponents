@@ -17,6 +17,9 @@ import * as creators from '../actionCreators';
 
 export const mapDispatchToProps = (dispatch) => {
     return {
+        handleLogin: function(){
+            dispatch(creators.login('admin', 'admin'));
+        }
     };
 };
 
