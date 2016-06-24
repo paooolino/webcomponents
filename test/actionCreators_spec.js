@@ -60,19 +60,19 @@ describe('[actionCreators_spec]', () => {
         });
         
         it('creates the LOGIN action which passes the correct parameters to the server', () => {
-            let passedBody;
+            let passedData;
             nock(ENDPOINT_HOST).post(ENDPOINT_PATH)
                 .reply(200, function(uri, requestBody){
-                    passedBody = requestBody;
+                    passedData = requestBody;
                 });
                
             const store = mockStore({});
 
             return store.dispatch(creators.login('admin', 'admin'))
                 .then(() => {
-                    expect(passedBody.action).toBe('login');
-                    expect(passedBody.username).toBe('admin');
-                    expect(passedBody.password).toBe('admin');
+                    expect(passedData.action).toBe('login');
+                    expect(passedData.username).toBe('admin');
+                    expect(passedData.password).toBe('admin');
                 });
         });
         

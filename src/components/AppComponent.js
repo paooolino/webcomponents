@@ -24,7 +24,27 @@ class AppComponent extends Component {
     
     render() {
         return(
-            <div>AppComponent</div>
+            <div>
+                <div className="formRow">
+                    <div className="formLabel">
+                        username
+                    </div>
+                    <div className="formField">
+                        <input className="username" />
+                    </div>
+                </div>
+                <div className="formRow">
+                    <div className="formLabel">
+                        password
+                    </div>
+                    <div className="formField">
+                        <input className="password" type="password" />
+                    </div>
+                </div>
+                <div className="formRow">
+                    <button onClick={this.props.handleLogin} className="login_button">Log in</button>
+                </div>
+            </div>
         )
     }
 }
@@ -34,7 +54,7 @@ class AppComponent extends Component {
 */
 
 AppComponent.propTypes = {
-    
+    handleLogin: PropTypes.func.isRequired
 };
 
 /*
