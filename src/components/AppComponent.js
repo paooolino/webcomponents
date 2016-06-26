@@ -30,7 +30,10 @@ class AppComponent extends Component {
                         username
                     </div>
                     <div className="formField">
-                        <input className="username" />
+                        <input className="username" 
+                            value={this.props.username}
+                            onChange={this.props.handleChangeUsername}
+                        />
                     </div>
                 </div>
                 <div className="formRow">
@@ -38,7 +41,10 @@ class AppComponent extends Component {
                         password
                     </div>
                     <div className="formField">
-                        <input className="password" type="password" />
+                        <input className="password" type="password" 
+                            value={this.props.password}
+                            onChange={this.props.handleChangePassword}
+                        />
                     </div>
                 </div>
                 <div className="formRow">
@@ -54,6 +60,10 @@ class AppComponent extends Component {
 */
 
 AppComponent.propTypes = {
+    username: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    handleChangeUsername: PropTypes.func.isRequired,
+    handleChangePassword: PropTypes.func.isRequired,
     handleLogin: PropTypes.func.isRequired
 };
 

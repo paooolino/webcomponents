@@ -19,6 +19,12 @@ export const mapDispatchToProps = (dispatch) => {
     return {
         handleLogin: function(){
             dispatch(creators.login('admin', 'admin'));
+        },
+        handleChangeUsername: function(){
+            dispatch(creators.changeUsername());
+        },
+        handleShangePassword: function(){
+            dispatch(creators.changePassword());
         }
     };
 };

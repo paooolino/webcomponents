@@ -11,15 +11,22 @@ function server($ARR) {
     switch( $ARR["action"] ) {
         
         case "login":
-            return array(
-                "status" => "ok",
-                "authCode" => "whatever_auth_code"
-            );
+            if( $ARR["username"] == "admin" && $ARR["password"] == "admin" ) {
+                return array(
+                    "status" => "ok",
+                    "authCode" => "whatever_auth_code"
+                );
+            } else {
+                return array(
+                    "status" => "ko",
+                    "errorMessage" => "Invalid credentials."
+                );
+            }
             
         default:
             return array(
                 "status" => "ko",
-                "description" => "No valid action"
+                "errorMessage" => "No valid action"
             );
     }
     

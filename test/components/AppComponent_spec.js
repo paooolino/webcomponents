@@ -18,6 +18,10 @@ import AppComponent from '../../src/components/AppComponent';
 */
 
 const defaultProps = {
+    username: '',
+    password: '',
+    handleChangeUsername: function(){},
+    handleChangePassword: function(){},
     handleLogin: function(){}
 };
 
@@ -89,7 +93,31 @@ describe('[components/AppComponent]', () => {
             output.find('.login_button').simulate('click');
             expect(handleLogin.calls.length).toBe(1);   
         });
+
+        it('should call handleChangeUsername when the input.username is changed', () => {
+            const handleChangeUsername = expect.createSpy();
+            const output = setupMount({
+                handleChangeUsername
+            });
+            output.find('.username').simulate(
+                'change',
+                { target: { value: "admin" }}
+            );    
+            expect(handleChangeUsername.calls.length).toBe(1);   
+        });
         
+        it('should call handleChangePassword when the input.password is changed', () => {
+            const handleChangePassword = expect.createSpy();
+            const output = setupMount({
+                handleChangePassword
+            });
+            output.find('.password').simulate(
+                'change',
+                { target: { value: "admin" }}
+            );    
+            expect(handleChangePassword.calls.length).toBe(1);   
+        });
+      
     });
     
 });

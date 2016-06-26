@@ -24,13 +24,27 @@ describe('[containers/AppContainer]', () => {
             
         describe('handleLogin', () => {
             
-            it('should be a function', () => {
-                expect(handlers.handleLogin).toBeA('function');
-            });
-            
             it('should dispatch the login function', () => {
                 handlers.handleLogin();
                 expect(dispatchSpy.calls[0].arguments[0]).toEqual(creators.login('admin', 'admin'));
+            });
+            
+        });
+        
+        describe('handleChangeUsername', () => {
+
+            it('should dispatch the changeUsername function', () => {
+                handlers.changeUsername();
+                expect(dispatchSpy.calls[0].arguments[0]).toEqual(creators.changeUsername('admin'));
+            });
+            
+        });
+        
+        describe('handleChangePassword', () => {
+
+            it('should dispatch the changePassword function', () => {
+                handlers.changePassword();
+                expect(dispatchSpy.calls[0].arguments[0]).toEqual(creators.changePassword('admin'));
             });
             
         });
