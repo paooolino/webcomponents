@@ -3,7 +3,6 @@
 */
 
 import expect from 'expect';
-import nock from 'nock';
 
 /*
     internal imports
@@ -39,9 +38,7 @@ describe('[containers/AppContainer]', () => {
     });
     
     describe('mapStateToProps', () => {
-        
-        //
-        
+
     });
     
 });
