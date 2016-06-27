@@ -17,7 +17,11 @@ import React, { Component, PropTypes } from 'react';
 */
 
 class AppComponent extends Component {
-    
+
+    //constructor(props) {
+        //super(props);
+    //}
+  
     componentDidMount() {
         
     }
@@ -48,7 +52,10 @@ class AppComponent extends Component {
                     </div>
                 </div>
                 <div className="formRow">
-                    <button onClick={this.props.handleLogin} className="login_button">Log in</button>
+                    <button onClick={ () => {this.props.handleLogin(
+                        this.props.username,
+                        this.props.password
+                    );} } className="login_button">Log in</button>
                 </div>
             </div>
         )

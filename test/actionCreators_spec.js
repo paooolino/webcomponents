@@ -77,18 +77,18 @@ describe('[actionCreators_spec]', () => {
         });
         
         it('creates the CHANGE_USERNAME action', () => {
-            const action = creators.changeUsername(newValue);
+            const action = creators.changeUsername('whatever_username');
             expect(action).toEqual({
                 type: types.CHANGE_USERNAME,
-                newValue
+                newValue: 'whatever_username'
             }); 
         });
         
         it('creates the CHANGE_PASSWORD action', () => {
-            const action = creators.changePassword(newValue);
+            const action = creators.changePassword('whatever_password');
             expect(action).toEqual({
                 type: types.CHANGE_PASSWORD,
-                newValue
+                newValue: 'whatever_password'
             }); 
         });
         

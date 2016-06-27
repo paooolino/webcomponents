@@ -13,20 +13,28 @@ import { mapDispatchToProps, mapStateToProps } from '../../src/containers/AppCon
 import * as creators from '../../src/actionCreators';
 
 /*
+    mocking
+*/
+
+const state = {
+    username: '',
+    password: ''
+};
+
+/*
     tests
 */
 
 describe('[containers/AppContainer]', () => {
-    
+
     describe('mapDispatchToProps', () => {
-        
-        const dispatchSpy = expect.createSpy();
-        const handlers = mapDispatchToProps(dispatchSpy);
-            
+    
         describe('handleLogin', () => {
             
             it('should dispatch the login function', () => {
-                handlers.handleLogin();
+                const dispatchSpy = expect.createSpy();
+                const handlers = mapDispatchToProps(dispatchSpy);
+                handlers.handleLogin('admin', 'admin');
                 expect(dispatchSpy.calls[0].arguments[0]).toEqual(creators.login('admin', 'admin'));
             });
             
@@ -35,8 +43,13 @@ describe('[containers/AppContainer]', () => {
         describe('handleChangeUsername', () => {
 
             it('should dispatch the changeUsername function', () => {
-                handlers.changeUsername();
-                expect(dispatchSpy.calls[0].arguments[0]).toEqual(creators.changeUsername('admin'));
+                const dispatchSpy = expect.createSpy();
+                const handlers = mapDispatchToProps(dispatchSpy);
+                const ev = {
+                    target: { value: 'whatever_username' }
+                }
+                handlers.handleChangeUsername(ev);
+                expect(dispatchSpy.calls[0].arguments[0]).toEqual(creators.changeUsername(ev.target.value));
             });
             
         });
@@ -44,8 +57,13 @@ describe('[containers/AppContainer]', () => {
         describe('handleChangePassword', () => {
 
             it('should dispatch the changePassword function', () => {
-                handlers.changePassword();
-                expect(dispatchSpy.calls[0].arguments[0]).toEqual(creators.changePassword('admin'));
+                const dispatchSpy = expect.createSpy();
+                const handlers = mapDispatchToProps(dispatchSpy);
+                const ev = {
+                    target: { value: 'whatever_password' }
+                }
+                handlers.handleChangePassword(ev);
+                expect(dispatchSpy.calls[0].arguments[0]).toEqual(creators.changePassword(ev.target.value));
             });
             
         });
@@ -55,7 +73,7 @@ describe('[containers/AppContainer]', () => {
     describe('mapStateToProps', () => {
 
         it('should map the correct props types', () => {
-            const props = mapStateToProps();
+            const props = mapStateToProps(state);
             expect(props.username).toBeA('string');
             expect(props.password).toBeA('string');
         });

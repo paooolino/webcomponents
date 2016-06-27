@@ -88,10 +88,13 @@ describe('[components/AppComponent]', () => {
         it('should call handleLogin when the button.login_button is clicked', () => {
             const handleLogin = expect.createSpy();
             const output = setupMount({
-                handleLogin
+                handleLogin,
+                username: 'whatever_username',
+                password: 'whatever_password'
             });
             output.find('.login_button').simulate('click');
             expect(handleLogin.calls.length).toBe(1);   
+            expect(handleLogin.calls[0].arguments).toEqual(['whatever_username', 'whatever_password']);   
         });
 
         it('should call handleChangeUsername when the input.username is changed', () => {
