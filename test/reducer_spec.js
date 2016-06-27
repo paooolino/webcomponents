@@ -58,6 +58,33 @@ describe('[reducer_spec]', () => {
             });
         });
         
+        it('should handle CHANGE_USERNAME', () => {
+            const nextState = reducer({
+                ...initialState,
+                username: ''
+            }, {
+                type: types.CHANGE_USERNAME,
+                newValue: 'whatever_username'
+            });
+            expect(nextState).toEqual({
+                ...initialState,
+                username: 'whatever_username'
+            });
+        });
+        
+        it('should handle CHANGE_PASSWORD', () => {
+            const nextState = reducer({
+                ...initialState,
+                password: ''
+            }, {
+                type: types.CHANGE_PASSWORD,
+                newValue: 'whatever_password'
+            });
+            expect(nextState).toEqual({
+                ...initialState,
+                password: 'whatever_password'
+            });
+        });
     });
     
 });

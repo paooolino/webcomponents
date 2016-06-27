@@ -38,6 +38,12 @@ describe('[containers/AppContainer]', () => {
     
     describe('mapStateToProps', () => {
         
+        it('should map the correct props types', () => {
+            const props = mapStateToProps();
+            expect(props.username).toBeA('string');
+            expect(props.password).toBeA('string');
+        });
+        
     });
     
 });

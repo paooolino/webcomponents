@@ -30,3 +30,13 @@ export const login = (username, password) => {
         loginRequest, loginFailure, loginSuccess
     );
 };
+
+export const changeUsername = (newValue) => ({
+    type: types.CHANGE_USERNAME,
+    newValue
+});
+
+export const changePassword = (newValue) => ({
+    type: types.CHANGE_PASSWORD,
+    newValue
+});

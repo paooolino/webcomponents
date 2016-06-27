@@ -29,6 +29,8 @@ export const mapDispatchToProps = (dispatch) => {
 
 export const mapStateToProps = (state) => {
     return {
+        username: state.username,
+        password: state.password
     };
 };
 

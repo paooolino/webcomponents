@@ -15,7 +15,9 @@ import * as types from './actionTypes';
 export const initialState = {
     nFetching: 0,
     isAuthenticated: false,
-    errorMessages: []
+    errorMessages: [],
+    username: '',
+    password: ''
 };
 
 /*
@@ -47,6 +49,18 @@ export default (state=initialState, action) => {
                 ...state,
                 isAuthenticated: true,
                 nFetching: state.nFetching - 1
+            };
+            
+        case types.CHANGE_USERNAME:
+            return {
+                ...state,
+                username: action.newValue
+            };
+            
+        case types.CHANGE_PASSWORD:
+            return {
+                ...state,
+                password: action.newValue
             };
             
         default:

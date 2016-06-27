@@ -76,5 +76,21 @@ describe('[actionCreators_spec]', () => {
                 });
         });
         
+        it('creates the CHANGE_USERNAME action', () => {
+            const action = creators.changeUsername(newValue);
+            expect(action).toEqual({
+                type: types.CHANGE_USERNAME,
+                newValue
+            }); 
+        });
+        
+        it('creates the CHANGE_PASSWORD action', () => {
+            const action = creators.changePassword(newValue);
+            expect(action).toEqual({
+                type: types.CHANGE_PASSWORD,
+                newValue
+            }); 
+        });
+        
     });
 });
