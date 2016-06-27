@@ -15,18 +15,10 @@ export const createAsyncAction = (actionName, data, request, error, success) => 
         })
     };
 
-	return dispatch => {
-	    
-        // First dispatch: the app state is updated to inform
-        // that the API call is starting.
-		dispatch(request());
-
-        // The function called by the thunk middleware can return a value,
-        // that is passed on as the 
-        // return value of the dispatch method.
+    return dispatch => {
         
-        // In this case, we return a promise to wait for.
-        // This is not required by thunk middleware, but it is convenient for us. 
+        dispatch(request());
+
         return fetch(API_ENDPOINT, config)
             .then(function(response){
                 let json;
@@ -48,5 +40,5 @@ export const createAsyncAction = (actionName, data, request, error, success) => 
             }).catch(function(err){
                 dispatch(error("JSON parsing error"))
             });
-	};
+    };
 }

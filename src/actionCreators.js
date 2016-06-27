@@ -24,6 +24,9 @@ export const loginSuccess = (serverData) => ({
 });
 
 export const login = (username, password) => {
+    if( !username || !password ) {
+        throw Error('You must provide username and password.');
+    }
     return createAsyncAction(
         'login',
         {username, password},
