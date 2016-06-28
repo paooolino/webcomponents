@@ -16,6 +16,7 @@ export const initialState = {
     nFetching: 0,
     isAuthenticated: false,
     errorMessages: [],
+    languages: [],
     username: '',
     password: ''
 };
@@ -40,7 +41,7 @@ export default (state=initialState, action) => {
                 isAuthenticated: false,
                 errorMessages: [
                     ...state.errorMessages, 
-                    'Login failure: ' + action.errorMessage
+                    action.errorMessage
                 ]
             };
             
@@ -61,6 +62,30 @@ export default (state=initialState, action) => {
             return {
                 ...state,
                 password: action.newValue
+            };
+            
+        case types.GET_LANGUAGES_REQUEST:
+            return {
+                ...state,
+                nFetching: state.nFetching + 1
+            };
+            
+        case types.GET_LANGUAGES_FAILURE:
+            return {
+                ...state,
+                nFetching: state.nFetching - 1,
+                languages: [],
+                errorMessages: [
+                    ...state.errorMessages, 
+                    action.errorMessage
+                ]
+            };
+            
+        case types.GET_LANGUAGES_SUCCESS:
+            return {
+                ...state,
+                languages: [...action.languages],
+                nFetching: state.nFetching - 1
             };
             
         default:

@@ -20,7 +20,9 @@ import AppComponent from '../../src/components/AppComponent';
 const defaultProps = {
     nFetching: 0,
     isAuthenticated: false,
-    errorMessages: []
+    errorMessages: [],
+    languages: [],
+    handleGetLanguages: function(){}
 };
 
 function setupDom() {
@@ -89,7 +91,27 @@ describe('[components/AppComponent]', () => {
             expect(output.find('.statusbar').children().length).toBe(1);
             expect(output.find('.statusbar').childAt([0]).text()).toEqual('message 2');
         });
+        
+        it('should render the .languagebar component', () => {
+            const output = setupShallow({ languages: ['it', 'en'] });
+            expect(output.find('.languagebar').length).toBe(1); 
+            expect(output.find('.languagebar').children().length).toBe(2); 
+            expect(output.find('.languagebar').childAt([0]).text()).toEqual('it');
+            expect(output.find('.languagebar').childAt([1]).text()).toEqual('en');
+        });
+        
+    });
     
+    describe('behaviour', () => {
+        
+        xit('should call handleGetLanguages when the component is mounted', () => {
+            const handleGetLanguages = expect.createSpy();
+            const output = setupMount({
+                handleGetLanguages
+            });
+            expect(handleGetLanguages.calls.length).toBe(1);   
+        });
+        
     });
     
 });

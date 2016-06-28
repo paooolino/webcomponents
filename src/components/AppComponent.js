@@ -25,12 +25,17 @@ class AppComponent extends Component {
     //}
   
     componentDidMount() {
-        
+        this.props.handleGetLanguages();
     }
     
     render() {
         return(
             <div>
+                <div className="languagebar">
+                    {this.props.languages.map((lang) => (
+                        <div key={lang}>{lang}</div>
+                    ))}
+                </div>
                 {(() => {
                     if(!this.props.isAuthenticated) {
                         return (
@@ -64,7 +69,9 @@ class AppComponent extends Component {
 AppComponent.propTypes = {
     nFetching: PropTypes.number.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
-    errorMessages: PropTypes.array.isRequired
+    errorMessages: PropTypes.array.isRequired,
+    languages: PropTypes.array.isRequired,
+    handleGetLanguages: PropTypes.func.isRequired
 };
 
 /*

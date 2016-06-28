@@ -26,20 +26,20 @@ describe('[reducer_spec]', () => {
         });
         
         it('should handle LOGIN_FAILURE', () => {
-            const serverErrorMessage = 'Whatever error message';
+            const errorMessage = 'Whatever error message';
             const nextState = reducer({
                 ...initialState,
                 nFetching: 1,
                 errorMessages: []
             }, {
                 type: types.LOGIN_FAILURE,
-                errorMessage: serverErrorMessage
+                errorMessage
             });
             expect(nextState).toEqual({
                 ...initialState,
                 nFetching: 0,
                 isAuthenticated: false,
-                errorMessages: ['Login failure: ' + serverErrorMessage] 
+                errorMessages: [errorMessage] 
             });
         });
         
@@ -83,6 +83,52 @@ describe('[reducer_spec]', () => {
             expect(nextState).toEqual({
                 ...initialState,
                 password: 'whatever_password'
+            });
+        });
+        
+        it('should handle GET_LANGUAGES_REQUEST', () => {
+            const nextState = reducer({
+                ...initialState,
+                nFetching: 0
+            }, {
+                type: types.GET_LANGUAGES_REQUEST
+            });
+            expect(nextState).toEqual({
+                ...initialState,
+                nFetching: 1
+            });
+        });
+        
+        it('should handle GET_LANGUAGES_FAILURE', () => {
+            const errorMessage = 'Whatever error message';
+            const nextState = reducer({
+                ...initialState,
+                nFetching: 1,
+                errorMessages: []
+            }, {
+                type: types.GET_LANGUAGES_FAILURE,
+                errorMessage
+            });
+            expect(nextState).toEqual({
+                ...initialState,
+                nFetching: 0,
+                errorMessages: [errorMessage] 
+            });
+        });
+        
+        it('should handle GET_LANGUAGES_SUCCESS', () => {
+            const nextState = reducer({
+                ...initialState,
+                languages: [],
+                nFetching: 1
+            }, {
+                type: types.GET_LANGUAGES_SUCCESS,
+                languages: ['it', 'en']
+            });
+            expect(nextState).toEqual({
+                ...initialState,
+                nFetching: 0,
+                languages: ['it', 'en']
             });
         });
     });

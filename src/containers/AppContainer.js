@@ -28,7 +28,8 @@ export const mapStateToProps = (state) => {
     return {
         nFetching: state.nFetching,
         isAuthenticated: state.isAuthenticated,
-        errorMessages: state.errorMessages
+        errorMessages: state.errorMessages,
+        languages: state.languages
     };
 };
 

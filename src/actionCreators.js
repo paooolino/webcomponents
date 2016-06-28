@@ -43,3 +43,25 @@ export const changePassword = (newValue) => ({
     type: types.CHANGE_PASSWORD,
     newValue
 });
+
+export const getLanguagesRequest = () => ({
+    type: types.GET_LANGUAGES_REQUEST
+});
+
+export const getLanguagesFailure = (errorMessage) => ({
+    type: types.GET_LANGUAGES_FAILURE,
+    errorMessage: 'Get languages failure: ' + errorMessage
+});
+
+export const getLanguagesSuccess = (serverData) => ({
+    type: types.GET_LANGUAGES_SUCCESS,
+    ...serverData
+});
+
+export const getLanguages = () => {
+    return createAsyncAction(
+        'getLanguages',
+        {},
+        getLanguagesRequest, getLanguagesFailure, getLanguagesSuccess
+    );
+};

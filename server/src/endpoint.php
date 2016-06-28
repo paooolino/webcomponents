@@ -19,14 +19,17 @@ function server($ARR) {
             } else {
                 return array(
                     "status" => "ko",
-                    "errorMessage" => "Invalid credentials."
+                    "serverErrorMessage" => "Invalid credentials."
                 );
             }
+        
+        case "getLanguages":
+            return array('it', 'en');
             
         default:
             return array(
                 "status" => "ko",
-                "errorMessage" => "No valid action"
+                "serverErrorMessage" => "No valid action"
             );
     }
     

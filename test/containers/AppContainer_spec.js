@@ -18,7 +18,8 @@ import { mapDispatchToProps, mapStateToProps } from '../../src/containers/AppCon
 const state = {
     nFetching: 0,
     isAuthenticated: false,
-    errorMessages: []
+    errorMessages: [],
+    languages: []
 };
 
 /*
@@ -38,6 +39,7 @@ describe('[containers/AppContainer]', () => {
             expect(props.nFetching).toBeA('number');
             expect(props.isAuthenticated).toBeA('boolean');
             expect(props.errorMessages).toBeA('array');
+            expect(props.languages).toBeA('array');
         });
         
     });

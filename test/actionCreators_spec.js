@@ -44,7 +44,7 @@ describe('[actionCreators_spec]', () => {
             const action = creators.loginFailure(serverErrorMessage);
             expect(action).toEqual({
                 type: types.LOGIN_FAILURE,
-                errorMessage: 'Login failure: ' + serverErrorMessage
+                errorMessage: 'Login failure: Whatever error message'
             }); 
         });
 
@@ -92,5 +92,50 @@ describe('[actionCreators_spec]', () => {
             }); 
         });
         
+    });
+    
+    describe('getLanguages', () => {
+        
+        it('creates the GET_LANGUAGES_REQUEST action', () => {
+            const action = creators.getLanguagesRequest();
+            expect(action).toEqual({
+                type: types.GET_LANGUAGES_REQUEST
+            }); 
+        });
+        
+        it('creates the GET_LANGUAGES_FAILURE action', () => {
+            const serverErrorMessage = 'Whatever error message';
+            const action = creators.getLanguagesFailure(serverErrorMessage);
+            expect(action).toEqual({
+                type: types.GET_LANGUAGES_FAILURE,
+                errorMessage: 'Get languages failure: Whatever error message'
+            }); 
+        });
+
+        it('creates the GET_LANGUAGES_SUCCESS action', () => {
+            const serverData = {
+                languages: ['it', 'en']
+            };
+            const action = creators.getLanguagesSuccess(serverData);
+            expect(action).toEqual({
+                type: types.GET_LANGUAGES_SUCCESS,
+                languages: ['it', 'en']
+            }); 
+        });
+        
+        it('creates the GET_LANGUAGES action which passes the correct parameters to the server', () => {
+            let passedData;
+            nock(ENDPOINT_HOST).post(ENDPOINT_PATH)
+                .reply(200, function(uri, requestBody){
+                    passedData = requestBody;
+                });
+               
+            const store = mockStore({});
+
+            return store.dispatch(creators.getLanguages())
+                .then(() => {
+                    expect(passedData.action).toBe('getLanguages');
+                });
+        });
     });
 });
