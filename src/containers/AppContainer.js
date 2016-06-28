@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 */
 
 import AppComponent from '../components/AppComponent';
-import * as creators from '../actionCreators';
 
 /*
     dispatch props
@@ -17,15 +16,7 @@ import * as creators from '../actionCreators';
 
 export const mapDispatchToProps = (dispatch) => {
     return {
-        handleLogin: function(username, password){
-            dispatch(creators.login(username, password));
-        },
-        handleChangeUsername: function(event){
-            dispatch(creators.changeUsername(event.target.value));
-        },
-        handleChangePassword: function(event){
-            dispatch(creators.changePassword(event.target.value));
-        }
+
     };
 };
 
@@ -34,10 +25,9 @@ export const mapDispatchToProps = (dispatch) => {
 */
 
 export const mapStateToProps = (state) => {
-    console.log(state);
     return {
-        username: state.username,
-        password: state.password
+        nFetching: state.nFetching,
+        isAuthenticated: state.isAuthenticated
     };
 };
 

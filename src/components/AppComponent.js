@@ -8,6 +8,8 @@ import React, { Component, PropTypes } from 'react';
     internal imports
 */
 
+import LoginFormContainer from '../containers/LoginFormContainer';
+
 /*
     setup
 */
@@ -29,34 +31,22 @@ class AppComponent extends Component {
     render() {
         return(
             <div>
-                <div className="formRow">
-                    <div className="formLabel">
-                        username
-                    </div>
-                    <div className="formField">
-                        <input className="username" 
-                            value={this.props.username}
-                            onChange={this.props.handleChangeUsername}
-                        />
-                    </div>
-                </div>
-                <div className="formRow">
-                    <div className="formLabel">
-                        password
-                    </div>
-                    <div className="formField">
-                        <input className="password" type="password" 
-                            value={this.props.password}
-                            onChange={this.props.handleChangePassword}
-                        />
-                    </div>
-                </div>
-                <div className="formRow">
-                    <button onClick={ () => {this.props.handleLogin(
-                        this.props.username,
-                        this.props.password
-                    );} } className="login_button">Log in</button>
-                </div>
+                {(() => {
+                    if(!this.props.isAuthenticated) {
+                        return (
+                            <div className="LoginFormContainer">
+                                <LoginFormContainer />
+                            </div>
+                        );
+                    }
+                })()}
+                {(() => {
+                    if(this.props.nFetching > 0) {
+                        return (
+                            <div className="fetchinglayer">fetching...</div>
+                        );
+                    }
+                })()}
             </div>
         )
     }
@@ -67,11 +57,8 @@ class AppComponent extends Component {
 */
 
 AppComponent.propTypes = {
-    username: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
-    handleChangeUsername: PropTypes.func.isRequired,
-    handleChangePassword: PropTypes.func.isRequired,
-    handleLogin: PropTypes.func.isRequired
+    nFetching: PropTypes.number.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired
 };
 
 /*
