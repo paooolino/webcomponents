@@ -19,7 +19,8 @@ import AppComponent from '../../src/components/AppComponent';
 
 const defaultProps = {
     nFetching: 0,
-    isAuthenticated: false
+    isAuthenticated: false,
+    errorMessages: []
 };
 
 function setupDom() {
@@ -78,6 +79,15 @@ describe('[components/AppComponent]', () => {
         it('should not render the LoginFormContainer when the use is authenticated', () => {
             const output = setupShallow({ isAuthenticated: true });
             expect(output.find('.LoginFormContainer').length).toBe(0);
+        });
+        
+        it('should render the .statusbar div with the last message', () => {
+            const output = setupShallow({
+                errorMessages: ['message 2', 'message 1']
+            });
+            expect(output.find('.statusbar').length).toBe(1);
+            expect(output.find('.statusbar').children().length).toBe(1);
+            expect(output.find('.statusbar').childAt([0]).text()).toEqual('message 2');
         });
     
     });

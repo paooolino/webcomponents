@@ -27,7 +27,8 @@ export const mapDispatchToProps = (dispatch) => {
 export const mapStateToProps = (state) => {
     return {
         nFetching: state.nFetching,
-        isAuthenticated: state.isAuthenticated
+        isAuthenticated: state.isAuthenticated,
+        errorMessages: state.errorMessages
     };
 };
 

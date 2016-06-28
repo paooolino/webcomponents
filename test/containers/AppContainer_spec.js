@@ -17,7 +17,8 @@ import { mapDispatchToProps, mapStateToProps } from '../../src/containers/AppCon
 
 const state = {
     nFetching: 0,
-    isAuthenticated: false
+    isAuthenticated: false,
+    errorMessages: []
 };
 
 /*
@@ -36,6 +37,7 @@ describe('[containers/AppContainer]', () => {
             const props = mapStateToProps(state);
             expect(props.nFetching).toBeA('number');
             expect(props.isAuthenticated).toBeA('boolean');
+            expect(props.errorMessages).toBeA('array');
         });
         
     });

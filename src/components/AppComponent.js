@@ -47,6 +47,11 @@ class AppComponent extends Component {
                         );
                     }
                 })()}
+                <div className="statusbar">
+                    <div className="errorMessage">
+                        {this.props.errorMessages[0]}
+                    </div>
+                </div>
             </div>
         )
     }
@@ -58,7 +63,8 @@ class AppComponent extends Component {
 
 AppComponent.propTypes = {
     nFetching: PropTypes.number.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired
+    isAuthenticated: PropTypes.bool.isRequired,
+    errorMessages: PropTypes.array.isRequired
 };
 
 /*
